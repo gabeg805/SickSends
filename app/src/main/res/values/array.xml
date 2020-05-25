@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string-array name="onboarding_next">
+		<item>@string/navigate_next</item>
+		<item>@string/navigate_finish</item>
+	</string-array>
+
+</resources>

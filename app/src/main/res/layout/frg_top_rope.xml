@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/frg_main"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Top rope"
+		/>
+
+	<!--
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id="@+id/fab_add_climb"
+		android:layout_width="@dimen/isz_attention"
+		android:layout_height="@dimen/isz_attention"
+		android:layout_gravity="bottom|center"
+		android:layout_marginBottom="8dp"
+		android:src="@mipmap/plus"
+		/>
+		-->
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

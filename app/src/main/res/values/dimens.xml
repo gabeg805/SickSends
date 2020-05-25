@@ -1,0 +1,59 @@
+<resources>
+
+	<dimen name="border">24dp</dimen>
+	<dimen name="corner">5dp</dimen>
+	<dimen name="spacing">16dp</dimen>
+	<dimen name="spacing_close">8dp</dimen>
+	<dimen name="text_size_small">13sp</dimen>
+	<dimen name="text_size_normal">16sp</dimen>
+	<dimen name="text_size_section">18sp</dimen>
+	<dimen name="text_size_title">24sp</dimen>
+	<dimen name="alpha_subtitle">0.65</dimen>
+	<dimen name="alpha_section">0.75</dimen>
+
+
+	<!-- Spacing -->
+	<dimen name="sp_section">24dp</dimen>
+	<dimen name="sp_main">16dp</dimen>
+	<dimen name="sp_support">8dp</dimen>
+	<dimen name="sp_align">4dp</dimen>
+	<dimen name="sp_row_last">16dp</dimen>
+	<dimen name="sp_row">8dp</dimen>
+	<dimen name="sp_snooze_icon">12dp</dimen>
+
+	<!-- Sizing -->
+	<dimen name="sz_touch">48dp</dimen>
+	<dimen name="sz_extend">16dp</dimen>
+	<dimen name="sz_radius">6dp</dimen>
+	<dimen name="sz_none">0dp</dimen>
+	<dimen name="sz_divider1">8dp</dimen>
+	<dimen name="sz_divider2">4dp</dimen>
+	<dimen name="sz_divider">1dp</dimen>
+
+	<!-- Image -->
+	<dimen name="isz_attention">54dp</dimen>
+	<dimen name="isz_main">24dp</dimen>
+	<dimen name="isz_icon">32dp</dimen>
+	<dimen name="isz_icon_button">28dp</dimen>
+	<dimen name="isz_support">16dp</dimen>
+	<dimen name="isz_support_extra">8dp</dimen>
+
+	<!-- Text -->
+	<dimen name="tsz_attention">40sp</dimen>
+	<dimen name="tsz_title">32sp</dimen>
+	<dimen name="tsz_icon">18sp</dimen>
+	<dimen name="tsz_main">16sp</dimen>
+	<dimen name="tsz_support">14sp</dimen>
+
+	<!-- Fragment sound -->
+	<!--
+	<dimen name="tsz_spotify_titles">20sp</dimen>
+	<dimen name="pt_spotify_titles">10dp</dimen>
+	<dimen name="pb_spotify_titles">10dp</dimen>
+	<dimen name="ml_spotify_search">-14dp</dimen>
+	<dimen name="isz_frg_spotify_image">130dp</dimen>
+	<dimen name="sp_frg_spotify_cover_text">10dp</dimen>
+	<dimen name="p_frg_spotify_cover">20dp</dimen>
+	-->
+
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- <attr name="colorPrimary" type="reference" /> -->
+	<!-- <attr name="colorPrimaryVariant" type="reference" /> -->
+	<!-- <attr name="colorSecondaryVariant" type="reference" /> -->
+	<!-- <attr name="colorError" type="reference" /> -->
+	<attr name="colorPrimaryLight" type="reference" />
+	<attr name="colorSecondary" type="reference" />
+	<attr name="colorSecondaryDark" type="reference" />
+	<attr name="colorSecondaryLight" type="reference" />
+	<attr name="colorBackground" type="reference" />
+	<attr name="colorSurface" type="reference" />
+	<attr name="colorAccentDark" type="reference" />
+	<attr name="colorAccentLight" type="reference" />
+	<attr name="colorOnPrimary" type="reference" />
+	<attr name="colorOnSecondary" type="reference" />
+	<attr name="colorOnBackground" type="reference" />
+	<attr name="colorOnSurface" type="reference" />
+	<attr name="colorOnError" type="reference" />
+
+</resources>

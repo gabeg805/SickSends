@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/OnboardingTheme.Root"
+	android:id="@+id/frg_onboarding"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<TextView
+		style="@style/OnboardingTheme.TextView.Title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/climbing_title"
+		/>
+
+	<TextView
+		style="@style/OnboardingTheme.TextView.Subtitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/climbing_subtitle"
+		/>
+
+	<com.google.android.material.switchmaterial.SwitchMaterial
+		style="@style/OnboardingTheme.Switch"
+		android:id="@+id/climbing_bouldering"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/bouldering"
+		android:onClick="onClimbingChoiceSelected"
+		/>
+
+	<com.google.android.material.switchmaterial.SwitchMaterial
+		style="@style/OnboardingTheme.Switch"
+		android:id="@+id/climbing_sport"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/sport"
+		android:onClick="onClimbingChoiceSelected"
+		/>
+
+	<com.google.android.material.switchmaterial.SwitchMaterial
+		style="@style/OnboardingTheme.Switch"
+		android:id="@+id/climbing_top_rope"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/top_rope"
+		android:onClick="onClimbingChoiceSelected"
+		/>
+
+	<com.google.android.material.switchmaterial.SwitchMaterial
+		style="@style/OnboardingTheme.Switch"
+		android:id="@+id/climbing_trad"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/trad"
+		android:onClick="onClimbingChoiceSelected"
+		/>
+
+</LinearLayout>

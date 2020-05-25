@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+		android:id="@+id/climbing_types"
+		android:orderInCategory="100"
+		android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/bouldering"
+            android:icon="@mipmap/copy"
+            android:title="@string/bouldering"
+			/>
+
+        <item
+            android:id="@+id/sport"
+            android:icon="@mipmap/delete"
+            android:title="@string/sport"
+			/>
+
+        <item
+            android:id="@+id/top_rope"
+            android:icon="@mipmap/app"
+            android:title="@string/top_rope"
+			/>
+
+        <item
+            android:id="@+id/trad"
+            android:icon="@mipmap/app"
+            android:title="@string/trad"
+			/>
+
+    </group>
+
+    <group
+		android:id="@+id/extra"
+		android:orderInCategory="200"
+		android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/settings"
+            android:icon="@mipmap/copy"
+            android:title="@string/settings"
+			/>
+
+        <item
+            android:id="@+id/second"
+            android:icon="@mipmap/delete"
+            android:title="@string/statistics"
+			/>
+
+	</group>
+
+</menu>

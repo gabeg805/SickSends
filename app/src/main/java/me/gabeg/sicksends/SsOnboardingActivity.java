@@ -3,223 +3,75 @@ package me.gabeg.sicksends;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.adapter.FragmentViewHolder;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
-
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-
 
 /**
  */
 public class SsOnboardingActivity
 	extends FragmentActivity
-	implements TabLayoutMediator.TabConfigurationStrategy
+	implements TabLayoutMediator.TabConfigurationStrategy,
+		MaterialButtonToggleGroup.OnButtonCheckedListener,
+		SsOnboardingPagerAdapter.OnAdapterDoneListener
 {
-
-	/**
-	 * Onboarding page adapter.
-	 */
-	public class OnboardingAdapter
-		extends FragmentStateAdapter
-	{
-
-		/**
-		 */
-		public OnboardingAdapter(FragmentActivity fragmentActivity)
-		{
-			super(fragmentActivity);
-		}
-
-		/**
-		 */
-		@NonNull
-		@Override
-		public Fragment createFragment(int position)
-		{
-			int layout = this.pageToLayout(position);
-			OnboardingFragment fragment = new OnboardingFragment(layout);
-			Bundle args = new Bundle();
-
-			args.putInt(OnboardingFragment.BUNDLE_KEY, position);
-			fragment.setArguments(args);
-			mPageFragments.add(fragment);
-			return fragment;
-		}
-
-		/**
-		 */
-		@Override
-		public int getItemCount()
-		{
-			return 3;
-		}
-
-		/**
-		 * @return The layout ID from the given page.
-		 */
-		private int pageToLayout(int page)
-		{
-			switch (page)
-			{
-				case 2:
-					return R.layout.frg_onboarding_grade_choice;
-				case 1:
-					return R.layout.frg_onboarding_climbing_choice;
-				case 0:
-				default:
-					return R.layout.frg_onboarding_welcome;
-			}
-		}
-
-	}
-
-	/**
-	 * Onboarding fragment.
-	 */
-	public static class OnboardingFragment
-		extends Fragment
-		implements MaterialButtonToggleGroup.OnButtonCheckedListener
-	{
-
-		/**
-		 * Bundle key.
-		 */
-		private static final String BUNDLE_KEY = "OnboardingFragmentBundleKey";
-
-		/**
-		 * Shared preferences.
-		 */
-		private SsSharedPreferences mSharedPreferences;
-
-		/**
-		 */
-		public OnboardingFragment(int layout)
-		{
-			super(layout);
-		}
-
-		/**
-		 * @return The shared preferences.
-		 */
-		private SsSharedPreferences getSharedPreferences()
-		{
-			return this.mSharedPreferences;
-		}
-
-		/**
-		 */
-		@Override
-		public void onButtonChecked(MaterialButtonToggleGroup group,
-			int checkedId, boolean isChecked)
-		{
-			Context context = getContext();
-			SsSharedPreferences shared = this.getSharedPreferences();
-			MaterialButton button = group.findViewById(checkedId);
-			String grade = button.getText().toString();
-			String example = shared.getGradeExample(context, grade);
-			int groupId = group.getId();
-			int exampleId;
-
-			switch (groupId)
-			{
-				case R.id.bouldering_grade_choice_group:
-					exampleId = R.id.bouldering_grade_example;
-					break;
-				case R.id.sport_grade_choice_group:
-					exampleId = R.id.sport_grade_example;
-					break;
-				case R.id.top_rope_grade_choice_group:
-					exampleId = R.id.top_rope_grade_example;
-					break;
-				case R.id.trad_grade_choice_group:
-					exampleId = R.id.trad_grade_example;
-					break;
-				default:
-					return;
-			}
-
-			Animation animation = AnimationUtils.loadAnimation(context,
-				R.anim.grade_example_fade);
-			TextView textview = (TextView) getView().findViewById(exampleId);
-			textview.setText(example);
-			textview.startAnimation(animation);
-		}
-
-		/**
-		 */
-		@Override
-		public void onViewCreated(@NonNull View view,
-			@Nullable Bundle savedInstanceState)
-		{
-			Bundle args = getArguments();
-			int position = args.getInt(BUNDLE_KEY);
-			Log.i(TAG, "Fragment position : " + position);
-			this.mSharedPreferences = new SsSharedPreferences(getContext());
-
-			if (position == 2)
-			{
-				MaterialButtonToggleGroup boulderingGroup =
-					(MaterialButtonToggleGroup) view.findViewById(
-						R.id.bouldering_grade_choice_group);
-				MaterialButtonToggleGroup sportGroup =
-					(MaterialButtonToggleGroup) view.findViewById(
-						R.id.sport_grade_choice_group);
-				MaterialButtonToggleGroup topRopeGroup =
-					(MaterialButtonToggleGroup) view.findViewById(
-						R.id.top_rope_grade_choice_group);
-				MaterialButtonToggleGroup tradGroup =
-					(MaterialButtonToggleGroup) view.findViewById(
-						R.id.trad_grade_choice_group);
-				boulderingGroup.addOnButtonCheckedListener(this);
-				sportGroup.addOnButtonCheckedListener(this);
-				topRopeGroup.addOnButtonCheckedListener(this);
-				tradGroup.addOnButtonCheckedListener(this);
-			}
-		}
-
-	}
 
 	/**
 	 * Onboarding page change callback.
 	 */
-	public class OnboardingPageChange
+	public class OnboardingPageChangeCallback
 		extends ViewPager2.OnPageChangeCallback
 	{
 
 		/**
+		 * Called when the scroll state is changed.
+		 */
+		@Override
+		public void onPageScrollStateChanged(int state)
+		{
+			ViewPager2 viewPager = getViewPager();
+			int position = viewPager.getCurrentItem();
+
+			if ((state == ViewPager2.SCROLL_STATE_IDLE) && (position == 2))
+			{
+				SsSharedPreferences shared = getSharedPreferences();
+				SsSharedConstants cons = getSharedPreferences().getConstants();
+
+				if (!shared.getWillClimb())
+				{
+					Context context = getApplicationContext();
+					String text = cons.getErrorMessageNoClimbingTypeSelected();
+
+					viewPager.setCurrentItem(1, true);
+					Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+
+		/**
+		 * Called when a page has been selected.
 		 */
 		@Override
 		public void onPageSelected(int position)
 		{
-			Log.i(TAG, "onPageSelected! " + position);
 			setNavigationButtonText(position);
-			Log.i(TAG, "Offscreen ! " + getPager().getOffscreenPageLimit());
-
-			//saveClimbingTypes();
-			//createClimbingGrades();
 		}
+
 	}
 
 	/**
@@ -238,52 +90,65 @@ public class SsOnboardingActivity
 	private ViewPager2 mViewPager;
 
 	/**
-	 * Adapter for the onboarding pages.
+	 * @return True if the page can be changed to the given position, and False
+	 *     otherwise.
 	 */
-	private OnboardingAdapter mAdapter;
+	private boolean canChangePage(int position)
+	{
+		SsOnboardingPagerAdapter adapter = this.getOnboardingPagerAdapter();
+		int maxPages = adapter.getItemCount();
+
+		return (position >= 0) && (position < maxPages);
+	}
 
 	/**
-	 * Page fragments.
+	 * @return ID for the example grade TextView. Chosen by checking against the
+	 *     climbing type that was selected.
 	 */
-	private List<OnboardingFragment> mPageFragments;
+	private int getExampleGradeId(MaterialButtonToggleGroup group)
+	{
+		int id = group.getId();
+		if (id == R.id.bouldering_grade_choice_group)
+		{
+			return R.id.bouldering_grade_example;
+		}
+		else if (id == R.id.sport_grade_choice_group)
+		{
+			return R.id.sport_grade_example;
+		}
+		else if (id == R.id.top_rope_grade_choice_group)
+		{
+			return R.id.top_rope_grade_example;
+		}
+		else if (id == R.id.trad_grade_choice_group)
+		{
+			return R.id.trad_grade_example;
+		}
+		else
+		{
+			return View.NO_ID;
+		}
+	}
 
 	/**
-	 * Previous button.
+	 * @return Text for the example grade TextView.
 	 */
-	private TextView mPreviousView;
+	private String getExampleGradeText(MaterialButtonToggleGroup group,
+		int checkedId)
+	{
+		SsSharedPreferences shared = this.getSharedPreferences();
+		MaterialButton button = group.findViewById(checkedId);
+		String grade = button.getText().toString();
 
-	/**
-	 * Next button.
-	 */
-	private TextView mNextView;
-
-	/**
-	 * Next strings.
-	 */
-	private String[] mNextString;
+		return shared.getGradeExample(grade);
+	}
 
 	/**
 	 * @return The onboarding adapter for the view pager.
 	 */
-	private OnboardingAdapter getAdapter()
+	private SsOnboardingPagerAdapter getOnboardingPagerAdapter()
 	{
-		return this.mAdapter;
-	}
-
-	/**
-	 * @return The onboarding page fragments.
-	 */
-	private List<OnboardingFragment> getPageFragments()
-	{
-		return this.mPageFragments;
-	}
-
-	/**
-	 * @return The onboarding view pager.
-	 */
-	private ViewPager2 getPager()
-	{
-		return this.mViewPager;
+		return (SsOnboardingPagerAdapter) this.getViewPager().getAdapter();
 	}
 
 	/**
@@ -295,60 +160,86 @@ public class SsOnboardingActivity
 	}
 
 	/**
-	 * Move to the next onboarding page.
+	 * @return The onboarding view pager.
 	 */
-	public void nextPage(View v)
+	private ViewPager2 getViewPager()
 	{
-		OnboardingAdapter adapter = this.getAdapter();
-		ViewPager2 viewPager = this.getPager();
-		int nextPage = viewPager.getCurrentItem() + 1;
-		int numberOfPages = adapter.getItemCount();
-
-		if (nextPage < numberOfPages)
-		{
-			viewPager.setCurrentItem(nextPage, true);
-		}
-		else
-		{
-			finish();
-		}
+		return this.mViewPager;
 	}
 
 	/**
-	 * Called when a climbing checkbox is selected.
-	 */
-	public void onClimbingChoiceSelected(View view)
-	{
-		CompoundButton button = (CompoundButton) view;
-		boolean isChecked = button.isChecked();
-		this.saveClimbingChoice(button, isChecked);
-		this.setupClimbingGrade(button, isChecked);
-	}
-
-	/**
+	 * Called when the adapter is done creating views.
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	public void onAdapterDone(SsOnboardingPagerAdapter adapter)
 	{
-		super.onCreate(savedInstanceState);
-		Log.i(TAG, "Starting onboarding activity!");
-		setContentView(R.layout.act_onboarding);
+		View root = adapter.getRootView(2);
+		MaterialButtonToggleGroup boulderingGroup = root.findViewById(
+			R.id.bouldering_grade_choice_group);
+		MaterialButtonToggleGroup sportGroup = root.findViewById(
+			R.id.sport_grade_choice_group);
+		MaterialButtonToggleGroup topRopeGroup = root.findViewById(
+			R.id.top_rope_grade_choice_group);
+		MaterialButtonToggleGroup tradGroup = root.findViewById(
+			R.id.trad_grade_choice_group);
 
-		ViewPager2 viewPager = findViewById(R.id.onboarding_pager);
-		TabLayout tabs = findViewById(R.id.onboarding_location);
-		OnboardingAdapter adapter = new OnboardingAdapter(this);
-		this.mSharedPreferences = new SsSharedPreferences(this);
-		this.mPageFragments = new ArrayList<>();
-		this.mPreviousView = findViewById(R.id.onboarding_previous);
-		this.mNextView = findViewById(R.id.onboarding_next);
-		this.mNextString = getResources().getStringArray(R.array.onboarding_next);
-		this.mViewPager = viewPager;
-		this.mAdapter = adapter;
+		boulderingGroup.addOnButtonCheckedListener(this);
+		sportGroup.addOnButtonCheckedListener(this);
+		topRopeGroup.addOnButtonCheckedListener(this);
+		tradGroup.addOnButtonCheckedListener(this);
+	}
 
-		viewPager.setAdapter(adapter);
-		viewPager.registerOnPageChangeCallback(new OnboardingPageChange());
-		viewPager.setOffscreenPageLimit(adapter.getItemCount());
-		new TabLayoutMediator(tabs, viewPager, this).attach();
+	/**
+	 * Called when a climbing grade is selected.
+	 */
+	@Override
+	public void onButtonChecked(MaterialButtonToggleGroup group,
+		int checkedId, boolean isChecked)
+	{
+		String example = this.getExampleGradeText(group, checkedId);
+		int id = this.getExampleGradeId(group);
+
+		SsOnboardingPagerAdapter adapter = this.getOnboardingPagerAdapter();
+		View root = adapter.getRootView(2);
+		TextView textview = root.findViewById(id);
+
+		Animation animation = AnimationUtils.loadAnimation(this,
+			R.anim.grade_example_fade);
+
+		textview.setText(example);
+		textview.startAnimation(animation);
+	}
+
+	/**
+	 * Called when a climbing type is selected.
+	 */
+	public void onClimbingTypeSelected(View view)
+	{
+		SsSharedPreferences shared = this.getSharedPreferences();
+		boolean state = ((CompoundButton)view).isChecked();
+		int visibility = state ? View.VISIBLE : View.GONE;
+		int id = view.getId();
+
+		if (id == R.id.climbing_bouldering)
+		{
+			shared.editWillClimbBouldering(state);
+			this.setBoulderingGradeVisibility(visibility);
+		}
+		else if (id == R.id.climbing_sport)
+		{
+			shared.editWillClimbSport(state);
+			this.setSportGradeVisibility(visibility);
+		}
+		else if (id == R.id.climbing_top_rope)
+		{
+			shared.editWillClimbTopRope(state);
+			this.setTopRopeGradeVisibility(visibility);
+		}
+		else if (id == R.id.climbing_trad)
+		{
+			shared.editWillClimbTrad(state);
+			this.setTradGradeVisibility(visibility);
+		}
 	}
 
 	/**
@@ -360,51 +251,50 @@ public class SsOnboardingActivity
 	}
 
 	/**
-	 * Move to the previous onboarding page.
 	 */
-	public void previousPage(View v)
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
 	{
-		ViewPager2 viewPager = this.getPager();
-		int previousPage = viewPager.getCurrentItem() - 1;
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.act_onboarding);
 
-		if (previousPage >= 0)
+		this.mSharedPreferences = new SsSharedPreferences(this);
+		this.mViewPager = findViewById(R.id.onboarding_pager);
+
+		this.setupViewPager();
+		this.setupTabLayoutMediator();
+	}
+
+	/**
+	 * Move to the next onboarding page.
+	 */
+	public void onNextPageClicked(View v)
+	{
+		ViewPager2 viewPager = this.getViewPager();
+		int next = viewPager.getCurrentItem() + 1;
+
+		if (this.canChangePage(next))
 		{
-			viewPager.setCurrentItem(previousPage, true);
+			viewPager.setCurrentItem(next, true);
+		}
+		else
+		{
+			finish();
 		}
 	}
 
 	/**
-	 * Save the selected climbing choice.
+	 * Move to the previous onboarding page.
 	 */
-	//private void saveClimbingChoice(View view, boolean checked)
-	private void saveClimbingChoice(CompoundButton button, boolean isChecked)
+	public void onPreviousPageClicked(View v)
 	{
-		SsSharedPreferences shared = this.getSharedPreferences();
-		int id = button.getId();
-		//int id = view.getId();
+		ViewPager2 viewPager = this.getViewPager();
+		int previous = viewPager.getCurrentItem() - 1;
 
-		switch (id)
+		if (this.canChangePage(previous))
 		{
-			case R.id.climbing_bouldering:
-				shared.editClimbingTypeBouldering(isChecked);
-				break;
-			case R.id.climbing_sport:
-				shared.editClimbingTypeSport(isChecked);
-				break;
-			case R.id.climbing_top_rope:
-				shared.editClimbingTypeTopRope(isChecked);
-				break;
-			case R.id.climbing_trad:
-				shared.editClimbingTypeTrad(isChecked);
-				break;
-			default:
-				break;
+			viewPager.setCurrentItem(previous, true);
 		}
-
-		Log.i(TAG, "Bouldering Checked! " + shared.getClimbingTypeBouldering());
-		Log.i(TAG, "Sport Checked! " + shared.getClimbingTypeSport());
-		Log.i(TAG, "Top Rope Checked! " + shared.getClimbingTypeTopRope());
-		Log.i(TAG, "Trad Checked! " + shared.getClimbingTypeTrad());
 	}
 
 	/**
@@ -412,51 +302,100 @@ public class SsOnboardingActivity
 	 */
 	private void setNavigationButtonText(int position)
 	{
-		String[] nextString = mNextString;
-		mPreviousView.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
-		mNextView.setText(position == 2 ? nextString[1] : nextString[0]);
+		Button previousButton = findViewById(R.id.onboarding_previous);
+		Button nextButton = findViewById(R.id.onboarding_next);
+		SsSharedConstants cons = this.getSharedPreferences().getConstants();
+
+		String previousText = (position > 0) ? cons.getNavigatePrevious() : "";
+		String nextText = (position < 2) ? cons.getNavigateNext()
+			: cons.getNavigateFinish();
+
+		previousButton.setText(previousText);
+		nextButton.setText(nextText);
 	}
 
 	/**
-	 * Setup the climbing grade screen.
+	 * Set visibility of bouldering grades.
 	 */
-	//private void setupClimbingGrade(View view, boolean checked)
-	private void setupClimbingGrade(CompoundButton button, boolean isChecked)
+	private void setBoulderingGradeVisibility(int visibility)
 	{
-		SsSharedPreferences shared = getSharedPreferences();
-		List<OnboardingFragment> pages = getPageFragments();
+		SsOnboardingPagerAdapter adapter = this.getOnboardingPagerAdapter();
+		View root = adapter.getRootView(2);
+		View title = root.findViewById(R.id.bouldering_grade_title);
+		View choice = root.findViewById(R.id.bouldering_grade_choice);
 
-		if (pages.size() < 3)
-		{
-			return;
-		}
+		title.setVisibility(visibility);
+		choice.setVisibility(visibility);
+	}
 
-		OnboardingFragment fragment = pages.get(2);
-		View root = fragment.getView();
-		int visibility = isChecked ? View.VISIBLE : View.GONE;
-		int id = button.getId();
+	/**
+	 * Set visibility of sport grades.
+	 */
+	private void setSportGradeVisibility(int visibility)
+	{
+		SsOnboardingPagerAdapter adapter = this.getOnboardingPagerAdapter();
+		View root = adapter.getRootView(2);
+		View title = root.findViewById(R.id.sport_grade_title);
+		View choice = root.findViewById(R.id.sport_grade_choice);
 
-		switch (id)
-		{
-			case R.id.climbing_bouldering:
-				root.findViewById(R.id.bouldering_grade_title).setVisibility(visibility);
-				root.findViewById(R.id.bouldering_grade_choice).setVisibility(visibility);
-				break;
-			case R.id.climbing_sport:
-				root.findViewById(R.id.sport_grade_title).setVisibility(visibility);
-				root.findViewById(R.id.sport_grade_choice).setVisibility(visibility);
-				break;
-			case R.id.climbing_top_rope:
-				root.findViewById(R.id.top_rope_grade_title).setVisibility(visibility);
-				root.findViewById(R.id.top_rope_grade_choice).setVisibility(visibility);
-				break;
-			case R.id.climbing_trad:
-				root.findViewById(R.id.trad_grade_title).setVisibility(visibility);
-				root.findViewById(R.id.trad_grade_choice).setVisibility(visibility);
-				break;
-			default:
-				return;
-		}
+		title.setVisibility(visibility);
+		choice.setVisibility(visibility);
+	}
+
+	/**
+	 * Set visibility of top rope grades.
+	 */
+	private void setTopRopeGradeVisibility(int visibility)
+	{
+		SsOnboardingPagerAdapter adapter = this.getOnboardingPagerAdapter();
+		View root = adapter.getRootView(2);
+		View title = root.findViewById(R.id.top_rope_grade_title);
+		View choice = root.findViewById(R.id.top_rope_grade_choice);
+
+		title.setVisibility(visibility);
+		choice.setVisibility(visibility);
+	}
+
+	/**
+	 * Set visibility of trade grades.
+	 */
+	private void setTradGradeVisibility(int visibility)
+	{
+		SsOnboardingPagerAdapter adapter = this.getOnboardingPagerAdapter();
+		View root = adapter.getRootView(2);
+		View title = root.findViewById(R.id.trad_grade_title);
+		View choice = root.findViewById(R.id.trad_grade_choice);
+
+		title.setVisibility(visibility);
+		choice.setVisibility(visibility);
+	}
+
+	/**
+	 * Setup the TabLayoutMediator associated with the Onboarding ViewPager.
+	 */
+	private void setupTabLayoutMediator()
+	{
+		ViewPager2 viewPager = this.getViewPager();
+		TabLayout tabs = findViewById(R.id.onboarding_location);
+
+		new TabLayoutMediator(tabs, viewPager, this).attach();
+	}
+
+	/**
+	 * Setup the ViewPager, which allows a user to navigate between different
+	 * pages of content.
+	 */
+	private void setupViewPager()
+	{
+		ViewPager2 viewPager = this.getViewPager();
+		SsOnboardingPagerAdapter adapter = new SsOnboardingPagerAdapter(this);
+		OnboardingPageChangeCallback pageChangeCallback =
+			new OnboardingPageChangeCallback();
+
+		adapter.setOnAdapterDoneListener(this);
+		viewPager.setAdapter(adapter);
+		viewPager.registerOnPageChangeCallback(pageChangeCallback);
+		viewPager.setOffscreenPageLimit(adapter.getItemCount());
 	}
 
 }

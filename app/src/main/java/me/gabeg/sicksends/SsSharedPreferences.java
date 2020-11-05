@@ -20,149 +20,89 @@ public class SsSharedPreferences
 	/**
 	 * Shared preferences instance.
 	 */
-	private final SharedPreferences mSharedPreferences;
+	private final SharedPreferences mInstance;
 
 	/**
-	 * Shared preference keys.
+	 * Keys.
 	 */
 	private final SsSharedKeys mKeys;
 
 	/**
-	 * Default value to see if this is the app's first run after installing.
+	 * Defaults.
 	 */
-	private static final boolean DEFAULT_APP_FIRST_RUN = true;
+	private final SsSharedDefaults mDefaults;
 
 	/**
-	 * Default app rating counter.
+	 * Constants.
 	 */
-	public static final int DEFAULT_RATE_MY_APP_COUNTER = 0;
-
-	/**
-	 * Default app rating counter limit.
-	 */
-	public static final int DEFAULT_RATE_MY_APP_LIMIT = 30;
-
-	/**
-	 * Counter amount indicating that the app has been rated.
-	 */
-	public static final int DEFAULT_RATE_MY_APP_RATED = -999;
-
-	/**
-	 * Default climbing type.
-	 */
-	public static final boolean DEFAULT_CLIMBING_TYPE = false;
+	private final SsSharedConstants mConstants;
 
 	/**
 	 */
 	public SsSharedPreferences(Context context)
 	{
-		this.mSharedPreferences = PreferenceManager
-			.getDefaultSharedPreferences(context);
-		this.mKeys = new SsSharedKeys(context);
 		this.mContext = context;
+		this.mInstance = PreferenceManager.getDefaultSharedPreferences(context);
+		this.mKeys = new SsSharedKeys(context);
+		this.mDefaults = new SsSharedDefaults(context);
+		this.mConstants = new SsSharedConstants(context);
 	}
 
 	/**
-	 * @see editAppFirstRun
+	 * Edit the flag indicating whether this is the app's first run or not.
+	 *
+	 * @param  isFirst  Flag indicating whether this is the app's first run or
+	 *     not.
 	 */
-	public void editAppFirstRun(boolean first)
-	{
-		this.editAppFirstRun(first, false);
-	}
-
-	/**
-	 * Edit the app first run value.
-	 */
-	public void editAppFirstRun(boolean first, boolean commit)
+	public void editAppFirstRun(boolean isFirst)
 	{
 		String key = this.getKeys().getAppFirstRun();
-		this.saveBoolean(key, first, commit);
+		this.saveBoolean(key, isFirst, false);
 	}
 
 	/**
-	 * @see editClimbingType
+	 * Edit the flag indicating whether the user will boulder or not.
+	 *
+	 * @param  willClimb  Flag indicating whether the user will boulder or not.
 	 */
-	public void editClimbingType(SsClimbing.Type type, boolean willClimb)
+	public void editWillClimbBouldering(boolean willClimb)
 	{
-		this.editClimbingType(type, willClimb, false);
+		String key = this.getKeys().getWillClimbBouldering();
+		this.saveBoolean(key, willClimb, false);
 	}
 
 	/**
-	 * Edit the climbing type to indicate if the user will climb it or not.
+	 * Edit the flag indicating whether the user will climb sport or not.
+	 *
+	 * @param  willClimb  Flag indicating whether the user will climb sport or
+	 *     not.
 	 */
-	public void editClimbingType(SsClimbing.Type type, boolean willClimb,
-		boolean commit)
+	public void editWillClimbSport(boolean willClimb)
 	{
-		String key = this.getKeys().getClimbingType(type);
-		this.saveBoolean(key, willClimb, commit);
+		String key = this.getKeys().getWillClimbSport();
+		this.saveBoolean(key, willClimb, false);
 	}
 
 	/**
-	 * @see editClimbingType
+	 * Edit the flag indicating whether the user will top rope or not.
+	 *
+	 * @param  willClimb  Flag indicating whether the user will top rope or not.
 	 */
-	public void editClimbingTypeBouldering(boolean willClimb)
+	public void editWillClimbTopRope(boolean willClimb)
 	{
-		this.editClimbingTypeBouldering(willClimb, false);
+		String key = this.getKeys().getWillClimbTopRope();
+		this.saveBoolean(key, willClimb, false);
 	}
 
 	/**
-	 * @see editClimbingType
+	 * Edit the flag indicating whether the user will climb trad or not.
+	 *
+	 * @param  willClimb  Flag indicating whether the user will climb trad or not.
 	 */
-	public void editClimbingTypeBouldering(boolean willClimb, boolean commit)
+	public void editWillClimbTrad(boolean willClimb)
 	{
-		String key = this.getKeys().getClimbingTypeBouldering();
-		this.saveBoolean(key, willClimb, commit);
-	}
-
-	/**
-	 * @see editClimbingType
-	 */
-	public void editClimbingTypeSport(boolean willClimb)
-	{
-		this.editClimbingTypeSport(willClimb, false);
-	}
-
-	/**
-	 * @see editClimbingType
-	 */
-	public void editClimbingTypeSport(boolean willClimb, boolean commit)
-	{
-		String key = this.getKeys().getClimbingTypeSport();
-		this.saveBoolean(key, willClimb, commit);
-	}
-
-	/**
-	 * @see editClimbingType
-	 */
-	public void editClimbingTypeTopRope(boolean willClimb)
-	{
-		this.editClimbingTypeTopRope(willClimb, false);
-	}
-
-	/**
-	 * @see editClimbingType
-	 */
-	public void editClimbingTypeTopRope(boolean willClimb, boolean commit)
-	{
-		String key = this.getKeys().getClimbingTypeTopRope();
-		this.saveBoolean(key, willClimb, commit);
-	}
-
-	/**
-	 * @see editClimbingType
-	 */
-	public void editClimbingTypeTrad(boolean willClimb)
-	{
-		this.editClimbingTypeTrad(willClimb, false);
-	}
-
-	/**
-	 * @see editClimbingType
-	 */
-	public void editClimbingTypeTrad(boolean willClimb, boolean commit)
-	{
-		String key = this.getKeys().getClimbingTypeTrad();
-		this.saveBoolean(key, willClimb, commit);
+		String key = this.getKeys().getWillClimbTrad();
+		this.saveBoolean(key, willClimb, false);
 	}
 
 	/**
@@ -188,58 +128,25 @@ public class SsSharedPreferences
 	public boolean getAppFirstRun()
 	{
 		String key = this.getKeys().getAppFirstRun();
-		return this.getSharedPreferences().getBoolean(key,
-			DEFAULT_APP_FIRST_RUN);
+		boolean value = this.getDefaults().getAppFirstRun();
+
+		return this.getBoolean(key, value);
 	}
 
 	/**
-	 * @return Whether the user will climb the given climbing type.
+	 * @return A boolean value from the SharedPreferences instance.
 	 */
-	public boolean getClimbingType(SsClimbing.Type type)
+	public boolean getBoolean(String key, boolean defValue)
 	{
-		String key = this.getKeys().getClimbingType(type);
-		return this.getSharedPreferences().getBoolean(key,
-			DEFAULT_CLIMBING_TYPE);
+		return this.getInstance().getBoolean(key, defValue);
 	}
 
 	/**
-	 * @return Whether the user will climb bouldering.
+	 * @return The shared constants.
 	 */
-	public boolean getClimbingTypeBouldering()
+	public SsSharedConstants getConstants()
 	{
-		String key = this.getKeys().getClimbingTypeBouldering();
-		return this.getSharedPreferences().getBoolean(key,
-			DEFAULT_CLIMBING_TYPE);
-	}
-
-	/**
-	 * @return Whether the user will climb sport.
-	 */
-	public boolean getClimbingTypeSport()
-	{
-		String key = this.getKeys().getClimbingTypeSport();
-		return this.getSharedPreferences().getBoolean(key,
-			DEFAULT_CLIMBING_TYPE);
-	}
-
-	/**
-	 * @return Whether the user will climb top rope.
-	 */
-	public boolean getClimbingTypeTopRope()
-	{
-		String key = this.getKeys().getClimbingTypeTopRope();
-		return this.getSharedPreferences().getBoolean(key,
-			DEFAULT_CLIMBING_TYPE);
-	}
-
-	/**
-	 * @return Whether the user will climb trad.
-	 */
-	public boolean getClimbingTypeTrad()
-	{
-		String key = this.getKeys().getClimbingTypeTrad();
-		return this.getSharedPreferences().getBoolean(key,
-			DEFAULT_CLIMBING_TYPE);
+		return this.mConstants;
 	}
 
 	/**
@@ -251,63 +158,73 @@ public class SsSharedPreferences
 	}
 
 	/**
+	 * @return The shared defaults.
+	 */
+	public SsSharedDefaults getDefaults()
+	{
+		return this.mDefaults;
+	}
+
+	/**
 	 * @return An example of the given climbing grade.
 	 */
-	public String getGradeExample(Context context, String grade)
+	public String getGradeExample(String grade)
 	{
+		Context context = this.getContext();
 		Resources res = context.getResources();
+		SsSharedConstants cons = this.getConstants();
 
 		if (res.getString(R.string.bouldering_font).equals(grade))
 		{
-			return res.getString(R.string.bouldering_font_example);
+			return cons.getExampleBoulderingFont();
 		}
 		else if (res.getString(R.string.bouldering_uk).equals(grade))
 		{
-			return res.getString(R.string.bouldering_uk_example);
+			return cons.getExampleBoulderingUk();
 		}
 		else if (res.getString(R.string.bouldering_vscale).equals(grade))
 		{
-			return res.getString(R.string.bouldering_vscale_example);
+			return cons.getExampleBoulderingVscale();
 		}
 		else if (res.getString(R.string.rope_aus).equals(grade))
 		{
-			return res.getString(R.string.rope_aus_example);
+			return cons.getExampleRopeAustralian();
 		}
 		else if (res.getString(R.string.rope_bra).equals(grade))
 		{
-			return res.getString(R.string.rope_bra_example);
+			return cons.getExampleRopeBrasilian();
 		}
 		else if (res.getString(R.string.rope_fin).equals(grade))
 		{
-			return res.getString(R.string.rope_fin_example);
+			return cons.getExampleRopeFinnish();
 		}
 		else if (res.getString(R.string.rope_fre).equals(grade))
 		{
-			return res.getString(R.string.rope_fre_example);
+			return cons.getExampleRopeFrench();
 		}
 		else if (res.getString(R.string.rope_nor).equals(grade))
 		{
-			return res.getString(R.string.rope_nor_example);
+			return cons.getExampleRopeNorway();
 		}
 		else if (res.getString(R.string.rope_pol).equals(grade))
 		{
-			return res.getString(R.string.rope_pol_example);
+			return cons.getExampleRopePoland();
 		}
 		else if (res.getString(R.string.rope_sax).equals(grade))
 		{
-			return res.getString(R.string.rope_sax_example);
+			return cons.getExampleRopeSaxon();
 		}
 		else if (res.getString(R.string.rope_uiaa).equals(grade))
 		{
-			return res.getString(R.string.rope_uiaa_example);
+			return cons.getExampleRopeUiaa();
 		}
 		else if (res.getString(R.string.rope_usa).equals(grade))
 		{
-			return res.getString(R.string.rope_usa_example);
+			return cons.getExampleRopeUsa();
 		}
 		else if (res.getString(R.string.trad_bri).equals(grade))
 		{
-			return res.getString(R.string.trad_bri_example);
+			return cons.getExampleTradBritish();
 		}
 		else
 		{
@@ -320,7 +237,15 @@ public class SsSharedPreferences
 	 */
 	public SharedPreferences getInstance()
 	{
-		return this.mSharedPreferences;
+		return this.mInstance;
+	}
+
+	/**
+	 * @return An integer value from the SharedPreferences instance.
+	 */
+	public int getInt(String key, int defValue)
+	{
+		return this.getInstance().getInt(key, defValue);
 	}
 
 	/**
@@ -337,22 +262,76 @@ public class SsSharedPreferences
 	public int getRateMyAppCounter()
 	{
 		String key = this.getKeys().getRateMyAppCounter();
+		int value = this.getDefaults().getRateMyAppCounter();
 
-		return this.getSharedPreferences().getInt(key,
-			DEFAULT_RATE_MY_APP_COUNTER);
+		return this.getInt(key, value);
 	}
 
 	/**
-	 * @return The SharedPreferences object.
+	 * @return A string value from the SharedPreferences instance.
 	 */
-	public SharedPreferences getSharedPreferences()
+	public String getString(String key, String defValue)
 	{
-		return this.mSharedPreferences;
+		return this.getInstance().getString(key, defValue);
 	}
 
 	/**
-	 * @see save
+	 * @return Whether the user has selected anything climb or not.
 	 */
+	public boolean getWillClimb()
+	{
+		return this.getWillClimbBouldering() || this.getWillClimbSport()
+			|| this.getWillClimbTopRope() || this.getWillClimbTrad();
+	}
+
+	/**
+	 * @return Whether the user will climb bouldering.
+	 */
+	public boolean getWillClimbBouldering()
+	{
+		String key = this.getKeys().getWillClimbBouldering();
+		boolean value = this.getDefaults().getWillClimbType();
+
+		return this.getBoolean(key, value);
+	}
+
+	/**
+	 * @return Whether the user will climb sport.
+	 */
+	public boolean getWillClimbSport()
+	{
+		String key = this.getKeys().getWillClimbSport();
+		boolean value = this.getDefaults().getWillClimbType();
+
+		return this.getBoolean(key, value);
+	}
+
+	/**
+	 * @return Whether the user will climb top rope.
+	 */
+	public boolean getWillClimbTopRope()
+	{
+		String key = this.getKeys().getWillClimbTopRope();
+		boolean value = this.getDefaults().getWillClimbType();
+
+		return this.getBoolean(key, value);
+	}
+
+	/**
+	 * @return Whether the user will climb trad.
+	 */
+	public boolean getWillClimbTrad()
+	{
+		String key = this.getKeys().getWillClimbTrad();
+		boolean value = this.getDefaults().getWillClimbType();
+
+		return this.getBoolean(key, value);
+	}
+
+	/**
+	 * @see #save(SharedPreferences.Editor, boolean)
+	 */
+	@SuppressWarnings("unused")
 	public void save(SharedPreferences.Editor editor)
 	{
 		this.save(editor, false);
@@ -374,14 +353,6 @@ public class SsSharedPreferences
 	}
 
 	/**
-	 * @see saveBoolean
-	 */
-	public void saveBoolean(String key, boolean value)
-	{
-		this.saveBoolean(key, value, false);
-	}
-
-	/**
 	 * Save a boolean to the shared preference.
 	 */
 	public void saveBoolean(String key, boolean value, boolean commit)
@@ -393,14 +364,6 @@ public class SsSharedPreferences
 	}
 
 	/**
-	 * @see saveInt
-	 */
-	public void saveInt(String key, int value)
-	{
-		this.saveInt(key, value, false);
-	}
-
-	/**
 	 * Save an int to the shared preference.
 	 */
 	public void saveInt(String key, int value, boolean commit)
@@ -409,14 +372,6 @@ public class SsSharedPreferences
 			.putInt(key, value);
 
 		this.save(editor, commit);
-	}
-
-	/**
-	 * @see saveString
-	 */
-	public void saveString(String key, String value)
-	{
-		this.saveString(key, value, false);
 	}
 
 	/**

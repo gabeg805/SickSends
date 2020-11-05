@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<bool name="default_app_first_run">true</bool>
+	<bool name="default_will_climb_type">false</bool>
+
+</resources>

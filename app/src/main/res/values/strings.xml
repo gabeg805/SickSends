@@ -17,10 +17,10 @@
 	<string name="grade_subtitle">Save your climbs with multiple grading systems. You can always change this later.</string>
 
 	<!-- Types of climbing -->
-	<string name="climbing_type_bouldering">climbing_type_bouldering</string>
-	<string name="climbing_type_sport">climbing_type_lead_sport</string>
-	<string name="climbing_type_top_rope">climbing_type_top_rope</string>
-	<string name="climbing_type_trad">climbing_type_trad</string>
+	<string name="will_climb_bouldering">will_climb_bouldering</string>
+	<string name="will_climb_sport">will_climb_sport</string>
+	<string name="will_climb_top_rope">will_climb_top_rope</string>
+	<string name="will_climb_trad">will_climb_trad</string>
 
 	<string name="bouldering">Bouldering</string>
 	<string name="sport">Sport</string>
@@ -56,6 +56,9 @@
 
 	<string name="trad_bri">British</string>
 	<string name="trad_bri_example">Ex. E1 5b, E2 5c, E3 6a, &#8230;</string>
+
+	<!-- Error messages -->
+	<string name="error_message_no_climbing_type_selected">Please select a climbing type</string>
 
 	<!-- Settings -->
 	<string name="settings">Settings</string>

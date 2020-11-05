@@ -27,7 +27,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/bouldering"
-		android:onClick="onClimbingChoiceSelected"
+		android:onClick="onClimbingTypeSelected"
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
@@ -36,7 +36,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/sport"
-		android:onClick="onClimbingChoiceSelected"
+		android:onClick="onClimbingTypeSelected"
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
@@ -45,7 +45,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/top_rope"
-		android:onClick="onClimbingChoiceSelected"
+		android:onClick="onClimbingTypeSelected"
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
@@ -54,7 +54,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/trad"
-		android:onClick="onClimbingChoiceSelected"
+		android:onClick="onClimbingTypeSelected"
 		/>
 
 </LinearLayout>

@@ -22,39 +22,31 @@
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
-		style="@style/OnboardingTheme.Switch"
-		android:id="@+id/climbing_bouldering"
+		android:id="@+id/climbing_choice_bouldering"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/bouldering"
-		android:onClick="onClimbingTypeSelected"
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
-		style="@style/OnboardingTheme.Switch"
-		android:id="@+id/climbing_sport"
+		android:id="@+id/climbing_choice_sport"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/sport"
-		android:onClick="onClimbingTypeSelected"
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
-		style="@style/OnboardingTheme.Switch"
-		android:id="@+id/climbing_top_rope"
+		android:id="@+id/climbing_choice_top_rope"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/top_rope"
-		android:onClick="onClimbingTypeSelected"
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
-		style="@style/OnboardingTheme.Switch"
-		android:id="@+id/climbing_trad"
+		android:id="@+id/climbing_choice_trad"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/trad"
-		android:onClick="onClimbingTypeSelected"
 		/>
 
 </LinearLayout>

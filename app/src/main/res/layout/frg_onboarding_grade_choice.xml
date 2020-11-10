@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto"
 	style="@style/OnboardingTheme.Root"
 	android:id="@+id/frg_onboarding"
 	android:layout_width="match_parent"
@@ -33,72 +34,117 @@
 			android:orientation="vertical">
 
 			<!-- Bouldering -->
-			<TextView
-				style="@style/OnboardingTheme.TextView.Section"
-				android:id="@+id/bouldering_grade_title"
+			<LinearLayout
+				android:id="@+id/bouldering_grade_root"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:visibility="gone"
-				android:text="@string/bouldering"
-				/>
-			<include
-				android:id="@+id/bouldering_grade_choice"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:visibility="gone"
-				layout="@layout/view_bouldering_grade_choice"
-				/>
+				android:layout_marginBottom="@dimen/tiny"
+				android:orientation="vertical"
+				android:visibility="gone">
+				<TextView
+					style="@style/OnboardingTheme.TextView.Section"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/bouldering"
+					/>
+				<include
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/view_grade_choice_bouldering"
+					/>
+				<TextView
+					style="@style/OnboardingTheme.TextView.Example"
+					android:id="@+id/grade_example_bouldering"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_horizontal"
+					/>
+			</LinearLayout>
 
 			<!-- Sport -->
-			<TextView
-				style="@style/OnboardingTheme.TextView.Section"
-				android:id="@+id/sport_grade_title"
+			<LinearLayout
+				android:id="@+id/sport_grade_root"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:visibility="gone"
-				android:text="@string/sport"
-				/>
-			<include
-				android:id="@+id/sport_grade_choice"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:visibility="gone"
-				layout="@layout/view_sport_grade_choice"
-				/>
+				android:layout_marginBottom="@dimen/tiny"
+				android:orientation="vertical"
+				android:visibility="gone">
+				<TextView
+					style="@style/OnboardingTheme.TextView.Section"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/sport"
+					/>
+				<include
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/view_grade_choice_sport"
+					/>
+				<TextView
+					style="@style/OnboardingTheme.TextView.Example"
+					android:id="@+id/grade_example_sport"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_horizontal"
+					/>
+			</LinearLayout>
 
 			<!-- Top rope -->
-			<TextView
-				style="@style/OnboardingTheme.TextView.Section"
-				android:id="@+id/top_rope_grade_title"
+			<LinearLayout
+				android:id="@+id/top_rope_grade_root"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:visibility="gone"
-				android:text="@string/top_rope"
-				/>
-			<include
-				android:id="@+id/top_rope_grade_choice"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:visibility="gone"
-				layout="@layout/view_top_rope_grade_choice"
-				/>
+				android:layout_marginBottom="@dimen/tiny"
+				android:orientation="vertical"
+				android:visibility="gone">
+				<TextView
+					style="@style/OnboardingTheme.TextView.Section"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/top_rope"
+					/>
+				<include
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/view_grade_choice_top_rope"
+					/>
+				<TextView
+					style="@style/OnboardingTheme.TextView.Example"
+					android:id="@+id/grade_example_top_rope"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_horizontal"
+					/>
+			</LinearLayout>
 
 			<!-- Trad -->
-			<TextView
-				style="@style/OnboardingTheme.TextView.Section"
-				android:id="@+id/trad_grade_title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:visibility="gone"
-				android:text="@string/trad"
-				/>
-			<include
-				android:id="@+id/trad_grade_choice"
+			<LinearLayout
+				android:id="@+id/trad_grade_root"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:visibility="gone"
-				layout="@layout/view_trad_grade_choice"
-				/>
+				android:layout_marginBottom="@dimen/tiny"
+				android:orientation="vertical"
+				android:visibility="gone">
+				<TextView
+					style="@style/OnboardingTheme.TextView.Section"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/trad"
+					/>
+				<include
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					layout="@layout/view_grade_choice_trad"
+					/>
+				<TextView
+					style="@style/OnboardingTheme.TextView.Example"
+					android:id="@+id/grade_example_trad"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_horizontal"
+					/>
+			</LinearLayout>
+
 		</LinearLayout>
 	</androidx.core.widget.NestedScrollView>
 

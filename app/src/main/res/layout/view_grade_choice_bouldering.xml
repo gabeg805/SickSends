@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center_horizontal">
+
+	<com.google.android.material.button.MaterialButtonToggleGroup
+		android:id="@+id/grade_choices_bouldering"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal">
+		<com.google.android.material.button.MaterialButton
+			style="@style/OnboardingTheme.Button.Toggle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAllCaps="false"
+			android:text="@string/grade_bouldering_font"
+			/>
+		<com.google.android.material.button.MaterialButton
+			style="@style/OnboardingTheme.Button.Toggle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAllCaps="false"
+			android:text="@string/grade_bouldering_uk"
+			/>
+		<com.google.android.material.button.MaterialButton
+			style="@style/OnboardingTheme.Button.Toggle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAllCaps="false"
+			android:text="@string/grade_bouldering_vscale"
+			/>
+	</com.google.android.material.button.MaterialButtonToggleGroup>
+</HorizontalScrollView>

@@ -5,6 +5,7 @@
 	<string name="app_first_run">app_first_run</string>
 	<string name="app_rating_counter">app_rating_counter</string>
 
+
 	<!-- Onboarding -->
 	<string name="welcome">Welcome to the\nSick Sends climbing app!</string>
 	<string name="get_started">Get started</string>
@@ -16,49 +17,63 @@
 	<string name="grade_title">Grading systems</string>
 	<string name="grade_subtitle">Save your climbs with multiple grading systems. You can always change this later.</string>
 
-	<!-- Types of climbing -->
+
+	<!-- Whether the user will climb a particular type -->
 	<string name="will_climb_bouldering">will_climb_bouldering</string>
 	<string name="will_climb_sport">will_climb_sport</string>
 	<string name="will_climb_top_rope">will_climb_top_rope</string>
 	<string name="will_climb_trad">will_climb_trad</string>
 
+
+	<!-- Whether the user will use a grade in a particular climbing type -->
+	<string name="use_grade_bouldering">use_grade_bouldering</string>
+	<string name="use_grade_sport">use_grade_sport</string>
+	<string name="use_grade_top_rope">use_grade_top_rope</string>
+	<string name="use_grade_trad">use_grade_trad</string>
+
+
+	<!-- Types of climbing -->
 	<string name="bouldering">Bouldering</string>
 	<string name="sport">Sport</string>
 	<string name="top_rope">Top rope</string>
 	<string name="trad">Trad</string>
 
+
 	<!-- Types of grades -->
-	<string name="bouldering_font">Fontainebleau</string>
-	<string name="bouldering_uk">UK</string>
-	<string name="bouldering_vscale">V scale</string>
-	<string name="bouldering_font_example">Ex. 5, 5&#43;, 6A, &#8230;</string>
-	<string name="bouldering_uk_example">Ex. 5b, 5c, 6a, &#8230;</string>
-	<string name="bouldering_vscale_example">Ex. V1, V2, V3, &#8230;</string>
+	<string name="grade_bouldering_font">Fontainebleau</string>
+	<string name="grade_bouldering_uk">UK</string>
+	<string name="grade_bouldering_vscale">V scale</string>
+	<string name="grade_rope_aus">Australian</string>
+	<string name="grade_rope_bra">Brasilian</string>
+	<string name="grade_rope_fin">Finnish</string>
+	<string name="grade_rope_fre">French</string>
+	<string name="grade_rope_nor">Norway</string>
+	<string name="grade_rope_pol">Poland</string>
+	<string name="grade_rope_sax">Saxon</string>
+	<string name="grade_rope_uiaa">UIAA</string>
+	<string name="grade_rope_usa">USA</string>
+	<string name="grade_trad_bri">British</string>
 
-	<string name="rope_aus">Australian</string>
-	<string name="rope_bra">Brasilian</string>
-	<string name="rope_fin">Finnish</string>
-	<string name="rope_fre">French</string>
-	<string name="rope_nor">Norway</string>
-	<string name="rope_pol">Poland</string>
-	<string name="rope_sax">Saxon</string>
-	<string name="rope_uiaa">UIAA</string>
-	<string name="rope_usa">USA</string>
-	<string name="rope_aus_example">Ex. 16, 17, 18, &#8230;</string>
-	<string name="rope_bra_example">Ex. VI, VI sup, 7a, &#8230;</string>
-	<string name="rope_fin_example">Ex. 7, 7&#43;, 8&#8722;, &#8230;</string>
-	<string name="rope_fre_example">Ex. 6a, 6a&#43;, 6b, &#8230;</string>
-	<string name="rope_nor_example">Ex. 7, 7&#43;, 7&#43;&#8725;8&#8722;, &#8230;</string>
-	<string name="rope_pol_example">Ex. VI&#43;, VI.1, VI.1&#43;, &#8230;</string>
-	<string name="rope_sax_example">Ex. VIIIa, VIIIb, VIIIc, &#8230;</string>
-	<string name="rope_uiaa_example">Ex. VII, VII&#43;, VIII&#8722;, &#8230;</string>
-	<string name="rope_usa_example">Ex. 5.10a, 5.10b, 5.10c, &#8230;</string>
 
-	<string name="trad_bri">British</string>
-	<string name="trad_bri_example">Ex. E1 5b, E2 5c, E3 6a, &#8230;</string>
+	<!-- Examples of types of grades -->
+	<string name="example_grade_bouldering_font">Ex. 5, 5&#43;, 6A, &#8230;</string>
+	<string name="example_grade_bouldering_uk">Ex. 5b, 5c, 6a, &#8230;</string>
+	<string name="example_grade_bouldering_vscale">Ex. V1, V2, V3, &#8230;</string>
+	<string name="example_grade_rope_aus">Ex. 16, 17, 18, &#8230;</string>
+	<string name="example_grade_rope_bra">Ex. VI, VI sup, 7a, &#8230;</string>
+	<string name="example_grade_rope_fin">Ex. 7, 7&#43;, 8&#8722;, &#8230;</string>
+	<string name="example_grade_rope_fre">Ex. 6a, 6a&#43;, 6b, &#8230;</string>
+	<string name="example_grade_rope_nor">Ex. 7, 7&#43;, 7&#43;&#8725;8&#8722;, &#8230;</string>
+	<string name="example_grade_rope_pol">Ex. VI&#43;, VI.1, VI.1&#43;, &#8230;</string>
+	<string name="example_grade_rope_sax">Ex. VIIIa, VIIIb, VIIIc, &#8230;</string>
+	<string name="example_grade_rope_uiaa">Ex. VII, VII&#43;, VIII&#8722;, &#8230;</string>
+	<string name="example_grade_rope_usa">Ex. 5.10a, 5.10b, 5.10c, &#8230;</string>
+	<string name="example_grade_trad_bri">Ex. E1 5b, E2 5c, E3 6a, &#8230;</string>
+
 
 	<!-- Error messages -->
 	<string name="error_message_no_climbing_type_selected">Please select a climbing type</string>
+
 
 	<!-- Settings -->
 	<string name="settings">Settings</string>

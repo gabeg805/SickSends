@@ -2,6 +2,7 @@
 <resources>
 
 	<bool name="default_app_first_run">true</bool>
-	<bool name="default_will_climb_type">false</bool>
+	<bool name="default_use_grade">false</bool>
+	<bool name="default_will_climb">false</bool>
 
 </resources>

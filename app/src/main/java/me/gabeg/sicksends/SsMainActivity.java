@@ -31,6 +31,8 @@ public class SsMainActivity
 	//implements View.OnClickListener
 {
 
+	private static final String TAG = "SsMainActivity";
+
 	public CollapsingToolbarLayout mCollapsingLayout;
 	public Toolbar mToolbar;
 	public DrawerLayout mDrawerLayout;
@@ -40,7 +42,7 @@ public class SsMainActivity
 	/**
 	 * Shared preferences.
 	 */
-	//private NacSharedPreferences mSharedPreferences;
+	private SsSharedPreferences mSharedPreferences;
 
 	/**
 	 * Recycler view containing the alarm cards.
@@ -84,10 +86,10 @@ public class SsMainActivity
 	/**
 	 * @return The shared preferences.
 	 */
-	//private NacSharedPreferences getSharedPreferences()
-	//{
-	//	return this.mSharedPreferences;
-	//}
+	private SsSharedPreferences getSharedPreferences()
+	{
+		return this.mSharedPreferences;
+	}
 
 	/**
 	 * Add a new alarm when the floating action button is clicked.
@@ -124,8 +126,13 @@ public class SsMainActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		startActivity(new Intent(this, SsOnboardingActivity.class));
+		SsSharedPreferences shared = new SsSharedPreferences(this);
+		if (shared.getAppFirstRun())
+		{
+			startActivity(new Intent(this, SsOnboardingActivity.class));
+		}
 
+		shared.editAppFirstRun(false);
 		setContentView(R.layout.act_main);
 
 		CollapsingToolbarLayout collapsingLayout = findViewById(
@@ -136,6 +143,7 @@ public class SsMainActivity
 		NavController navController = Navigation.findNavController(this,
 			R.id.nav_host_fragment);
 
+		this.mSharedPreferences = shared;
 		AppBarConfiguration appBarConfiguration =
 			new AppBarConfiguration.Builder(navController.getGraph())
 				.setDrawerLayout(drawer)
@@ -237,16 +245,20 @@ public class SsMainActivity
 	//}
 
 	/**
+	 * Activity is resumed.
 	 */
-	//@Override
-	//protected void onResume()
-	//{
-	//	super.onResume();
-	//	this.setupAlarmCardAdapter();
-	//	this.setupFloatingActionButton();
-	//	this.setupGoogleRatingDialog();
-	//	this.addSetAlarmFromIntent();
-	//}
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		SsSharedPreferences shared = this.getSharedPreferences();
+		shared.debug();
+
+		//this.setupAlarmCardAdapter();
+		//this.setupFloatingActionButton();
+		//this.setupGoogleRatingDialog();
+		//this.addSetAlarmFromIntent();
+	}
 
 	/**
 	 * Setup the alarm card adapter.

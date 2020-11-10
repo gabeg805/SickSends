@@ -16,61 +16,86 @@
 	<!-- Standard colors -->
 	<color name="black">#000000</color>
 	<color name="charcoal">#323232</color>
-	<color name="gray_light">#cccccc</color>
 	<color name="gray">#262626</color>
-	<color name="gray_dark">#101010</color>
 	<color name="white_dull">#b2b2b2</color>
-	<color name="white">#ffffff</color>
 	<color name="orange">#fb8c00</color>
 	<color name="olive">#808000</color>
 
+
+	<!-- Official -->
+	<!--
+	<color name="off_white">#fffaf0</color>
+	-->
+	<color name="white">#ffffff</color>
+	<color name="white_300">#f0f0f0</color>
+	<color name="white_400">#dedede</color>
+	<color name="white_500">#c2c2c2</color>
+	<color name="white_600">#979797</color>
+	<color name="white_700">#818181</color>
+	<color name="white_800">#606060</color>
+	<color name="white_900">#3c3c3c</color>
+
+	<color name="light_blue">#4fc3f7</color>
+	<color name="light_red">#e54f4f</color>
+	<color name="light_purple">#92447a</color>
+
+	<color name="black_a50">#80000000</color>
+
+	<color name="maroon_900">#5d1049</color>
+	<color name="maroon_800">#821057</color>
+	<color name="maroon_700">#980f5e</color>
+	<color name="maroon_600">#ad0c66</color>
+	<color name="maroon_500">#bd086b</color>
+
+	<color name="purple_600">#573f86</color>
+	<color name="purple_500">#5e448c</color>
+	<color name="purple_400">#745e9c</color>
+	<color name="purple_300">#8b79ad</color>
+
+	<color name="pink_900">#92447a</color>
+	<color name="pink_800">#bb4c8b</color>
+	<color name="pink_700">#d25d93</color>
+	<color name="pink_600">#eb559c</color>
+
+	<color name="blue_900">#00509a</color>
+	<color name="blue_800">#0070bc</color>
+	<color name="blue_700">#0080d0</color>
+	<color name="blue_600">#0093e5</color>
+
+	<!--
+	<color name="blue_900">#004f9a</color>
+	<color name="blue_800">#006bb9</color>
+	<color name="blue_2">#0095d4</color>
+	<color name="blue_3">#00bcd3</color>
+	-->
+
+	<color name="green_900">#105d25</color>
+
+	<color name="cyan_1">#00dfbd</color>
+	<color name="cyan_2">#00c9a3</color>
+	<color name="cyan_500">#009a97</color>
+	<color name="cyan_400">#26a9a9</color>
+	<color name="cyan_300">#4eb9ba</color>
+	<color name="cyan_200">#82cdce</color>
+
+
+
+
+
+	<!-- OTHER -->
 	<color name="teal">#009688</color>
 	<color name="cyan">#00bcd4</color>
+	<!--
 	<color name="light_blue">#03a9f4</color>
+	-->
 	<color name="blue_grey">#607d8b</color>
 
 	<color name="blue">#2196f3</color>
 	<color name="blue_dark">#1769aa</color>
 	<color name="blue_light">#4dabf5</color>
 
-	<color name="red">#e91e63</color>
-	<color name="red_dark">#a31545</color>
-	<color name="red_light">#ed4b82</color>
-
-	<!--
-	<color name="blue">#1d00fb</color>
-	<color name="dark_orange">#fb4b00</color>
-	<color name="eggshell">#f0ead6</color>
-	<color name="silver">#c0c0c0</color>
-	<color name="yellow">#fbc900</color>
-
-	<color name="gray">#808080</color>
-	<color name="red">#ff0000</color>
-	<color name="orange">#ffa500</color>
-	<color name="maroon">#800000</color>
-	<color name="yellow">#ffff00</color>
-	<color name="olive">#808000</color>
-	<color name="lime">#00ff00</color>
-	<color name="green">#008000</color>
-	<color name="aqua">#00ffff</color>
-	<color name="teal">#008080</color>
-	<color name="blue">#0000ff</color>
-	<color name="navy">#000080</color>
-	<color name="fuchsia">#ff00ff</color>
-	<color name="pink">#ec407a</color>
-	<color name="purple">#800080</color>
-
-	<color name="gray_light">#b2b2b2</color>
-	<color name="gray_dark">#595959</color>
-	<color name="gray_darkest">#111111</color>
-	-->
-
-	<!--
-	<color name="blue">#182048</color>
-	<color name="darkBlue">#121836</color>
-	<color name="darkerBlue">#121836</color>
-	<color name="darkestBlue">#0c1024</color>
-	<color name="offWhite">#f1f5f8</color>
-	-->
+	<color name="red">#f50057</color>
+	<color name="red_dark">#ab003c</color>
+	<color name="red_light">#f73378</color>
 
 </resources>

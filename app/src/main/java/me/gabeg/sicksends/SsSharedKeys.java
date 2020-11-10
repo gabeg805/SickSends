@@ -42,6 +42,42 @@ public class SsSharedKeys
 	}
 
 	/**
+	 * @return Key for using a particular bouldering grade.
+	 */
+	public String getUseGradeBouldering(String grade)
+	{
+		String key = this.getString(R.string.use_grade_bouldering);
+		return key.concat("_").concat(grade);
+	}
+
+	/**
+	 * @return Key for using a particular sport grade.
+	 */
+	public String getUseGradeSport(String grade)
+	{
+		String key = this.getString(R.string.use_grade_sport);
+		return key.concat("_").concat(grade);
+	}
+
+	/**
+	 * @return Key for using a particular top rope grade.
+	 */
+	public String getUseGradeTopRope(String grade)
+	{
+		String key = this.getString(R.string.use_grade_top_rope);
+		return key.concat("_").concat(grade);
+	}
+
+	/**
+	 * @return Key for using a particular trad grade.
+	 */
+	public String getUseGradeTrad(String grade)
+	{
+		String key = this.getString(R.string.use_grade_trad);
+		return key.concat("_").concat(grade);
+	}
+
+	/**
 	 * @return The bouldering climbing type.
 	 */
 	public String getWillClimbBouldering()

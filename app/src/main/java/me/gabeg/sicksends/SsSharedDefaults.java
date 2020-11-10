@@ -57,11 +57,19 @@ public class SsSharedDefaults
 	}
 
 	/**
-	 * @return Whether a particular climbing type will be climbed or not.
+	 * @return Default value for whether a climbing grade will be used or not.
 	 */
-	public boolean getWillClimbType()
+	public boolean getUseGrade()
 	{
-		return this.getBoolean(R.bool.default_will_climb_type);
+		return this.getBoolean(R.bool.default_use_grade);
+	}
+
+	/**
+	 * @return Default value for whether a climbing type will be climbed or not.
+	 */
+	public boolean getWillClimb()
+	{
+		return this.getBoolean(R.bool.default_will_climb);
 	}
 
 }

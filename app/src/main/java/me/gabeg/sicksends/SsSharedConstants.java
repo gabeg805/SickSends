@@ -33,107 +33,211 @@ public class SsSharedConstants
 	}
 
 	/**
-	 * @return The example text for Fontainebleau bouldering.
+	 * @return An example of the grade scale for Fontainebleau bouldering.
 	 */
-	public String getExampleBoulderingFont()
+	public String getExampleGradeBoulderingFont()
 	{
-		return this.getString(R.string.bouldering_font_example);
+		return this.getString(R.string.example_grade_bouldering_font);
 	}
 
 	/**
-	 * @return The example text for UK bouldering.
+	 * @return An example of the grade scale for UK bouldering.
 	 */
-	public String getExampleBoulderingUk()
+	public String getExampleGradeBoulderingUk()
 	{
-		return this.getString(R.string.bouldering_uk_example);
+		return this.getString(R.string.example_grade_bouldering_uk);
 	}
 
 	/**
-	 * @return The example text for V-scale bouldering.
+	 * @return An example of the grade scale for V-scale bouldering.
 	 */
-	public String getExampleBoulderingVscale()
+	public String getExampleGradeBoulderingVscale()
 	{
-		return this.getString(R.string.bouldering_vscale_example);
+		return this.getString(R.string.example_grade_bouldering_vscale);
 	}
 
 	/**
-	 * @return The example text for Australian rope climbing.
+	 * @return An example of the grade scale for Australian rope climbing.
 	 */
-	public String getExampleRopeAustralian()
+	public String getExampleGradeRopeAustralian()
 	{
-		return this.getString(R.string.rope_aus_example);
+		return this.getString(R.string.example_grade_rope_aus);
 	}
 
 	/**
-	 * @return The example text for Brasilian rope climbing.
+	 * @return An example of the grade scale for Brasilian rope climbing.
 	 */
-	public String getExampleRopeBrasilian()
+	public String getExampleGradeRopeBrasilian()
 	{
-		return this.getString(R.string.rope_bra_example);
+		return this.getString(R.string.example_grade_rope_bra);
 	}
 
 	/**
-	 * @return The example text for Finnish rope climbing.
+	 * @return An example of the grade scale for Finnish rope climbing.
 	 */
-	public String getExampleRopeFinnish()
+	public String getExampleGradeRopeFinnish()
 	{
-		return this.getString(R.string.rope_fin_example);
+		return this.getString(R.string.example_grade_rope_fin);
 	}
 
 	/**
-	 * @return The example text for French rope climbing.
+	 * @return An example of the grade scale for French rope climbing.
 	 */
-	public String getExampleRopeFrench()
+	public String getExampleGradeRopeFrench()
 	{
-		return this.getString(R.string.rope_fre_example);
+		return this.getString(R.string.example_grade_rope_fre);
 	}
 
 	/**
-	 * @return The example text for Norway rope climbing.
+	 * @return An example of the grade scale for Norway rope climbing.
 	 */
-	public String getExampleRopeNorway()
+	public String getExampleGradeRopeNorway()
 	{
-		return this.getString(R.string.rope_nor_example);
+		return this.getString(R.string.example_grade_rope_nor);
 	}
 
 	/**
-	 * @return The example text for Poland rope climbing.
+	 * @return An example of the grade scale for Poland rope climbing.
 	 */
-	public String getExampleRopePoland()
+	public String getExampleGradeRopePoland()
 	{
-		return this.getString(R.string.rope_pol_example);
+		return this.getString(R.string.example_grade_rope_pol);
 	}
 
 	/**
-	 * @return The example text for Saxon rope climbing.
+	 * @return An example of the grade scale for Saxon rope climbing.
 	 */
-	public String getExampleRopeSaxon()
+	public String getExampleGradeRopeSaxon()
 	{
-		return this.getString(R.string.rope_sax_example);
+		return this.getString(R.string.example_grade_rope_sax);
 	}
 
 	/**
-	 * @return The example text for UIAA rope climbing.
+	 * @return An example of the grade scale for UIAA rope climbing.
 	 */
-	public String getExampleRopeUiaa()
+	public String getExampleGradeRopeUiaa()
 	{
-		return this.getString(R.string.rope_uiaa_example);
+		return this.getString(R.string.example_grade_rope_uiaa);
 	}
 
 	/**
-	 * @return The example text for rope climbing.
+	 * @return An example of the grade scale for USA rope climbing.
 	 */
-	public String getExampleRopeUsa()
+	public String getExampleGradeRopeUsa()
 	{
-		return this.getString(R.string.rope_usa_example);
+		return this.getString(R.string.example_grade_rope_usa);
 	}
 
 	/**
-	 * @return The example text for British trad climbing.
+	 * @return An example of the grade scale for British trad climbing.
 	 */
-	public String getExampleTradBritish()
+	public String getExampleGradeTradBritish()
 	{
-		return this.getString(R.string.trad_bri_example);
+		return this.getString(R.string.example_grade_trad_bri);
+	}
+
+	/**
+	 * @return Name of grade for Fontainebleau bouldering.
+	 */
+	public String getGradeBoulderingFont()
+	{
+		return this.getString(R.string.grade_bouldering_font);
+	}
+
+	/**
+	 * @return Name of grade for UK bouldering.
+	 */
+	public String getGradeBoulderingUk()
+	{
+		return this.getString(R.string.grade_bouldering_uk);
+	}
+
+	/**
+	 * @return Name of grade for V-scale bouldering.
+	 */
+	public String getGradeBoulderingVscale()
+	{
+		return this.getString(R.string.grade_bouldering_vscale);
+	}
+
+	/**
+	 * @return Name of grade for Australian rope climbing.
+	 */
+	public String getGradeRopeAustralian()
+	{
+		return this.getString(R.string.grade_rope_aus);
+	}
+
+	/**
+	 * @return Name of grade for Brasilian rope climbing.
+	 */
+	public String getGradeRopeBrasilian()
+	{
+		return this.getString(R.string.grade_rope_bra);
+	}
+
+	/**
+	 * @return Name of grade for Finnish rope climbing.
+	 */
+	public String getGradeRopeFinnish()
+	{
+		return this.getString(R.string.grade_rope_fin);
+	}
+
+	/**
+	 * @return Name of grade for French rope climbing.
+	 */
+	public String getGradeRopeFrench()
+	{
+		return this.getString(R.string.grade_rope_fre);
+	}
+
+	/**
+	 * @return Name of grade for Norway rope climbing.
+	 */
+	public String getGradeRopeNorway()
+	{
+		return this.getString(R.string.grade_rope_nor);
+	}
+
+	/**
+	 * @return Name of grade for Poland rope climbing.
+	 */
+	public String getGradeRopePoland()
+	{
+		return this.getString(R.string.grade_rope_pol);
+	}
+
+	/**
+	 * @return Name of grade for Saxon rope climbing.
+	 */
+	public String getGradeRopeSaxon()
+	{
+		return this.getString(R.string.grade_rope_sax);
+	}
+
+	/**
+	 * @return Name of grade for UIAA rope climbing.
+	 */
+	public String getGradeRopeUiaa()
+	{
+		return this.getString(R.string.grade_rope_uiaa);
+	}
+
+	/**
+	 * @return Name of grade for USA rope climbing.
+	 */
+	public String getGradeRopeUsa()
+	{
+		return this.getString(R.string.grade_rope_usa);
+	}
+
+	/**
+	 * @return Name of grade for British trad climbing.
+	 */
+	public String getGradeTradBritish()
+	{
+		return this.getString(R.string.grade_trad_bri);
 	}
 
 	/**

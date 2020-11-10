@@ -23,7 +23,7 @@
 		app:tabIndicatorHeight="0dp"
 		/>
 
-	<Button
+	<com.google.android.material.button.MaterialButton
 		style="@style/OnboardingTheme.Button.Navigation"
 		android:id="@+id/onboarding_previous"
 		android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
 		android:onClick="onPreviousPageClicked"
 		/>
 
-	<Button
+	<com.google.android.material.button.MaterialButton
 		style="@style/OnboardingTheme.Button.Navigation"
 		android:id="@+id/onboarding_next"
 		android:layout_width="wrap_content"

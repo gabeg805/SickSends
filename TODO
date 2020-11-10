@@ -1,0 +1,55 @@
+TODO:
+
+* Add onBackPressed() functionality to the Onboarding activity.
+
+
+
+DESIGN:
+
+* Database
+	- timestamp
+	- grade
+	- perceived grade
+	- how hard it was? Seems similar to perceived grade. Could be related to endurance? As you get better things will be easier
+	- flash?
+	- location
+	- route desc.
+		> overhang
+		> chimney
+		> slab
+		> traverse
+		> crack
+		> highball
+	- hold desc. 
+		> jug
+		> crimp
+		> sloper
+		> undercling
+		> arete
+		> pocket
+		? mono pocket
+		> pinch
+	- movement/technique
+		> heel hook
+		> toe hook
+		> knee bar
+		> hand jam
+		> drop knee
+		> dyno
+		> gaston
+		> mantel
+		> smear
+		> stem
+		> finger/fist/hand jam
+		> flag
+		> heel/toe lock
+
+* Add reminder/show often the person has been going to the gym every week
+
+
+RESOURCES:
+https://rockclimbing.com/Articles/Introduction_to_Climbing/Climbing_Dictionary_528.html
+https://rockandice.com/how-to-climb/climbing-terminology/
+
+DONE:
+

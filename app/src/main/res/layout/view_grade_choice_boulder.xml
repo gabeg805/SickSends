@@ -6,7 +6,7 @@
 	android:layout_gravity="center_horizontal">
 
 	<com.google.android.material.button.MaterialButtonToggleGroup
-		android:id="@+id/grade_choices_bouldering"
+		android:id="@+id/grade_choices_boulder"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_horizontal">
@@ -15,21 +15,21 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAllCaps="false"
-			android:text="@string/grade_bouldering_font"
+			android:text="@string/grade_boulder_font"
 			/>
 		<com.google.android.material.button.MaterialButton
 			style="@style/OnboardingTheme.Button.Toggle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAllCaps="false"
-			android:text="@string/grade_bouldering_uk"
+			android:text="@string/grade_boulder_uk"
 			/>
 		<com.google.android.material.button.MaterialButton
 			style="@style/OnboardingTheme.Button.Toggle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAllCaps="false"
-			android:text="@string/grade_bouldering_vscale"
+			android:text="@string/grade_boulder_vscale"
 			/>
 	</com.google.android.material.button.MaterialButtonToggleGroup>
 </HorizontalScrollView>

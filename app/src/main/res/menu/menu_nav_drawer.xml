@@ -8,9 +8,9 @@
 		android:checkableBehavior="single">
 
         <item
-            android:id="@+id/bouldering"
+            android:id="@+id/boulder"
             android:icon="@mipmap/copy"
-            android:title="@string/bouldering"
+            android:title="@string/boulder"
 			/>
 
         <item

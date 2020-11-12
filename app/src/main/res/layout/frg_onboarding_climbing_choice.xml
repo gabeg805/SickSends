@@ -22,10 +22,10 @@
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
-		android:id="@+id/climbing_choice_bouldering"
+		android:id="@+id/climbing_choice_boulder"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/bouldering"
+		android:text="@string/boulder"
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
 	<!-- App -->
@@ -19,30 +20,30 @@
 
 
 	<!-- Whether the user will climb a particular type -->
-	<string name="will_climb_bouldering">will_climb_bouldering</string>
+	<string name="will_climb_boulder">will_climb_boulder</string>
 	<string name="will_climb_sport">will_climb_sport</string>
 	<string name="will_climb_top_rope">will_climb_top_rope</string>
 	<string name="will_climb_trad">will_climb_trad</string>
 
 
 	<!-- Whether the user will use a grade in a particular climbing type -->
-	<string name="use_grade_bouldering">use_grade_bouldering</string>
+	<string name="use_grade_boulder">use_grade_boulder</string>
 	<string name="use_grade_sport">use_grade_sport</string>
 	<string name="use_grade_top_rope">use_grade_top_rope</string>
 	<string name="use_grade_trad">use_grade_trad</string>
 
 
 	<!-- Types of climbing -->
-	<string name="bouldering">Bouldering</string>
+	<string name="boulder">Boulder</string>
 	<string name="sport">Sport</string>
 	<string name="top_rope">Top rope</string>
 	<string name="trad">Trad</string>
 
 
 	<!-- Types of grades -->
-	<string name="grade_bouldering_font">Fontainebleau</string>
-	<string name="grade_bouldering_uk">UK</string>
-	<string name="grade_bouldering_vscale">V scale</string>
+	<string name="grade_boulder_font">Fontainebleau</string>
+	<string name="grade_boulder_uk">UK</string>
+	<string name="grade_boulder_vscale">V scale</string>
 	<string name="grade_rope_aus">Australian</string>
 	<string name="grade_rope_bra">Brasilian</string>
 	<string name="grade_rope_fin">Finnish</string>
@@ -56,9 +57,9 @@
 
 
 	<!-- Examples of types of grades -->
-	<string name="example_grade_bouldering_font">Ex. 5, 5&#43;, 6A, &#8230;</string>
-	<string name="example_grade_bouldering_uk">Ex. 5b, 5c, 6a, &#8230;</string>
-	<string name="example_grade_bouldering_vscale">Ex. V1, V2, V3, &#8230;</string>
+	<string name="example_grade_boulder_font">Ex. 5, 5&#43;, 6A, &#8230;</string>
+	<string name="example_grade_boulder_uk">Ex. 5b, 5c, 6a, &#8230;</string>
+	<string name="example_grade_boulder_vscale">Ex. V1, V2, V3, &#8230;</string>
 	<string name="example_grade_rope_aus">Ex. 16, 17, 18, &#8230;</string>
 	<string name="example_grade_rope_bra">Ex. VI, VI sup, 7a, &#8230;</string>
 	<string name="example_grade_rope_fin">Ex. 7, 7&#43;, 8&#8722;, &#8230;</string>

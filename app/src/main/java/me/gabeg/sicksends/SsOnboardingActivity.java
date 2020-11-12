@@ -150,10 +150,10 @@ public class SsOnboardingActivity
 		String example = shared.getGradeExample(grade);
 		int id = group.getId();
 
-		if (id == R.id.grade_choices_bouldering)
+		if (id == R.id.grade_choices_boulder)
 		{
-			shared.editUseGradeBouldering(grade, isChecked);
-			this.showExampleGradeBouldering(example);
+			shared.editUseGradeBoulder(grade, isChecked);
+			this.showExampleGradeBoulder(example);
 		}
 		else if (id == R.id.grade_choices_sport)
 		{
@@ -182,10 +182,10 @@ public class SsOnboardingActivity
 		int visibility = isChecked ? View.VISIBLE : View.GONE;
 		int id = button.getId();
 
-		if (id == R.id.climbing_choice_bouldering)
+		if (id == R.id.climbing_choice_boulder)
 		{
-			shared.editWillClimbBouldering(isChecked);
-			this.setGradeVisibilityBouldering(visibility);
+			shared.editWillClimbBoulder(isChecked);
+			this.setGradeVisibilityBoulder(visibility);
 		}
 		else if (id == R.id.climbing_choice_sport)
 		{
@@ -272,11 +272,11 @@ public class SsOnboardingActivity
 	}
 
 	/**
-	 * Set visibility of bouldering grades.
+	 * Set visibility of boulder grades.
 	 */
-	private void setGradeVisibilityBouldering(int visibility)
+	private void setGradeVisibilityBoulder(int visibility)
 	{
-		this.setGradeVisibility(R.id.bouldering_grade_root, visibility);
+		this.setGradeVisibility(R.id.boulder_grade_root, visibility);
 	}
 
 	/**
@@ -327,22 +327,22 @@ public class SsOnboardingActivity
 	{
 		SsSharedPreferences shared = this.getSharedPreferences();
 		View root = adapter.getRootView(1);
-		SwitchMaterial bouldering = root.findViewById(R.id.climbing_choice_bouldering);
+		SwitchMaterial boulder = root.findViewById(R.id.climbing_choice_boulder);
 		SwitchMaterial sport = root.findViewById(R.id.climbing_choice_sport);
 		SwitchMaterial topRope = root.findViewById(R.id.climbing_choice_top_rope);
 		SwitchMaterial trad = root.findViewById(R.id.climbing_choice_trad);
 
-		boolean willBoulder = shared.getWillClimbBouldering();
+		boolean willBoulder = shared.getWillClimbBoulder();
 		boolean willSport = shared.getWillClimbSport();
 		boolean willTopRope = shared.getWillClimbTopRope();
 		boolean willTrad = shared.getWillClimbTrad();
 
-		bouldering.setOnCheckedChangeListener(this);
+		boulder.setOnCheckedChangeListener(this);
 		sport.setOnCheckedChangeListener(this);
 		topRope.setOnCheckedChangeListener(this);
 		trad.setOnCheckedChangeListener(this);
 
-		bouldering.setChecked(willBoulder);
+		boulder.setChecked(willBoulder);
 		sport.setChecked(willSport);
 		topRope.setChecked(willTopRope);
 		trad.setChecked(willTrad);
@@ -354,12 +354,12 @@ public class SsOnboardingActivity
 	private void setupGradeChoices(SsOnboardingPagerAdapter adapter)
 	{
 		View root = adapter.getRootView(2);
-		MaterialButtonToggleGroup bouldering = root.findViewById(R.id.grade_choices_bouldering);
+		MaterialButtonToggleGroup boulder = root.findViewById(R.id.grade_choices_boulder);
 		MaterialButtonToggleGroup sport = root.findViewById(R.id.grade_choices_sport);
 		MaterialButtonToggleGroup topRope = root.findViewById(R.id.grade_choices_top_rope);
 		MaterialButtonToggleGroup trad = root.findViewById(R.id.grade_choices_trad);
 
-		bouldering.addOnButtonCheckedListener(this);
+		boulder.addOnButtonCheckedListener(this);
 		sport.addOnButtonCheckedListener(this);
 		topRope.addOnButtonCheckedListener(this);
 		trad.addOnButtonCheckedListener(this);
@@ -410,11 +410,11 @@ public class SsOnboardingActivity
 	}
 
 	/**
-	 * Show the example grade for bouldering.
+	 * Show the example grade for boulder.
 	 */
-	private void showExampleGradeBouldering(String example)
+	private void showExampleGradeBoulder(String example)
 	{
-		this.showExampleGrade(R.id.grade_example_bouldering, example);
+		this.showExampleGrade(R.id.grade_example_boulder, example);
 	}
 
 	/**

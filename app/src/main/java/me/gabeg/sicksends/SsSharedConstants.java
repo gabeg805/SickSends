@@ -35,25 +35,25 @@ public class SsSharedConstants
 	/**
 	 * @return An example of the grade scale for Fontainebleau bouldering.
 	 */
-	public String getExampleGradeBoulderingFont()
+	public String getExampleGradeBoulderFont()
 	{
-		return this.getString(R.string.example_grade_bouldering_font);
+		return this.getString(R.string.example_grade_boulder_font);
 	}
 
 	/**
 	 * @return An example of the grade scale for UK bouldering.
 	 */
-	public String getExampleGradeBoulderingUk()
+	public String getExampleGradeBoulderUk()
 	{
-		return this.getString(R.string.example_grade_bouldering_uk);
+		return this.getString(R.string.example_grade_boulder_uk);
 	}
 
 	/**
 	 * @return An example of the grade scale for V-scale bouldering.
 	 */
-	public String getExampleGradeBoulderingVscale()
+	public String getExampleGradeBoulderVscale()
 	{
-		return this.getString(R.string.example_grade_bouldering_vscale);
+		return this.getString(R.string.example_grade_boulder_vscale);
 	}
 
 	/**
@@ -139,25 +139,25 @@ public class SsSharedConstants
 	/**
 	 * @return Name of grade for Fontainebleau bouldering.
 	 */
-	public String getGradeBoulderingFont()
+	public String getGradeBoulderFont()
 	{
-		return this.getString(R.string.grade_bouldering_font);
+		return this.getString(R.string.grade_boulder_font);
 	}
 
 	/**
 	 * @return Name of grade for UK bouldering.
 	 */
-	public String getGradeBoulderingUk()
+	public String getGradeBoulderUk()
 	{
-		return this.getString(R.string.grade_bouldering_uk);
+		return this.getString(R.string.grade_boulder_uk);
 	}
 
 	/**
 	 * @return Name of grade for V-scale bouldering.
 	 */
-	public String getGradeBoulderingVscale()
+	public String getGradeBoulderVscale()
 	{
-		return this.getString(R.string.grade_bouldering_vscale);
+		return this.getString(R.string.grade_boulder_vscale);
 	}
 
 	/**

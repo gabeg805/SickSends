@@ -42,11 +42,11 @@ public class SsSharedKeys
 	}
 
 	/**
-	 * @return Key for using a particular bouldering grade.
+	 * @return Key for using a particular boulder grade.
 	 */
-	public String getUseGradeBouldering(String grade)
+	public String getUseGradeBoulder(String grade)
 	{
-		String key = this.getString(R.string.use_grade_bouldering);
+		String key = this.getString(R.string.use_grade_boulder);
 		return key.concat("_").concat(grade);
 	}
 
@@ -78,11 +78,11 @@ public class SsSharedKeys
 	}
 
 	/**
-	 * @return The bouldering climbing type.
+	 * @return The boulder climbing type.
 	 */
-	public String getWillClimbBouldering()
+	public String getWillClimbBoulder()
 	{
-		return this.getString(R.string.will_climb_bouldering);
+		return this.getString(R.string.will_climb_boulder);
 	}
 
 	/**

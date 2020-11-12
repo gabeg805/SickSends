@@ -33,9 +33,9 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 
-			<!-- Bouldering -->
+			<!-- Boulder -->
 			<LinearLayout
-				android:id="@+id/bouldering_grade_root"
+				android:id="@+id/boulder_grade_root"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginBottom="@dimen/tiny"
@@ -45,16 +45,16 @@
 					style="@style/OnboardingTheme.TextView.Section"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/bouldering"
+					android:text="@string/boulder"
 					/>
 				<include
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					layout="@layout/view_grade_choice_bouldering"
+					layout="@layout/view_grade_choice_boulder"
 					/>
 				<TextView
 					style="@style/OnboardingTheme.TextView.Example"
-					android:id="@+id/grade_example_bouldering"
+					android:id="@+id/grade_example_boulder"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:gravity="center_horizontal"

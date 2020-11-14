@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -126,16 +127,10 @@ public class SsMainActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		SsSharedPreferences shared = new SsSharedPreferences(this);
-		if (shared.getAppFirstRun())
-		{
-			startActivity(new Intent(this, SsOnboardingActivity.class));
-		}
+		this.mSharedPreferences = new SsSharedPreferences(this);
 
-		shared.editAppFirstRun(false);
+		this.setupOnboardingActivity();
 		setContentView(R.layout.act_main);
-
-		this.mSharedPreferences = shared;
 		this.setupAppBar();
 	}
 
@@ -226,12 +221,10 @@ public class SsMainActivity
 	{
 		super.onResume();
 		SsSharedPreferences shared = this.getSharedPreferences();
-		shared.debug();
+		//shared.debug();
 
-		//this.setupAlarmCardAdapter();
-		//this.setupFloatingActionButton();
-		//this.setupGoogleRatingDialog();
-		//this.addSetAlarmFromIntent();
+		this.setupBottomNavigationBar();
+		this.setupGoogleRatingDialog();
 	}
 
 	/**
@@ -244,7 +237,6 @@ public class SsMainActivity
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		NavigationView navView = findViewById(R.id.nav_view);
-
 		NavController navController = Navigation.findNavController(this,
 			R.id.nav_host_fragment);
 
@@ -254,12 +246,8 @@ public class SsMainActivity
 				.build();
 
 		setSupportActionBar(toolbar);
-		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		//getSupportActionBar().setDisplayShowHomeEnabled(true);
-		//NavigationUI.setupActionBarWithNavController(this, navController, drawer);
-		//NavigationUI.setupWithNavController(navView, navController);
-		NavigationUI.setupWithNavController(collapsingLayout, toolbar,
-			navController, appBarConfiguration);
+		NavigationUI.setupWithNavController(collapsingLayout, toolbar, navController,
+			appBarConfiguration);
 		navView.setNavigationItemSelectedListener(this);
 
 		this.mCollapsingLayout = collapsingLayout;
@@ -270,49 +258,59 @@ public class SsMainActivity
 	}
 
 	/**
-	 * Setup the alarm card adapter.
+	 * Setup the bottom navigation bar.
 	 */
-	//private void setupAlarmCardAdapter()
-	//{
-	//	NacCardAdapter adapter = this.getCardAdapter();
-	//	adapter.build();
-	//}
+	private void setupBottomNavigationBar()
+	{
+		SsSharedPreferences shared = this.getSharedPreferences();
+		BottomNavigationView bottomBar = findViewById(R.id.bottom_navigation_bar);
+		Menu menu = bottomBar.getMenu();
 
-	/**
-	 * Setup the floating action button.
-	 */
-	//private void setupFloatingActionButton()
-	//{
-	//	NacSharedPreferences shared = this.getSharedPreferences();
-	//	FloatingActionButton floatingButton = this.getFloatingButton();
-	//	ColorStateList color = ColorStateList.valueOf(shared.getThemeColor());
+		boolean willBoulder = shared.getWillClimbBoulder();
+		boolean willLead = shared.getWillClimbLead();
+		boolean willTopRope = shared.getWillClimbTopRope();
+		boolean willTrad = shared.getWillClimbTrad();
 
-	//	floatingButton.setBackgroundTintList(color);
-	//}
+		menu.findItem(R.id.go_to_boulder).setVisible(willBoulder);
+		menu.findItem(R.id.go_to_lead).setVisible(willLead);
+		menu.findItem(R.id.go_to_top_rope).setVisible(willTopRope);
+		menu.findItem(R.id.go_to_trad).setVisible(willTrad);
+	}
 
 	/**
 	 * Setup the Google rating dialog.
 	 */
-	//private void setupGoogleRatingDialog()
-	//{
-	//	NacSharedPreferences shared = this.getSharedPreferences();
-	//	int counter = shared.getRateMyAppCounter();
+	private void setupGoogleRatingDialog()
+	{
+		SsSharedPreferences shared = this.getSharedPreferences();
+		if (shared.isRateMyAppRated())
+		{
+			return;
+		}
 
-	//	if (counter == NacSharedPreferences.DEFAULT_RATE_MY_APP_RATED)
-	//	{
-	//		return;
-	//	}
-	//	else if ((counter+1) >= NacSharedPreferences.DEFAULT_RATE_MY_APP_LIMIT)
-	//	{
-	//		NacRateMyAppDialog dialog = new NacRateMyAppDialog(this);
+		if (shared.isRateMyAppLimit())
+		{
+			//NacRateMyAppDialog dialog = new NacRateMyAppDialog(this);
+			//dialog.build();
+			//dialog.show();
+		}
+		else
+		{
+			//shared.incrementRateMyApp();
+		}
+	}
 
-	//		dialog.build();
-	//		dialog.show();
-	//	}
-	//	else
-	//	{
-	//		shared.editRateMyAppCounter(counter+1);
-	//	}
-	//}
+	/**
+	 * Setup the onboarding activity.
+	 */
+	private void setupOnboardingActivity()
+	{
+		SsSharedPreferences shared = this.getSharedPreferences();
+
+		if (shared.getAppFirstRun())
+		{
+			startActivity(new Intent(this, SsOnboardingActivity.class));
+		}
+	}
 
 }

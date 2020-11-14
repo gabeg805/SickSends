@@ -251,6 +251,9 @@ public class SsOnboardingActivity
 		}
 		else
 		{
+			SsSharedPreferences shared = this.getSharedPreferences();
+
+			shared.editAppFirstRun(false);
 			finish();
 		}
 	}

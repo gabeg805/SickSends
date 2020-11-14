@@ -5,6 +5,7 @@
 	<string name="app_name">Sick Sends</string>
 	<string name="app_first_run">app_first_run</string>
 	<string name="app_rating_counter">app_rating_counter</string>
+	<string name="home">Home</string>
 
 
 	<!-- Onboarding -->

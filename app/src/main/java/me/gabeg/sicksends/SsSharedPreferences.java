@@ -67,20 +67,12 @@ public class SsSharedPreferences
 	}
 
 	/**
-	 * @see editRateMyAppCounter
+	 * Edit the app rating counter.
 	 */
 	public void editRateMyAppCounter(int counter)
 	{
-		this.editRateMyAppCounter(counter, false);
-	}
-
-	/**
-	 * Edit the app rating counter.
-	 */
-	public void editRateMyAppCounter(int counter, boolean commit)
-	{
 		String key = this.getKeys().getRateMyAppCounter();
-		this.saveInt(key, counter, commit);
+		this.saveInt(key, counter, false);
 	}
 
 	/**
@@ -489,6 +481,62 @@ public class SsSharedPreferences
 		boolean value = this.getDefaults().getWillClimb();
 
 		return this.getBoolean(key, value);
+	}
+
+	/**
+	 * Increment the rate my app counter.
+	 */
+	public void incrementRateMyApp()
+	{
+		int counter = this.getRateMyAppCounter();
+		this.editRateMyAppCounter(counter+1);
+	}
+
+	/**
+	 * @return True if app has reached the counter limit, and False otherwise.
+	 */
+	public boolean isRateMyAppLimit()
+	{
+		int counter = this.getRateMyAppCounter();
+		int limit = this.getDefaults().getRateMyAppLimit();
+		return counter == limit;
+	}
+
+	/**
+	 * @return True if app has been rated, and False otherwise.
+	 */
+	public boolean isRateMyAppRated()
+	{
+		int counter = this.getRateMyAppCounter();
+		int rated = this.getDefaults().getRateMyAppRated();
+		return counter == rated;
+	}
+
+	/**
+	 * Set the rate my app counter to the postpone value.
+	 */
+	public void postponeRateMyApp()
+	{
+		int postpone = -2 * this.getDefaults().getRateMyAppLimit();
+		this.editRateMyAppCounter(postpone);
+	}
+
+	/**
+	 * Set the rate my app counter to the rated value.
+	 */
+	public void ratedRateMyApp()
+	{
+		int rated = this.getDefaults().getRateMyAppRated();
+		this.editRateMyAppCounter(rated);
+	}
+
+	/**
+	 * Reset the rate my app counter.
+	 */
+	public void resetRateMyApp()
+	{
+		int reset = this.getDefaults().getRateMyAppCounter();
+		this.editRateMyAppCounter(reset);
 	}
 
 	/**

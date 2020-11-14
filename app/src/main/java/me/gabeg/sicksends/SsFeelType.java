@@ -10,7 +10,7 @@ public enum SsFeelType
 	PRETTY_EASY(2),
 	NORMAL(3),
 	PRETTY_HARD(4),
-	HARD(5)
+	HARD(5);
 
 	/**
 	 * Value associated with an enum.

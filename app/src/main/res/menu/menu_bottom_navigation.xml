@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@+id/page_1"
+		android:enabled="true"
+		android:icon="@mipmap/boulder"
+		android:title="@string/boulder"
+		/>
+
+	<item
+		android:id="@+id/page_2"
+		android:enabled="true"
+		android:icon="@mipmap/lead"
+		android:title="@string/lead"
+		/>
+
+	<item
+		android:id="@+id/page_3"
+		android:enabled="true"
+		android:icon="@mipmap/top_rope"
+		android:title="@string/top_rope"
+		/>
+
+	<item
+		android:id="@+id/page_4"
+		android:enabled="true"
+		android:icon="@mipmap/trad"
+		android:title="@string/trad"
+		/>
+
+</menu>

@@ -21,6 +21,7 @@
 
 	<!-- Whether the user will climb a particular type -->
 	<string name="will_climb_boulder">will_climb_boulder</string>
+	<string name="will_climb_lead">will_climb_lead</string>
 	<string name="will_climb_sport">will_climb_sport</string>
 	<string name="will_climb_top_rope">will_climb_top_rope</string>
 	<string name="will_climb_trad">will_climb_trad</string>
@@ -28,6 +29,7 @@
 
 	<!-- Whether the user will use a grade in a particular climbing type -->
 	<string name="use_grade_boulder">use_grade_boulder</string>
+	<string name="use_grade_lead">use_grade_lead</string>
 	<string name="use_grade_sport">use_grade_sport</string>
 	<string name="use_grade_top_rope">use_grade_top_rope</string>
 	<string name="use_grade_trad">use_grade_trad</string>
@@ -35,6 +37,7 @@
 
 	<!-- Types of climbing -->
 	<string name="boulder">Boulder</string>
+	<string name="lead">Lead</string>
 	<string name="sport">Sport</string>
 	<string name="top_rope">Top rope</string>
 	<string name="trad">Trad</string>

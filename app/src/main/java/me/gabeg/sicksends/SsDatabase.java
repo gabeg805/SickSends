@@ -6,7 +6,8 @@ import androidx.room.RoomDatabase;
 /**
  * Database that can be used to access stored climbing information.
  */
-@Database(entities={SsBoulderProblem.class, SsSportProblem.class, SsTopRopeProblem.class, SsTradProblem.class}, version=1)
+//@Database(entities={SsBoulderProblem.class, SsSportProblem.class, SsTopRopeProblem.class, SsTradProblem.class}, version=1)
+@Database(entities={SsBoulderProblem.class, SsLeadProblem.class, SsTopRopeProblem.class, SsTradProblem.class}, version=1)
 public abstract class SsDatabase
 	extends RoomDatabase
 {
@@ -17,9 +18,14 @@ public abstract class SsDatabase
 	public abstract SsBoulderDao boulderDao();
 
 	/**
-	 * Store sport problems.
+	 * Store lead problems.
 	 */
-	public abstract SsSportDao sportDao();
+	public abstract SsLeadDao leadDao();
+
+	///**
+	// * Store sport problems.
+	// */
+	//public abstract SsSportDao sportDao();
 
 	/**
 	 * Store top rope problems.

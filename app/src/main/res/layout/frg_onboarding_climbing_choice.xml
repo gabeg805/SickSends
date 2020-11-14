@@ -29,11 +29,20 @@
 		/>
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
+		android:id="@+id/climbing_choice_lead"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/lead"
+		/>
+
+	<!--
+	<com.google.android.material.switchmaterial.SwitchMaterial
 		android:id="@+id/climbing_choice_sport"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/sport"
 		/>
+	-->
 
 	<com.google.android.material.switchmaterial.SwitchMaterial
 		android:id="@+id/climbing_choice_top_rope"

@@ -56,11 +56,21 @@
 	<color name="pink_800">#bb4c8b</color>
 	<color name="pink_700">#d25d93</color>
 	<color name="pink_600">#eb559c</color>
+	<color name="pink_500">#fe59a3</color>
+	<color name="pink_400">#fa6bb4</color>
+	<color name="pink_300">#f984c4</color>
+	<color name="pink_200">#f8a6d6</color>
+	<color name="pink_100">#f8c8e6</color>
 
 	<color name="blue_900">#00509a</color>
 	<color name="blue_800">#0070bc</color>
 	<color name="blue_700">#0080d0</color>
 	<color name="blue_600">#0093e5</color>
+	<color name="blue_500">#00a1f4</color>
+	<color name="blue_400">#1aaff7</color>
+	<color name="blue_300">#47bdf8</color>
+	<color name="blue_200">#7dd0fb</color>
+	<color name="blue_100">#b1e2fd</color>
 
 	<!--
 	<color name="blue_900">#004f9a</color>

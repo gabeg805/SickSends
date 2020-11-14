@@ -9,25 +9,33 @@
 
         <item
             android:id="@+id/boulder"
-            android:icon="@mipmap/copy"
+            android:icon="@mipmap/boulder"
             android:title="@string/boulder"
 			/>
 
+        <item
+            android:id="@+id/lead"
+            android:icon="@mipmap/lead"
+            android:title="@string/lead"
+			/>
+
+		<!--
         <item
             android:id="@+id/sport"
             android:icon="@mipmap/delete"
             android:title="@string/sport"
 			/>
+		-->
 
         <item
             android:id="@+id/top_rope"
-            android:icon="@mipmap/app"
+            android:icon="@mipmap/top_rope"
             android:title="@string/top_rope"
 			/>
 
         <item
             android:id="@+id/trad"
-            android:icon="@mipmap/app"
+            android:icon="@mipmap/trad"
             android:title="@string/trad"
 			/>
 
@@ -40,7 +48,7 @@
 
         <item
             android:id="@+id/settings"
-            android:icon="@mipmap/copy"
+            android:icon="@mipmap/settings"
             android:title="@string/settings"
 			/>
 

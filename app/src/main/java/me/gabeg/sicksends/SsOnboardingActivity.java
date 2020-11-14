@@ -155,11 +155,16 @@ public class SsOnboardingActivity
 			shared.editUseGradeBoulder(grade, isChecked);
 			this.showExampleGradeBoulder(example);
 		}
-		else if (id == R.id.grade_choices_sport)
+		else if (id == R.id.grade_choices_lead)
 		{
-			shared.editUseGradeSport(grade, isChecked);
-			this.showExampleGradeSport(example);
+			shared.editUseGradeLead(grade, isChecked);
+			this.showExampleGradeLead(example);
 		}
+		//else if (id == R.id.grade_choices_sport)
+		//{
+		//	shared.editUseGradeSport(grade, isChecked);
+		//	this.showExampleGradeSport(example);
+		//}
 		else if (id == R.id.grade_choices_top_rope)
 		{
 			shared.editUseGradeTopRope(grade, isChecked);
@@ -187,11 +192,16 @@ public class SsOnboardingActivity
 			shared.editWillClimbBoulder(isChecked);
 			this.setGradeVisibilityBoulder(visibility);
 		}
-		else if (id == R.id.climbing_choice_sport)
+		else if (id == R.id.climbing_choice_lead)
 		{
-			shared.editWillClimbSport(isChecked);
-			this.setGradeVisibilitySport(visibility);
+			shared.editWillClimbLead(isChecked);
+			this.setGradeVisibilityLead(visibility);
 		}
+		//else if (id == R.id.climbing_choice_sport)
+		//{
+		//	shared.editWillClimbSport(isChecked);
+		//	this.setGradeVisibilitySport(visibility);
+		//}
 		else if (id == R.id.climbing_choice_top_rope)
 		{
 			shared.editWillClimbTopRope(isChecked);
@@ -280,12 +290,20 @@ public class SsOnboardingActivity
 	}
 
 	/**
-	 * Set visibility of sport grades.
+	 * Set visibility of lead grades.
 	 */
-	private void setGradeVisibilitySport(int visibility)
+	private void setGradeVisibilityLead(int visibility)
 	{
-		this.setGradeVisibility(R.id.sport_grade_root, visibility);
+		this.setGradeVisibility(R.id.lead_grade_root, visibility);
 	}
+
+	///**
+	// * Set visibility of sport grades.
+	// */
+	//private void setGradeVisibilitySport(int visibility)
+	//{
+	//	this.setGradeVisibility(R.id.sport_grade_root, visibility);
+	//}
 
 	/**
 	 * Set visibility of top rope grades.
@@ -328,22 +346,26 @@ public class SsOnboardingActivity
 		SsSharedPreferences shared = this.getSharedPreferences();
 		View root = adapter.getRootView(1);
 		SwitchMaterial boulder = root.findViewById(R.id.climbing_choice_boulder);
-		SwitchMaterial sport = root.findViewById(R.id.climbing_choice_sport);
+		SwitchMaterial lead = root.findViewById(R.id.climbing_choice_lead);
+		//SwitchMaterial sport = root.findViewById(R.id.climbing_choice_sport);
 		SwitchMaterial topRope = root.findViewById(R.id.climbing_choice_top_rope);
 		SwitchMaterial trad = root.findViewById(R.id.climbing_choice_trad);
 
 		boolean willBoulder = shared.getWillClimbBoulder();
-		boolean willSport = shared.getWillClimbSport();
+		boolean willLead = shared.getWillClimbLead();
+		//boolean willSport = shared.getWillClimbSport();
 		boolean willTopRope = shared.getWillClimbTopRope();
 		boolean willTrad = shared.getWillClimbTrad();
 
 		boulder.setOnCheckedChangeListener(this);
-		sport.setOnCheckedChangeListener(this);
+		lead.setOnCheckedChangeListener(this);
+		//sport.setOnCheckedChangeListener(this);
 		topRope.setOnCheckedChangeListener(this);
 		trad.setOnCheckedChangeListener(this);
 
 		boulder.setChecked(willBoulder);
-		sport.setChecked(willSport);
+		lead.setChecked(willLead);
+		//sport.setChecked(willSport);
 		topRope.setChecked(willTopRope);
 		trad.setChecked(willTrad);
 	}
@@ -355,12 +377,14 @@ public class SsOnboardingActivity
 	{
 		View root = adapter.getRootView(2);
 		MaterialButtonToggleGroup boulder = root.findViewById(R.id.grade_choices_boulder);
-		MaterialButtonToggleGroup sport = root.findViewById(R.id.grade_choices_sport);
+		MaterialButtonToggleGroup lead = root.findViewById(R.id.grade_choices_lead);
+		//MaterialButtonToggleGroup sport = root.findViewById(R.id.grade_choices_sport);
 		MaterialButtonToggleGroup topRope = root.findViewById(R.id.grade_choices_top_rope);
 		MaterialButtonToggleGroup trad = root.findViewById(R.id.grade_choices_trad);
 
 		boulder.addOnButtonCheckedListener(this);
-		sport.addOnButtonCheckedListener(this);
+		lead.addOnButtonCheckedListener(this);
+		//sport.addOnButtonCheckedListener(this);
 		topRope.addOnButtonCheckedListener(this);
 		trad.addOnButtonCheckedListener(this);
 	}
@@ -418,12 +442,20 @@ public class SsOnboardingActivity
 	}
 
 	/**
-	 * Show the example grade for sport climbing.
+	 * Show the example grade for lead climbing.
 	 */
-	private void showExampleGradeSport(String example)
+	private void showExampleGradeLead(String example)
 	{
-		this.showExampleGrade(R.id.grade_example_sport, example);
+		this.showExampleGrade(R.id.grade_example_lead, example);
 	}
+
+	///**
+	// * Show the example grade for sport climbing.
+	// */
+	//private void showExampleGradeSport(String example)
+	//{
+	//	this.showExampleGrade(R.id.grade_example_sport, example);
+	//}
 
 	/**
 	 * Show the example grade for top rope climbing.

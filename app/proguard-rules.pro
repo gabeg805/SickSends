@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.nfcalarmclock.** { *; }
+#-keep class com.nfcalarmclock.** { *; }
 #-dontusemixedcaseclassnames
 #-dontskipnonpubliclibraryclasses
--verbose
+#-verbose

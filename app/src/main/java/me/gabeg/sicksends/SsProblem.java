@@ -109,6 +109,6 @@ public abstract class SsProblem
 	 * Path to the image.
 	 */
 	@ColumnInfo(name="image_path")
-	public String techniqueType;
+	public String imagePath;
 
 }

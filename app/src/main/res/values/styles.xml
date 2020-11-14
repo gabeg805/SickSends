@@ -2,7 +2,11 @@
 <resources>
 
 	<!-- Base application theme. -->
+	<!--
+	<style name="AppTheme" parent="Theme.MaterialComponents">
 	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+	-->
+	<style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
 		<!-- <item name="android:windowActionBar">true</item> -->
 
 		<!-- 
@@ -20,6 +24,22 @@
 		<item name="colorPrimary">@color/blue</item>
 		<item name="colorPrimaryDark">@color/blue_dark</item>
 		<item name="colorAccent">@color/red</item>
+
+		<item name="bottomNavigationStyle">@style/AppTheme.BottomNavigation</item>
+
+		<!-- Set this for the material theme to use a custom toolbar -->
+		<!--
+		<item name="windowActionBar">false</item>
+		-->
+	</style>
+
+	<style name="AppTheme.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+		<item name="materialThemeOverlay">@style/AppTheme.BottomNavigationOverlay</item>
+	</style>
+
+	<style name="AppTheme.BottomNavigationOverlay" parent="">
+		<item name="colorPrimary">@color/blue_900</item>
+		<item name="colorOnPrimary">@color/blue_100</item>
 	</style>
 
 </resources>

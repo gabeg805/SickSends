@@ -52,7 +52,7 @@ public class SsMainActivity
 	/**
 	 * Floating button to add new alarms.
 	 */
-	//private FloatingActionButton mFloatingButton;
+	private FloatingActionButton mFloatingButton;
 
 	/**
 	 * Alarm card adapter.
@@ -70,10 +70,10 @@ public class SsMainActivity
 	/**
 	 * @return The floating action button.
 	 */
-	//private FloatingActionButton getFloatingButton()
-	//{
-	//	return this.mFloatingButton;
-	//}
+	private FloatingActionButton getFloatingButton()
+	{
+		return this.mFloatingButton;
+	}
 
 	/**
 	 * @return The recycler view.
@@ -104,20 +104,20 @@ public class SsMainActivity
 	//	adapter.setWasAddedWithFloatingButton(true);
 	//}
 
-	/**
-	 */
-	@Override
-	public void onBackPressed()
-	{
-		if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START))
-		{
-			this.mDrawerLayout.closeDrawer(GravityCompat.START);
-		}
-		else
-		{
-			super.onBackPressed();
-		}
-	}
+	///**
+	// */
+	//@Override
+	//public void onBackPressed()
+	//{
+	//	if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START))
+	//	{
+	//		this.mDrawerLayout.closeDrawer(GravityCompat.START);
+	//	}
+	//	else
+	//	{
+	//		super.onBackPressed();
+	//	}
+	//}
 
 	/**
 	 */
@@ -135,34 +135,8 @@ public class SsMainActivity
 		shared.editAppFirstRun(false);
 		setContentView(R.layout.act_main);
 
-		CollapsingToolbarLayout collapsingLayout = findViewById(
-			R.id.collapsing_toolbar_layout);
-		Toolbar toolbar = findViewById(R.id.toolbar);
-		DrawerLayout drawer = findViewById(R.id.drawer_layout);
-		NavigationView navView = findViewById(R.id.nav_view);
-		NavController navController = Navigation.findNavController(this,
-			R.id.nav_host_fragment);
-
 		this.mSharedPreferences = shared;
-		AppBarConfiguration appBarConfiguration =
-			new AppBarConfiguration.Builder(navController.getGraph())
-				.setDrawerLayout(drawer)
-				.build();
-
-		setSupportActionBar(toolbar);
-		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		//getSupportActionBar().setDisplayShowHomeEnabled(true);
-		//NavigationUI.setupActionBarWithNavController(this, navController, drawer);
-		//NavigationUI.setupWithNavController(navView, navController);
-		NavigationUI.setupWithNavController(collapsingLayout, toolbar,
-			navController, appBarConfiguration);
-		navView.setNavigationItemSelectedListener(this);
-
-		this.mCollapsingLayout = collapsingLayout;
-		this.mToolbar = toolbar;
-		this.mDrawerLayout = drawer;
-		this.mNavigationView = navView;
-		this.mNavController = navController;
+		this.setupAppBar();
 	}
 
 	/**
@@ -258,6 +232,41 @@ public class SsMainActivity
 		//this.setupFloatingActionButton();
 		//this.setupGoogleRatingDialog();
 		//this.addSetAlarmFromIntent();
+	}
+
+	/**
+	 * Setup the app bar for navigation.
+	 */
+	private void setupAppBar()
+	{
+		CollapsingToolbarLayout collapsingLayout = findViewById(
+			R.id.collapsing_toolbar_layout);
+		Toolbar toolbar = findViewById(R.id.toolbar);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
+		NavigationView navView = findViewById(R.id.nav_view);
+
+		NavController navController = Navigation.findNavController(this,
+			R.id.nav_host_fragment);
+
+		AppBarConfiguration appBarConfiguration =
+			new AppBarConfiguration.Builder(navController.getGraph())
+				.setDrawerLayout(drawer)
+				.build();
+
+		setSupportActionBar(toolbar);
+		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//getSupportActionBar().setDisplayShowHomeEnabled(true);
+		//NavigationUI.setupActionBarWithNavController(this, navController, drawer);
+		//NavigationUI.setupWithNavController(navView, navController);
+		NavigationUI.setupWithNavController(collapsingLayout, toolbar,
+			navController, appBarConfiguration);
+		navView.setNavigationItemSelectedListener(this);
+
+		this.mCollapsingLayout = collapsingLayout;
+		this.mToolbar = toolbar;
+		this.mDrawerLayout = drawer;
+		this.mNavigationView = navView;
+		this.mNavController = navController;
 	}
 
 	/**

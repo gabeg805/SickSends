@@ -1,8 +1,7 @@
 package me.gabeg.sicksends;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import java.util.List;
 
@@ -11,28 +10,19 @@ import java.util.List;
  */
 @Dao
 public interface SsBoulderDao
+	extends SsProblemDao<SsBoulder>
 {
 
 	/**
-	 * Delete the boulder problem.
-	 *
-	 * @param  problem  Boulder problem.
+	 * @see SsProblemDao#deleteAll
 	 */
-	@Delete
-	void delete(SsBoulderProblem problem);
+	@Query("DELETE FROM boulder")
+	void deleteAll();
 
 	/**
 	 * @return All boulder problems.
 	 */
 	@Query("SELECT * FROM boulder")
-	List<SsBoulderProblem> getAll();
-
-	/**
-	 * Insert a new boulder problem.
-	 *
-	 * @param  problem  Boulder problem.
-	 */
-	@Insert
-	void insert(SsBoulderProblem problem);
+	LiveData<List<SsBoulder>> getAll();
 
 }

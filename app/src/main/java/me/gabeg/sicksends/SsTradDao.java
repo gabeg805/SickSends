@@ -1,8 +1,7 @@
 package me.gabeg.sicksends;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import java.util.List;
 
@@ -11,28 +10,13 @@ import java.util.List;
  */
 @Dao
 public interface SsTradDao
+	extends SsProblemDao<SsTrad>
 {
-
-	/**
-	 * Delete the trad problem.
-	 *
-	 * @param  problem  Trad problem.
-	 */
-	@Delete
-	void delete(SsTradProblem problem);
 
 	/**
 	 * @return All trad problems.
 	 */
 	@Query("SELECT * FROM trad")
-	List<SsTradProblem> getAll();
-
-	/**
-	 * Insert a new trad problem.
-	 *
-	 * @param  problem  Trad problem.
-	 */
-	@Insert
-	void insert(SsTradProblem problem);
+	LiveData<List<SsTrad>> getAll();
 
 }

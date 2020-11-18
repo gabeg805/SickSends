@@ -2,6 +2,12 @@ TODO:
 
 * Add onBackPressed() functionality to the Onboarding activity.
 
+* Fix header layout of the navigation view (the drawer layout)
+
+* Maybe change USA rope climbing to Yosemite Decimal System (YDS). Check
+  other climbing grades like Ewbank. Not sure if I have it but it looks
+  popular?
+
 
 
 DESIGN:

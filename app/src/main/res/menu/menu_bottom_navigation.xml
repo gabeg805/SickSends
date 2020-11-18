@@ -3,38 +3,46 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<item
-		android:id="@+id/go_to_home"
+		android:id="@+id/home_from_bar"
 		android:enabled="true"
 		android:icon="@mipmap/home"
 		android:title="@string/home"
 		/>
 
 	<item
-		android:id="@+id/go_to_boulder"
+		android:id="@+id/boulder_from_bar"
 		android:enabled="true"
 		android:icon="@mipmap/boulder"
 		android:title="@string/boulder"
 		/>
 
 	<item
-		android:id="@+id/go_to_lead"
+		android:id="@+id/lead_from_bar"
 		android:enabled="true"
 		android:icon="@mipmap/lead"
 		android:title="@string/lead"
 		/>
 
+	<!--
 	<item
-		android:id="@+id/go_to_top_rope"
+		android:id="@+id/sport_from_bar"
+		android:enabled="true"
+		android:icon="@mipmap/sport"
+		android:title="@string/sport"
+		/>
+	-->
+
+	<item
+		android:id="@+id/top_rope_from_bar"
 		android:enabled="true"
 		android:icon="@mipmap/top_rope"
 		android:title="@string/top_rope"
 		/>
 
 	<item
-		android:id="@+id/go_to_trad"
+		android:id="@+id/trad_from_bar"
 		android:enabled="true"
 		android:icon="@mipmap/trad"
 		android:title="@string/trad"
 		/>
-
 </menu>

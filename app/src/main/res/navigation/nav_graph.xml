@@ -4,13 +4,36 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/nav_graph"
-	app:startDestination="@id/frg_boulder">
+	app:startDestination="@id/frg_home">
 
 	<!-- Add tools:layout -->
 	<fragment
-		android:name="me.gabeg.sicksends.SsBoulderingFragment"
-		android:id="@+id/frg_boulder"
-		android:label="Boulder"
+		android:name="me.gabeg.sicksends.SsHomeFragment"
+		android:id="@+id/frg_home"
+		android:label="@string/home"
 		/>
 
+	<fragment
+		android:name="me.gabeg.sicksends.SsBoulderFragment"
+		android:id="@+id/frg_boulder"
+		android:label="@string/boulder"
+		/>
+
+	<fragment
+		android:name="me.gabeg.sicksends.SsLeadFragment"
+		android:id="@+id/frg_lead"
+		android:label="@string/lead"
+		/>
+
+	<fragment
+		android:name="me.gabeg.sicksends.SsTopRopeFragment"
+		android:id="@+id/frg_top_rope"
+		android:label="@string/top_rope"
+		/>
+
+	<fragment
+		android:name="me.gabeg.sicksends.SsTradFragment"
+		android:id="@+id/frg_trad"
+		android:label="@string/trad"
+		/>
 </navigation>

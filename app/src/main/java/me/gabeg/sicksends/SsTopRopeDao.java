@@ -1,8 +1,7 @@
 package me.gabeg.sicksends;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import java.util.List;
 
@@ -11,28 +10,19 @@ import java.util.List;
  */
 @Dao
 public interface SsTopRopeDao
+	extends SsProblemDao<SsTopRope>
 {
 
 	/**
-	 * Delete the top rope problem.
-	 *
-	 * @param  problem  Top rope problem.
+	 * Delete all top rope problems.
 	 */
-	@Delete
-	void delete(SsTopRopeProblem problem);
+	@Query("DELETE FROM top_rope")
+	void deleteAll();
 
 	/**
 	 * @return All top rope problems.
 	 */
 	@Query("SELECT * FROM top_rope")
-	List<SsTopRopeProblem> getAll();
-
-	/**
-	 * Insert a new top rope problem.
-	 *
-	 * @param  problem  Top rope problem.
-	 */
-	@Insert
-	void insert(SsTopRopeProblem problem);
+	LiveData<List<SsTopRope>> getAll();
 
 }

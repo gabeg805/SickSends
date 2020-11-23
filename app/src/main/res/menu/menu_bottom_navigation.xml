@@ -17,20 +17,11 @@
 		/>
 
 	<item
-		android:id="@+id/lead_from_bar"
-		android:enabled="true"
-		android:icon="@mipmap/lead"
-		android:title="@string/lead"
-		/>
-
-	<!--
-	<item
 		android:id="@+id/sport_from_bar"
 		android:enabled="true"
 		android:icon="@mipmap/sport"
 		android:title="@string/sport"
 		/>
-	-->
 
 	<item
 		android:id="@+id/top_rope_from_bar"

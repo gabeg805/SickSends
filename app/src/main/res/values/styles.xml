@@ -22,10 +22,15 @@
 		-->
 
 		<!--
+		<item name="colorOnPrimary">@color/white</item>
+		<item name="colorOnSecondary">@color/white</item>
+
 		<item name="colorPrimary">@color/blue</item>
 		<item name="colorPrimaryDark">@color/blue_dark</item>
 		<item name="colorAccent">@color/red</item>
 		-->
+
+		<item name="toolbarStyle">@style/AppTheme.Toolbar</item>
 
 		<!--
 		<item name="bottomNavigationStyle">@style/AppTheme.BottomNavigation</item>
@@ -36,6 +41,41 @@
 		<item name="windowActionBar">false</item>
 		-->
 	</style>
+
+	<!-- Base theme overlay -->
+	<style name="ThemeOverlay" parent="">
+	</style>
+
+
+	<!-- Toolbar -->
+	<style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+		<!--
+		<item name="materialThemeOverlay">@style/ThemeOverlay.Toolbar</item>
+		-->
+		<item name="titleTextAppearance">@style/AppTheme.Toolbar.Title</item>
+		<item name="subtitleTextAppearance">@style/AppTheme.Toolbar.Subtitle</item>
+	</style>
+
+	<style name="AppTheme.Toolbar.Title" parent="TextAppearance.MaterialComponents.Headline6">
+		<item name="android:textColor">@color/white</item>
+	</style>
+
+	<style name="AppTheme.Toolbar.Subtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textSize">@dimen/tsz_tiny</item>
+		<item name="android:textStyle">bold</item>
+	</style>
+
+	<!--
+	<style name="ThemeOverlay.Toolbar" parent="">
+		<item name="colorPrimary">@color/pink_100</item>
+		<item name="colorPrimaryVariant">@color/pink_300</item>
+		<item name="colorOnPrimary">@color/pink_900</item>
+		<item name="colorOnSurface">@color/pink_900</item>
+		<item name="colorControlNormal">@color/pink_900</item>
+	</style>
+	-->
+
 
 	<style name="AppTheme.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
 		<!--

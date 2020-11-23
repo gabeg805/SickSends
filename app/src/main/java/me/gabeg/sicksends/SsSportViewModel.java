@@ -3,15 +3,15 @@ package me.gabeg.sicksends;
 import android.app.Application;
 
 /**
- * Lead view model.
+ * Sport view model.
  */
-public class SsLeadViewModel
-	extends SsProblemViewModel<SsLeadRepository, SsLead>
+public class SsSportViewModel
+	extends SsProblemViewModel<SsSportRepository, SsSport>
 {
 
 	/**
 	 */
-	public SsLeadViewModel(Application app)
+	public SsSportViewModel(Application app)
 	{
 		super(app);
 	}
@@ -21,7 +21,7 @@ public class SsLeadViewModel
 	 */
 	public void buildRepository(Application app)
 	{
-		this.mRepository = new SsLeadRepository(app);
+		this.mRepository = new SsSportRepository(app);
 	}
 
 }

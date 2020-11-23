@@ -1,8 +1,7 @@
 package me.gabeg.sicksends;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
 import androidx.room.Query;
 import java.util.List;
 
@@ -11,28 +10,13 @@ import java.util.List;
  */
 @Dao
 public interface SsSportDao
+	extends SsProblemDao<SsSport>
 {
-
-	/**
-	 * Delete the sport problem.
-	 *
-	 * @param  problem  Sport problem.
-	 */
-	@Delete
-	void delete(SsSportProblem problem);
 
 	/**
 	 * @return All sport problems.
 	 */
 	@Query("SELECT * FROM sport")
-	List<SsSportProblem> getAll();
-
-	/**
-	 * Insert a new sport problem.
-	 *
-	 * @param  problem  Sport problem.
-	 */
-	@Insert
-	void insert(SsSportProblem problem);
+	LiveData<List<SsSport>> getAll();
 
 }

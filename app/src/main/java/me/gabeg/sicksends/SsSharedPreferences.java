@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import androidx.preference.PreferenceManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Container for the values of each preference.
@@ -83,39 +85,25 @@ public class SsSharedPreferences
 	 * @param  willUse  Flag indicating whether the user will use the grade or
 	 *     not.
 	 */
-	public void editUseGradeBoulder(String grade, boolean willUse)
+	public void editUseBoulderGrade(String grade, boolean willUse)
 	{
-		String key = this.getKeys().getUseGradeBoulder(grade);
+		String key = this.getKeys().getUseBoulderGrade(grade);
 		this.saveBoolean(key, willUse, false);
 	}
 
 	/**
 	 * Edit the flag indicating whether the user will use a particular type of
-	 * lead grade or not.
+	 * sport grade or not.
 	 *
-	 * @param  grade  Name of a lead grade.
+	 * @param  grade  Name of a sport grade.
 	 * @param  willUse  Flag indicating whether the user will use the grade or
 	 *     not.
 	 */
-	public void editUseGradeLead (String grade, boolean willUse)
+	public void editUseSportGrade(String grade, boolean willUse)
 	{
-		String key = this.getKeys().getUseGradeLead(grade);
+		String key = this.getKeys().getUseSportGrade(grade);
 		this.saveBoolean(key, willUse, false);
 	}
-
-	///**
-	// * Edit the flag indicating whether the user will use a particular type of
-	// * sport grade or not.
-	// *
-	// * @param  grade  Name of a sport grade.
-	// * @param  willUse  Flag indicating whether the user will use the grade or
-	// *     not.
-	// */
-	//public void editUseGradeSport(String grade, boolean willUse)
-	//{
-	//	String key = this.getKeys().getUseGradeSport(grade);
-	//	this.saveBoolean(key, willUse, false);
-	//}
 
 	/**
 	 * Edit the flag indicating whether the user will use a particular type of
@@ -125,9 +113,9 @@ public class SsSharedPreferences
 	 * @param  willUse  Flag indicating whether the user will use the grade or
 	 *     not.
 	 */
-	public void editUseGradeTopRope(String grade, boolean willUse)
+	public void editUseTopRopeGrade(String grade, boolean willUse)
 	{
-		String key = this.getKeys().getUseGradeTopRope(grade);
+		String key = this.getKeys().getUseTopRopeGrade(grade);
 		this.saveBoolean(key, willUse, false);
 	}
 
@@ -139,9 +127,9 @@ public class SsSharedPreferences
 	 * @param  willUse  Flag indicating whether the user will use the grade or
 	 *     not.
 	 */
-	public void editUseGradeTrad(String grade, boolean willUse)
+	public void editUseTradGrade(String grade, boolean willUse)
 	{
-		String key = this.getKeys().getUseGradeTrad(grade);
+		String key = this.getKeys().getUseTradGrade(grade);
 		this.saveBoolean(key, willUse, false);
 	}
 
@@ -157,28 +145,16 @@ public class SsSharedPreferences
 	}
 
 	/**
-	 * Edit the flag indicating whether the user will climb lead or not.
+	 * Edit the flag indicating whether the user will climb sport or not.
 	 *
-	 * @param  willClimb  Flag indicating whether the user will climb lead or
+	 * @param  willClimb  Flag indicating whether the user will climb sport or
 	 *     not.
 	 */
-	public void editWillClimbLead(boolean willClimb)
+	public void editWillClimbSport(boolean willClimb)
 	{
-		String key = this.getKeys().getWillClimbLead();
+		String key = this.getKeys().getWillClimbSport();
 		this.saveBoolean(key, willClimb, false);
 	}
-
-	///**
-	// * Edit the flag indicating whether the user will climb sport or not.
-	// *
-	// * @param  willClimb  Flag indicating whether the user will climb sport or
-	// *     not.
-	// */
-	//public void editWillClimbSport(boolean willClimb)
-	//{
-	//	String key = this.getKeys().getWillClimbSport();
-	//	this.saveBoolean(key, willClimb, false);
-	//}
 
 	/**
 	 * Edit the flag indicating whether the user will top rope or not.
@@ -200,6 +176,56 @@ public class SsSharedPreferences
 	{
 		String key = this.getKeys().getWillClimbTrad();
 		this.saveBoolean(key, willClimb, false);
+	}
+
+	/**
+	 * @return All possible boulder grades for a type of grade.
+	 */
+	public List<String> getAllBoulderGrades(String grade)
+	{
+		SsSharedConstants cons = this.getConstants();
+
+		if (cons.getGradeBoulderFont().equals(grade))
+		{
+			Log.i(TAG, "Getting all font boulders!");
+			return cons.getGradeListBoulderFont();
+		}
+		else if (cons.getGradeBoulderUk().equals(grade))
+		{
+			Log.i(TAG, "Getting all uk boulders!");
+			return cons.getGradeListBoulderUk();
+		}
+		else if (cons.getGradeBoulderVscale().equals(grade))
+		{
+			Log.i(TAG, "Getting all vscale boulders!");
+			return cons.getGradeListBoulderVscale();
+		}
+		else
+		{
+			Log.i(TAG, "Getting NO boulders!");
+			return null;
+		}
+	}
+
+	/**
+	 * @return All boulder grades that will be used by the user.
+	 */
+	public List<String> getAllUseBoulderGrades()
+	{
+		SsSharedConstants cons = this.getConstants();
+		List<String> allBoulders = cons.getAllBoulderGrades();
+		List<String> useBoulders = new ArrayList<>();
+
+		for (String grade : allBoulders)
+		{
+			if (this.useBoulderGrade(grade))
+			{
+				Log.i(TAG, "Use boulder grade : " + grade);
+				useBoulders.add(grade);
+			}
+		}
+
+		return useBoulders;
 	}
 
 	/**
@@ -354,77 +380,11 @@ public class SsSharedPreferences
 	}
 
 	/**
-	 * @return Whether a bouldering grad will be used or not.
-	 *
-	 * @param  grade  Name of a bouldering grade.
-	 */
-	public boolean getUseGradeBoulder(String grade)
-	{
-		String key = this.getKeys().getUseGradeBoulder(grade);
-		boolean value = this.getDefaults().getUseGrade();
-
-		return this.getBoolean(key, value);
-	}
-
-	/**
-	 * @return Whether a lead grad will be used or not.
-	 *
-	 * @param  grade  Name of a lead grade.
-	 */
-	public boolean getUseGradeLead(String grade)
-	{
-		String key = this.getKeys().getUseGradeLead(grade);
-		boolean value = this.getDefaults().getUseGrade();
-
-		return this.getBoolean(key, value);
-	}
-
-	///**
-	// * @return Whether a sport grad will be used or not.
-	// *
-	// * @param  grade  Name of a sport grade.
-	// */
-	//public boolean getUseGradeSport(String grade)
-	//{
-	//	String key = this.getKeys().getUseGradeSport(grade);
-	//	boolean value = this.getDefaults().getUseGrade();
-
-	//	return this.getBoolean(key, value);
-	//}
-
-	/**
-	 * @return Whether a top rope grad will be used or not.
-	 *
-	 * @param  grade  Name of a top rope grade.
-	 */
-	public boolean getUseGradeTopRope(String grade)
-	{
-		String key = this.getKeys().getUseGradeTopRope(grade);
-		boolean value = this.getDefaults().getUseGrade();
-
-		return this.getBoolean(key, value);
-	}
-
-	/**
-	 * @return Whether a trad grad will be used or not.
-	 *
-	 * @param  grade  Name of a trad grade.
-	 */
-	public boolean getUseGradeTrad(String grade)
-	{
-		String key = this.getKeys().getUseGradeTrad(grade);
-		boolean value = this.getDefaults().getUseGrade();
-
-		return this.getBoolean(key, value);
-	}
-
-	/**
 	 * @return Whether the user has selected anything climb or not.
 	 */
 	public boolean getWillClimb()
 	{
-		//return this.getWillClimbBoulder() || this.getWillClimbSport()
-		return this.getWillClimbBoulder() || this.getWillClimbLead()
+		return this.getWillClimbBoulder() || this.getWillClimbSport()
 			|| this.getWillClimbTopRope() || this.getWillClimbTrad();
 	}
 
@@ -440,26 +400,15 @@ public class SsSharedPreferences
 	}
 
 	/**
-	 * @return Whether the user will climb lead.
+	 * @return Whether the user will climb sport.
 	 */
-	public boolean getWillClimbLead()
+	public boolean getWillClimbSport()
 	{
-		String key = this.getKeys().getWillClimbLead();
+		String key = this.getKeys().getWillClimbSport();
 		boolean value = this.getDefaults().getWillClimb();
 
 		return this.getBoolean(key, value);
 	}
-
-	///**
-	// * @return Whether the user will climb sport.
-	// */
-	//public boolean getWillClimbSport()
-	//{
-	//	String key = this.getKeys().getWillClimbSport();
-	//	boolean value = this.getDefaults().getWillClimb();
-
-	//	return this.getBoolean(key, value);
-	//}
 
 	/**
 	 * @return Whether the user will climb top rope.
@@ -597,6 +546,60 @@ public class SsSharedPreferences
 	}
 
 	/**
+	 * @return True if will use a boulder grade, and False otherwise.
+	 *
+	 * @param  grade  Name of a bouldering grade.
+	 */
+	public boolean useBoulderGrade(String grade)
+	{
+		String key = this.getKeys().getUseBoulderGrade(grade);
+		boolean value = this.getDefaults().getUseGrade();
+
+		return this.getBoolean(key, value);
+	}
+
+	/**
+	 * @return True if will use a sport grade, and False otherwise.
+	 *
+	 * @param  grade  Name of a sport grade.
+	 */
+	public boolean useSportGrade(String grade)
+	{
+		String key = this.getKeys().getUseSportGrade(grade);
+		boolean value = this.getDefaults().getUseGrade();
+
+		return this.getBoolean(key, value);
+	}
+
+	/**
+	 * @return True if will use a top rope grade, and False otherwise.
+	 *
+	 * @param  grade  Name of a top rope grade.
+	 */
+	public boolean useTopRopeGrade(String grade)
+	{
+		String key = this.getKeys().getUseTopRopeGrade(grade);
+		boolean value = this.getDefaults().getUseGrade();
+
+		return this.getBoolean(key, value);
+	}
+
+	/**
+	 * @return True if will use a trad grade, and False otherwise.
+	 *
+	 * @param  grade  Name of a trad grade.
+	 */
+	public boolean useTradGrade(String grade)
+	{
+		String key = this.getKeys().getUseTradGrade(grade);
+		boolean value = this.getDefaults().getUseGrade();
+
+		return this.getBoolean(key, value);
+	}
+
+
+
+	/**
 	 * Debug the shared preferences.
 	 */
 	public void debug()
@@ -635,40 +638,32 @@ public class SsSharedPreferences
 		Log.i(TAG, "Will climb boulder? " + this.getWillClimbBoulder());
 		for (String g : bgrades)
 		{
-			boolean use = this.getUseGradeBoulder(g);
-			String k = keys.getUseGradeBoulder(g);
+			boolean use = this.useBoulderGrade(g);
+			String k = keys.getUseBoulderGrade(g);
 			Log.i(TAG, "Use? " + use + "  | Grade : " + g + "  | Key : " + k);
 		}
 
-		Log.i(TAG, "Will climb lead?      " + this.getWillClimbLead());
+		Log.i(TAG, "Will climb sport?      " + this.getWillClimbSport());
 		for (String g : rgrades)
 		{
-			boolean use = this.getUseGradeLead(g);
-			String k = keys.getUseGradeLead(g);
+			boolean use = this.useSportGrade(g);
+			String k = keys.getUseSportGrade(g);
 			Log.i(TAG, "Use? " + use + "  | Grade : " + g + "  | Key : " + k);
 		}
-
-		//Log.i(TAG, "Will climb sport?      " + this.getWillClimbSport());
-		//for (String g : rgrades)
-		//{
-		//	boolean use = this.getUseGradeSport(g);
-		//	String k = keys.getUseGradeSport(g);
-		//	Log.i(TAG, "Use? " + use + "  | Grade : " + g + "  | Key : " + k);
-		//}
 
 		Log.i(TAG, "Will climb top rope?   " + this.getWillClimbTopRope());
 		for (String g : rgrades)
 		{
-			boolean use = this.getUseGradeTopRope(g);
-			String k = keys.getUseGradeTopRope(g);
+			boolean use = this.useTopRopeGrade(g);
+			String k = keys.getUseTopRopeGrade(g);
 			Log.i(TAG, "Use? " + use + "  | Grade : " + g + "  | Key : " + k);
 		}
 
 		Log.i(TAG, "Will climb trad?       " + this.getWillClimbTrad());
 		for (String g : tgrades)
 		{
-			boolean use = this.getUseGradeTrad(g);
-			String k = keys.getUseGradeTrad(g);
+			boolean use = this.useTradGrade(g);
+			String k = keys.getUseTradGrade(g);
 			Log.i(TAG, "Use? " + use + "  | Grade : " + g + "  | Key : " + k);
 		}
 	}

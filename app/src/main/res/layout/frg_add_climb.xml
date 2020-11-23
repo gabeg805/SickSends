@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/frg_add_climb"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="@dimen/normal"
+		android:orientation="vertical">
+
+		<!-- Name section -->
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/medium"
+			android:layout_marginBottom="@dimen/medium">
+		
+			<!-- Icon -->
+			<com.google.android.material.button.MaterialButton
+				style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+				android:id="@+id/name_icon"
+				android:layout_width="@dimen/touch"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/zero"
+				app:iconGravity="textStart"
+				app:iconPadding="@dimen/zero"
+				app:iconSize="@dimen/isz_large"
+				app:icon="@mipmap/pencil"
+				/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/normal"
+				android:layout_marginEnd="@dimen/normal"
+				android:layout_toEndOf="@id/name_icon"
+				android:orientation="vertical">
+
+				<!-- Title -->
+				<TextView
+					android:id="@+id/name_title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:textSize="@dimen/tsz_normal"
+					android:text="@string/name"
+					/>
+
+				<!-- Q/A -->
+				<TextView
+					android:id="@+id/name_qa"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/medium"
+					android:textSize="@dimen/tsz_large"
+					android:textStyle="bold"
+					android:text="What was the name of the climb?"
+					android:visibility="visible"
+					/>
+
+				<!-- Entry -->
+					<!--
+					style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+					-->
+				<com.google.android.material.textfield.TextInputLayout
+					android:id="@+id/name_entry_group"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:visibility="visible">
+
+					<com.google.android.material.textfield.TextInputEditText
+						android:id="@+id/name_entry_edittext"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:paddingTop="@dimen/small"
+						android:singleLine="true"
+						android:imeOptions="actionDone"
+						android:inputType="textCapSentences"
+						android:textSize="@dimen/tsz_large">
+					</com.google.android.material.textfield.TextInputEditText>
+				</com.google.android.material.textfield.TextInputLayout>
+			</LinearLayout>
+		</RelativeLayout>
+
+		<!-- Attempts section -->
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/medium"
+			android:layout_marginBottom="@dimen/medium">
+
+			<!-- Icon -->
+			<com.google.android.material.button.MaterialButton
+				style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+				android:id="@+id/attempt_icon"
+				android:layout_width="@dimen/touch"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/zero"
+				app:iconGravity="textStart"
+				app:iconPadding="@dimen/zero"
+				app:iconSize="@dimen/isz_large"
+				app:icon="@mipmap/attempt"
+				/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/normal"
+				android:layout_marginEnd="@dimen/normal"
+				android:layout_toEndOf="@id/attempt_icon"
+				android:orientation="vertical">
+
+				<!-- Title -->
+				<TextView
+					android:id="@+id/attempts_title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:textSize="@dimen/tsz_normal"
+					android:text="@string/attempts"
+					/>
+
+				<!-- Q/A -->
+				<TextView
+					android:id="@+id/attempts_qa"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/medium"
+					android:textSize="@dimen/tsz_large"
+					android:textStyle="bold"
+					android:text="How many attempts did it take?"
+					android:visibility="visible"
+					/>
+
+				<!-- Entry -->
+				<LinearLayout
+					android:id="@+id/attempts_entry_group"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal"
+					android:visibility="visible">
+					<!--
+					android:gravity="center"
+					android:layout_width="wrap_content"
+					android:paddingStart="@dimen/huge"
+					-->
+
+					<com.google.android.material.button.MaterialButton
+						style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+						android:id="@+id/attempts_decrement"
+						android:layout_width="@dimen/touch"
+						android:layout_height="@dimen/touch"
+						android:layout_marginEnd="@dimen/normal"
+						android:layout_gravity="center"
+						android:padding="@dimen/zero"
+						app:iconGravity="textStart"
+						app:iconPadding="@dimen/zero"
+						app:iconSize="@dimen/isz_normal"
+						app:icon="@mipmap/minus"
+						/>
+
+						<!--
+						style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+						-->
+					<com.google.android.material.textfield.TextInputLayout
+						android:id="@+id/attempts_entry"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content">
+
+						<com.google.android.material.textfield.TextInputEditText
+							android:id="@+id/attempts_entry_edittext"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:paddingTop="@dimen/small"
+							android:gravity="center_horizontal"
+							android:inputType="number"
+							android:minWidth="@dimen/touch"
+							android:singleLine="true"
+							android:textSize="@dimen/tsz_large"
+							/>
+					</com.google.android.material.textfield.TextInputLayout>
+
+					<com.google.android.material.button.MaterialButton
+						style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+						android:id="@+id/attempts_increment"
+						android:layout_width="@dimen/touch"
+						android:layout_height="@dimen/touch"
+						android:layout_marginStart="@dimen/normal"
+						android:layout_gravity="center"
+						android:padding="@dimen/zero"
+						app:iconGravity="textStart"
+						app:iconPadding="@dimen/zero"
+						app:iconSize="@dimen/isz_normal"
+						app:icon="@mipmap/plus"
+						/>
+				</LinearLayout>
+			</LinearLayout>
+		</RelativeLayout>
+
+		<!-- Grade section -->
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/medium"
+			android:layout_marginBottom="@dimen/medium">
+		
+			<!-- Icon -->
+			<com.google.android.material.button.MaterialButton
+				style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+				android:id="@+id/grade_icon"
+				android:layout_width="@dimen/touch"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/zero"
+				app:iconGravity="textStart"
+				app:iconPadding="@dimen/zero"
+				app:iconSize="@dimen/isz_large"
+				app:icon="@mipmap/camera"
+				/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/normal"
+				android:layout_marginEnd="@dimen/normal"
+				android:layout_toEndOf="@id/grade_icon"
+				android:orientation="vertical">
+
+				<!-- Title -->
+				<TextView
+					android:id="@+id/grade_title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:textSize="@dimen/tsz_normal"
+					android:text="@string/grade"
+					/>
+
+				<!-- Q/A -->
+				<TextView
+					android:id="@+id/grade_qa"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/medium"
+					android:textSize="@dimen/tsz_large"
+					android:textStyle="bold"
+					android:text="What was the grade?"
+					android:visibility="visible"
+					/>
+
+				<!-- Entry -->
+				<LinearLayout
+					android:id="@+id/grade_entry_group"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					android:visibility="visible">
+					<!--
+					android:gravity="center"
+					-->
+
+					<LinearLayout
+						android:id="@+id/grade_entry_name"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						/>
+
+					<LinearLayout
+						android:id="@+id/grade_entry_level"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:visibility="visible"
+						/>
+				</LinearLayout>
+			</LinearLayout>
+		</RelativeLayout>
+
+			<!-- Location -->
+			<!-- Route type -->
+			<!-- Hold type -->
+			<!-- Technique type -->
+
+	</LinearLayout>
+</androidx.core.widget.NestedScrollView>

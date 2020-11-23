@@ -6,21 +6,43 @@ package me.gabeg.sicksends;
 public enum SsRouteType
 {
 
-	CHIMNEY(1 << 0),
-	CRACK(1 << 1),
-	DIHEDRAL(1 << 2),
-	FACE(1 << 3),
-	HIGH_BALL(1 << 4),
-	OVERHANG(1 << 5),
-	ROOF(1 << 6),
-	SLAB(1 << 7),
-	TOP_OUT(1 << 8),
-	TRAVERSE(1 << 9);
+
+	ARETE(1 << 0),
+	CHIMNEY(1 << 1),
+	CRACK(1 << 2),
+	DIHEDRAL(1 << 3),
+	FACE(1 << 4),
+	HIGH_BALL(1 << 5),
+	OVERHANG(1 << 6),
+	ROOF(1 << 7),
+	SLAB(1 << 8),
+	TOP_OUT(1 << 9),
+	TRAVERSE(1 << 10);
+
+
+
+	//FACE(1 << 3),
+	//OVERHANG(1 << 5),
+	//ROOF(1 << 6),
+	//SLAB(1 << 7),
+
+	//ARETE(1 << 10),
+	//CHIMNEY(1 << 0),
+	//DIHEDRAL(1 << 2),
+	//CRACK(1 << 1),
+
+	//TRAVERSE(1 << 9);
+
+	//// Only boulder
+	//HIGH_BALL(1 << 4),
+
+	//// Assume every boulder is topout but not necessarily every trad
+	//TOP_OUT(1 << 8),
 
 	/**
 	 * Value associated with an enum.
 	 */
-	private long mValue;
+	private final long mValue;
 
 	/**
 	 */

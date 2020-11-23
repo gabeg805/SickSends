@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Show lead climbs.
+ * Show sport climbs.
  */
-public class SsLeadFragment
+public class SsSportFragment
 	extends Fragment
 {
 
@@ -17,7 +17,7 @@ public class SsLeadFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		Bundle savedInstanceState)
 	{
-		return inflater.inflate(R.layout.frg_lead, container, false);
+		return inflater.inflate(R.layout.frg_sport, container, false);
 	}
 
 }

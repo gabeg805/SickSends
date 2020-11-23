@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!--
+	Resources:
+
+	https://www.mountainproject.com/international-climbing-grades
+	https://www.thecrag.com/en/article/grades
+	https://pt.wikipedia.org/wiki/Cota%C3%A7%C3%A3o_%28montanha%29#Tabela_comparativa
+	https://en.wikipedia.org/wiki/Grade_(climbing)#Free_climbing_2
+	-->
+
+	<!-- Fontainebleau boulder grades -->
+	<string-array name="grades_boulder_font">
+		<item>3</item>
+		<item>4-</item>
+		<item>4</item>
+		<item>4+</item>
+		<item>5-</item>
+		<item>5</item>
+		<item>5+</item>
+		<item>6A</item>
+		<item>6A+</item>
+		<item>6B</item>
+		<item>6B+</item>
+		<item>6C</item>
+		<item>6C+</item>
+		<item>7A</item>
+		<item>7A+</item>
+		<item>7B</item>
+		<item>7B+</item>
+		<item>7C</item>
+		<item>7C+</item>
+		<item>8A</item>
+		<item>8A+</item>
+		<item>8B</item>
+		<item>8B+</item>
+		<item>8C</item>
+		<item>8C+</item>
+		<item>9A</item>
+	</string-array>
+
+	<!-- UK boulder grades -->
+	<string-array name="grades_boulder_uk">
+		<item>4a</item>
+		<item>4b</item>
+		<item>4c</item>
+		<item>5a</item>
+		<item>5b</item>
+		<item>5c</item>
+		<item>6a</item>
+		<item>6b</item>
+		<item>6c</item>
+		<item>7a</item>
+		<item>7b</item>
+		<item>7c</item>
+	</string-array>
+
+	<!-- V scale boulder grades -->
+	<string-array name="grades_boulder_vscale">
+		<item>VB</item>
+		<item>V0-</item>
+		<item>V0</item>
+		<item>V0+</item>
+		<item>V1-</item>
+		<item>V1</item>
+		<item>V1+</item>
+		<item>V2-</item>
+		<item>V2</item>
+		<item>V2+</item>
+		<item>V3-</item>
+		<item>V3</item>
+		<item>V3+</item>
+		<item>V4-</item>
+		<item>V4</item>
+		<item>V4+</item>
+		<item>V5-</item>
+		<item>V5</item>
+		<item>V5+</item>
+		<item>V6-</item>
+		<item>V6</item>
+		<item>V6+</item>
+		<item>V7-</item>
+		<item>V7</item>
+		<item>V7+</item>
+		<item>V8-</item>
+		<item>V8</item>
+		<item>V8+</item>
+		<item>V9-</item>
+		<item>V9</item>
+		<item>V9+</item>
+		<item>V10-</item>
+		<item>V10</item>
+		<item>V10+</item>
+		<item>V11-</item>
+		<item>V11</item>
+		<item>V11+</item>
+		<item>V12-</item>
+		<item>V12</item>
+		<item>V12+</item>
+		<item>V13-</item>
+		<item>V13</item>
+		<item>V13+</item>
+		<item>V14-</item>
+		<item>V14</item>
+		<item>V14+</item>
+		<item>V15-</item>
+		<item>V15</item>
+		<item>V15+</item>
+		<item>V16-</item>
+		<item>V16</item>
+		<item>V16+</item>
+		<item>V17-</item>
+		<item>V17</item>
+		<item>V17+</item>
+	</string-array>
+
+	<!-- USA (YSD) rope grades -->
+	<string-array name="grades_rope_usa">
+		<item>5.0</item>
+		<item>5.1</item>
+		<item>5.2</item>
+		<item>5.3</item>
+		<item>5.4</item>
+		<item>5.5</item>
+		<item>5.6</item>
+		<item>5.7</item>
+		<item>5.7+</item>
+		<item>5.8-</item>
+		<item>5.8</item>
+		<item>5.8+</item>
+		<item>5.9-</item>
+		<item>5.9</item>
+		<item>5.9+</item>
+		<item>5.10a</item>
+		<item>5.10-</item>
+		<item>5.10b</item>
+		<item>5.10</item>
+		<item>5.10c</item>
+		<item>5.10+</item>
+		<item>5.10d</item>
+		<item>5.11a</item>
+		<item>5.11-</item>
+		<item>5.11b</item>
+		<item>5.11</item>
+		<item>5.11c</item>
+		<item>5.11+</item>
+		<item>5.11d</item>
+		<item>5.12a</item>
+		<item>5.12-</item>
+		<item>5.12b</item>
+		<item>5.12</item>
+		<item>5.12c</item>
+		<item>5.12+</item>
+		<item>5.12d</item>
+		<item>5.13a</item>
+		<item>5.13-</item>
+		<item>5.13b</item>
+		<item>5.13</item>
+		<item>5.13c</item>
+		<item>5.13+</item>
+		<item>5.13d</item>
+		<item>5.14a</item>
+		<item>5.14-</item>
+		<item>5.14b</item>
+		<item>5.14</item>
+		<item>5.14c</item>
+		<item>5.14+</item>
+		<item>5.14d</item>
+		<item>5.15a</item>
+		<item>5.15-</item>
+		<item>5.15b</item>
+		<item>5.15</item>
+		<item>5.15c</item>
+		<item>5.15+</item>
+		<item>5.15d</item>
+	</string-array>
+
+	<!-- Australian rope grades -->
+	<string-array name="grades_rope_aus">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
+		<item>8</item>
+		<item>9</item>
+		<item>10</item>
+		<item>11</item>
+		<item>12</item>
+		<item>13</item>
+		<item>14</item>
+		<item>15</item>
+		<item>16</item>
+		<item>17</item>
+		<item>18</item>
+		<item>19</item>
+		<item>20</item>
+		<item>21</item>
+		<item>22</item>
+		<item>23</item>
+		<item>24</item>
+		<item>25</item>
+		<item>26</item>
+		<item>27</item>
+		<item>28</item>
+		<item>29</item>
+		<item>30</item>
+		<item>31</item>
+		<item>32</item>
+		<item>33</item>
+		<item>34</item>
+		<item>35</item>
+		<item>36</item>
+		<item>37</item>
+		<item>38</item>
+		<item>39</item>
+	</string-array>
+
+	<!-- Brazilian rope grades -->
+	<string-array name="grades_rope_bra">
+		<item>I sup</item>
+		<item>II</item>
+		<item>II sup</item>
+		<item>III</item>
+		<item>III sup</item>
+		<item>IV</item>
+		<item>IV sup</item>
+		<item>V</item>
+		<item>V sup</item>
+		<item>VI</item>
+		<item>VI sup</item>
+		<item>VIIa</item>
+		<item>VIIb</item>
+		<item>VIIc</item>
+		<item>VIIIa</item>
+		<item>VIIIb</item>
+		<item>VIIIc</item>
+		<item>IXa</item>
+		<item>IXb</item>
+		<item>IXc</item>
+		<item>Xa</item>
+		<item>Xb</item>
+		<item>Xc</item>
+		<item>XIa</item>
+		<item>XIb</item>
+		<item>XIc</item>
+		<item>XIIa</item>
+		<item>XIIb</item>
+		<item>XIIc</item>
+	</string-array>
+
+	<!-- Finnish rope grades -->
+	<string-array name="grades_rope_fin">
+		<item>1-</item>
+		<item>1</item>
+		<item>1+</item>
+		<item>2-</item>
+		<item>2</item>
+		<item>2+</item>
+		<item>3-</item>
+		<item>3</item>
+		<item>3+</item>
+		<item>4-</item>
+		<item>4</item>
+		<item>4+</item>
+		<item>5-</item>
+		<item>5</item>
+		<item>5+</item>
+		<item>6-</item>
+		<item>6</item>
+		<item>6+</item>
+		<item>7-</item>
+		<item>7</item>
+		<item>7+</item>
+		<item>8-</item>
+		<item>8</item>
+		<item>8+</item>
+		<item>9-</item>
+		<item>9</item>
+		<item>9+</item>
+		<item>10-</item>
+		<item>10</item>
+		<item>10+</item>
+		<item>11-</item>
+		<item>11</item>
+		<item>11+</item>
+		<item>12-</item>
+		<item>12</item>
+		<item>12+</item>
+	</string-array>
+
+	<!-- French rope grades -->
+	<string-array name="grades_rope_fre">
+		<item>1-</item>
+		<item>1</item>
+		<item>1+</item>
+		<item>2-</item>
+		<item>2</item>
+		<item>3</item>
+		<item>3+</item>
+		<item>4a</item>
+		<item>4b</item>
+		<item>4c</item>
+		<item>5a</item>
+		<item>5b</item>
+		<item>5c</item>
+		<item>6a</item>
+		<item>6a+</item>
+		<item>6b</item>
+		<item>6b+</item>
+		<item>6c</item>
+		<item>6c+</item>
+		<item>7a</item>
+		<item>7a+</item>
+		<item>7b</item>
+		<item>7b+</item>
+		<item>7c</item>
+		<item>7c+</item>
+		<item>8a</item>
+		<item>8a+</item>
+		<item>8b</item>
+		<item>8b+</item>
+		<item>8c</item>
+		<item>8c+</item>
+		<item>9a</item>
+		<item>9a+</item>
+		<item>9b</item>
+		<item>9b+</item>
+		<item>9c</item>
+	</string-array>
+
+	<!-- Norway rope grades -->
+	<string-array name="grades_rope_nor">
+		<item>1-</item>
+		<item>1</item>
+		<item>1+</item>
+		<item>2-</item>
+		<item>2</item>
+		<item>2+</item>
+		<item>3-</item>
+		<item>3</item>
+		<item>3+</item>
+		<item>4-</item>
+		<item>4</item>
+		<item>4+</item>
+		<item>5-</item>
+		<item>5</item>
+		<item>5+</item>
+		<item>6-</item>
+		<item>6</item>
+		<item>6+</item>
+		<item>7-</item>
+		<item>7</item>
+		<item>7+</item>
+		<item>8-</item>
+		<item>8</item>
+		<item>8+</item>
+		<item>9-</item>
+		<item>9</item>
+		<item>9+</item>
+		<item>10-</item>
+		<item>10</item>
+		<item>10+</item>
+		<item>11-</item>
+		<item>11</item>
+		<item>11+</item>
+		<item>12-</item>
+		<item>12</item>
+		<item>12+</item>
+	</string-array>
+
+	<!-- Poland rope grades -->
+	<string-array name="grades_rope_pol">
+		<item>I-</item>
+		<item>I</item>
+		<item>I+</item>
+		<item>II-</item>
+		<item>II</item>
+		<item>II+</item>
+		<item>III-</item>
+		<item>III</item>
+		<item>III+</item>
+		<item>IV-</item>
+		<item>IV</item>
+		<item>IV+</item>
+		<item>V-</item>
+		<item>V</item>
+		<item>V+</item>
+		<item>VI-</item>
+		<item>VI</item>
+		<item>VI+</item>
+		<item>VI.1</item>
+		<item>VI.1+</item>
+		<item>VI.2</item>
+		<item>VI.2+</item>
+		<item>VI.3</item>
+		<item>VI.3+</item>
+		<item>VI.4</item>
+		<item>VI.4+</item>
+		<item>VI.5</item>
+		<item>VI.5+</item>
+		<item>VI.6</item>
+		<item>VI.6+</item>
+		<item>VI.7</item>
+		<item>VI.7+</item>
+		<item>VI.8</item>
+		<item>VI.8+</item>
+		<item>VI.9</item>
+		<item>VI.9+</item>
+	</string-array>
+
+	<!-- Saxon rope grades -->
+	<string-array name="grades_rope_sax">
+		<item>I</item>
+		<item>II</item>
+		<item>III</item>
+		<item>IV</item>
+		<item>V</item>
+		<item>VI</item>
+		<item>VIIa</item>
+		<item>VIIb</item>
+		<item>VIIc</item>
+		<item>VIIIa</item>
+		<item>VIIIb</item>
+		<item>VIIIc</item>
+		<item>IXa</item>
+		<item>IXb</item>
+		<item>IXc</item>
+		<item>Xa</item>
+		<item>Xb</item>
+		<item>Xc</item>
+		<item>XIa</item>
+		<item>XIb</item>
+		<item>XIc</item>
+		<item>XIIa</item>
+		<item>XIIb</item>
+		<item>XIIc</item>
+	</string-array>
+
+	<!-- UIAA rope grades -->
+	<string-array name="grades_rope_uiaa">
+		<item>I</item>
+		<item>II</item>
+		<item>III</item>
+		<item>IV</item>
+		<item>IV+</item>
+		<item>V</item>
+		<item>V+</item>
+		<item>VI-</item>
+		<item>VI</item>
+		<item>VI+</item>
+		<item>VII-</item>
+		<item>VII</item>
+		<item>VII+</item>
+		<item>VIII-</item>
+		<item>VIII</item>
+		<item>VIII+</item>
+		<item>IX-</item>
+		<item>IX</item>
+		<item>IX+</item>
+		<item>X-</item>
+		<item>X</item>
+		<item>X+</item>
+		<item>XI-</item>
+		<item>XI</item>
+		<item>XI+</item>
+		<item>XII-</item>
+		<item>XII</item>
+		<item>XII+</item>
+		<item>XIII-</item>
+	</string-array>
+
+	<!-- British trad grades -->
+	<string-array name="grades_trad_bri">
+	</string-array>
+
+</resources>

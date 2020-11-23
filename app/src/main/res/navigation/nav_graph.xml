@@ -20,9 +20,9 @@
 		/>
 
 	<fragment
-		android:name="me.gabeg.sicksends.SsLeadFragment"
-		android:id="@+id/frg_lead"
-		android:label="@string/lead"
+		android:name="me.gabeg.sicksends.SsSportFragment"
+		android:id="@+id/frg_sport"
+		android:label="@string/sport"
 		/>
 
 	<fragment
@@ -35,5 +35,11 @@
 		android:name="me.gabeg.sicksends.SsTradFragment"
 		android:id="@+id/frg_trad"
 		android:label="@string/trad"
+		/>
+
+	<fragment
+		android:name="me.gabeg.sicksends.SsAddClimbFragment"
+		android:id="@+id/frg_add_climb"
+		android:label="Add climb"
 		/>
 </navigation>

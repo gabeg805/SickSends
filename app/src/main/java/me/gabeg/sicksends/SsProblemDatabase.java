@@ -13,7 +13,7 @@ import java.lang.System;
 /**
  * Database that can be used to access stored climbing information.
  */
-@Database(entities={SsBoulder.class, SsLead.class, SsTopRope.class, SsTrad.class}, version=1)
+@Database(entities={SsBoulder.class, SsSport.class, SsTopRope.class, SsTrad.class}, version=1)
 public abstract class SsProblemDatabase
 	extends RoomDatabase
 {
@@ -26,14 +26,9 @@ public abstract class SsProblemDatabase
 	public abstract SsBoulderDao boulderDao();
 
 	/**
-	 * Store lead problems.
+	 * Store sport problems.
 	 */
-	public abstract SsLeadDao leadDao();
-
-	///**
-	// * Store sport problems.
-	// */
-	//public abstract SsSportDao sportDao();
+	public abstract SsSportDao sportDao();
 
 	/**
 	 * Store top rope problems.
@@ -74,7 +69,8 @@ public abstract class SsProblemDatabase
 			if (sInstance == null)
 			{
 				Context appContext = context.getApplicationContext();
-				sInstance = Room.databaseBuilder(appContext, SsProblemDatabase.class, DB_NAME)
+				sInstance = Room.databaseBuilder(appContext, SsProblemDatabase.class,
+					DB_NAME)
 					//.allowMainThreadQueries()
 					.addCallback(sDatabaseCallback)
 					.build();
@@ -154,15 +150,15 @@ public abstract class SsProblemDatabase
 			boulders[1].isIndoor = true;
 			boulders[2].isIndoor = false;
 
-			boulders[0].holdType = SsHoldType.JUG.getValue() | SsHoldType.UNDERCLING.getValue();
-			boulders[1].holdType = SsHoldType.ARETE.getValue() | SsHoldType.CRIMP.getValue() | SsHoldType.PINCH.getValue() | SsHoldType.POCKET.getValue();
-			boulders[2].holdType = SsHoldType.SLOPER.getValue() | SsHoldType.VOLUME.getValue();
+			boulders[0].holdType = SsHoldType.JUG.getValue();
+			boulders[1].holdType = SsHoldType.CRIMP.getValue() | SsHoldType.PINCH.getValue() | SsHoldType.POCKET.getValue();
+			boulders[2].holdType = SsHoldType.POCKET.getValue() | SsHoldType.SLOPER.getValue();
 
 			boulders[0].routeType = SsRouteType.FACE.getValue();
-			boulders[1].routeType = SsRouteType.OVERHANG.getValue();
+			boulders[1].routeType = SsRouteType.ARETE.getValue() | SsRouteType.OVERHANG.getValue();
 			boulders[2].routeType = SsRouteType.SLAB.getValue() | SsRouteType.TOP_OUT.getValue();
 
-			boulders[0].techniqueType = SsTechniqueType.BUMP.getValue() | SsTechniqueType.CAMPUS.getValue();
+			boulders[0].techniqueType = SsTechniqueType.CAMPUS.getValue();
 			boulders[1].techniqueType = SsTechniqueType.KNEE_BAR.getValue() | SsTechniqueType.SMEARING.getValue();
 			boulders[2].techniqueType = SsTechniqueType.DROP_KNEE.getValue() | SsTechniqueType.DYNO.getValue() | SsTechniqueType.MANTLE.getValue();
 		}

@@ -8,6 +8,13 @@
 	<string name="home">Home</string>
 	<string name="about">About</string>
 
+	<string name="name">Name</string>
+	<string name="grade">Grade</string>
+	<string name="attempts">Attempts</string>
+
+	<!-- Misc -->
+	<string name="indoor">Indoor</string>
+	<string name="outdoor">Outdoor</string>
 
 	<!-- Onboarding -->
 	<string name="welcome">Welcome to the\nSick Sends climbing app!</string>
@@ -75,6 +82,42 @@
 	<string name="example_grade_rope_uiaa">Ex. VII, VII&#43;, VIII&#8722;, &#8230;</string>
 	<string name="example_grade_rope_usa">Ex. 5.10a, 5.10b, 5.10c, &#8230;</string>
 	<string name="example_grade_trad_bri">Ex. E1 5b, E2 5c, E3 6a, &#8230;</string>
+
+
+	<!-- Whether the particular grade uses a plus or minus-->
+	<!--
+	<string name="use_plus_grade_boulder_font"></string>
+	<string name="use_plus_grade_boulder_uk"></string>
+	<string name="use_plus_grade_boulder_vscale"></string>
+	<string name="use_plus_grade_rope_aus"></string>
+	<string name="use_plus_grade_rope_bra"></string>
+	<string name="use_plus_grade_rope_fin"></string>
+	<string name="use_plus_grade_rope_fre"></string>
+	<string name="use_plus_grade_rope_nor"></string>
+	<string name="use_plus_grade_rope_pol"></string>
+	<string name="use_plus_grade_rope_sax"></string>
+	<string name="use_plus_grade_rope_uiaa"></string>
+	<string name="use_plus_grade_rope_usa"></string>
+	<string name="use_plus_grade_trad_bri"></string>
+	-->
+
+
+	<!-- Whether the particular grade uses a letter -->
+	<!--
+	<string name="use_plus_grade_boulder_font"></string>
+	<string name="use_plus_grade_boulder_uk"></string>
+	<string name="use_plus_grade_boulder_vscale"></string>
+	<string name="use_plus_grade_rope_aus"></string>
+	<string name="use_plus_grade_rope_bra"></string>
+	<string name="use_plus_grade_rope_fin"></string>
+	<string name="use_plus_grade_rope_fre"></string>
+	<string name="use_plus_grade_rope_nor"></string>
+	<string name="use_plus_grade_rope_pol"></string>
+	<string name="use_plus_grade_rope_sax"></string>
+	<string name="use_plus_grade_rope_uiaa"></string>
+	<string name="use_plus_grade_rope_usa"></string>
+	<string name="use_plus_grade_trad_bri"></string>
+	-->
 
 
 	<!-- Error messages -->

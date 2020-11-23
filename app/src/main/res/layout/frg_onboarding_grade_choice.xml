@@ -61,36 +61,7 @@
 					/>
 			</LinearLayout>
 
-			<!-- Lead -->
-			<LinearLayout
-				android:id="@+id/lead_grade_root"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/tiny"
-				android:orientation="vertical"
-				android:visibility="gone">
-				<TextView
-					style="@style/OnboardingTheme.TextView.Section"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/lead"
-					/>
-				<include
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					layout="@layout/view_grade_choice_lead"
-					/>
-				<TextView
-					style="@style/OnboardingTheme.TextView.Example"
-					android:id="@+id/grade_example_lead"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:gravity="center_horizontal"
-					/>
-			</LinearLayout>
-
 			<!-- Sport -->
-			<!--
 			<LinearLayout
 				android:id="@+id/sport_grade_root"
 				android:layout_width="match_parent"
@@ -117,7 +88,6 @@
 					android:gravity="center_horizontal"
 					/>
 			</LinearLayout>
-			-->
 
 			<!-- Top rope -->
 			<LinearLayout

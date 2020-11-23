@@ -44,34 +44,25 @@ public class SsSharedKeys
 	/**
 	 * @return Key for using a particular boulder grade.
 	 */
-	public String getUseGradeBoulder(String grade)
+	public String getUseBoulderGrade(String grade)
 	{
 		String key = this.getString(R.string.use_grade_boulder);
 		return key.concat("_").concat(grade);
 	}
 
 	/**
-	 * @return Key for using a particular lead grade.
+	 * @return Key for using a particular sport grade.
 	 */
-	public String getUseGradeLead(String grade)
+	public String getUseSportGrade(String grade)
 	{
-		String key = this.getString(R.string.use_grade_lead);
+		String key = this.getString(R.string.use_grade_sport);
 		return key.concat("_").concat(grade);
 	}
-
-	///**
-	// * @return Key for using a particular sport grade.
-	// */
-	//public String getUseGradeSport(String grade)
-	//{
-	//	String key = this.getString(R.string.use_grade_sport);
-	//	return key.concat("_").concat(grade);
-	//}
 
 	/**
 	 * @return Key for using a particular top rope grade.
 	 */
-	public String getUseGradeTopRope(String grade)
+	public String getUseTopRopeGrade(String grade)
 	{
 		String key = this.getString(R.string.use_grade_top_rope);
 		return key.concat("_").concat(grade);
@@ -80,7 +71,7 @@ public class SsSharedKeys
 	/**
 	 * @return Key for using a particular trad grade.
 	 */
-	public String getUseGradeTrad(String grade)
+	public String getUseTradGrade(String grade)
 	{
 		String key = this.getString(R.string.use_grade_trad);
 		return key.concat("_").concat(grade);
@@ -95,20 +86,12 @@ public class SsSharedKeys
 	}
 
 	/**
-	 * @return The lead climbing type.
+	 * @return The sport climbing type.
 	 */
-	public String getWillClimbLead()
+	public String getWillClimbSport()
 	{
-		return this.getString(R.string.will_climb_lead);
+		return this.getString(R.string.will_climb_sport);
 	}
-
-	///**
-	// * @return The sport climbing type.
-	// */
-	//public String getWillClimbSport()
-	//{
-	//	return this.getString(R.string.will_climb_sport);
-	//}
 
 	/**
 	 * @return The top rope climbing type.

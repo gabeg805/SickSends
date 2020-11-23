@@ -10,27 +10,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 //import androidx.customview.widget.Openable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The application's main activity.
  */
 public class SsMainActivity
 	extends AppCompatActivity
-	implements NavigationView.OnNavigationItemSelectedListener,
-		BottomNavigationView.OnNavigationItemSelectedListener
+	implements View.OnClickListener,
+		NavigationView.OnNavigationItemSelectedListener,
+		BottomNavigationView.OnNavigationItemSelectedListener,
+		NavController.OnDestinationChangedListener
 {
 
 	private static final String TAG = "SsMainActivity";
@@ -67,7 +75,15 @@ public class SsMainActivity
 	/**
 	 * Floating button to add new alarms.
 	 */
-	private FloatingActionButton mFloatingButton;
+	private FloatingActionButton mFloatingActionButton;
+
+	/**
+	 * Top level destinations in the app bar.
+	 *
+	 * This dictates whether the hamburger icon is visible, or a back button.
+	 */
+	private static final Integer[] TOP_LEVEL_DST_IDS = {R.id.frg_home,
+		R.id.frg_boulder, R.id.frg_sport, R.id.frg_top_rope, R.id.frg_trad};
 
 	/**
 	 * Convert a menu item ID from the bottom bar to the corresponding ID in the
@@ -83,8 +99,8 @@ public class SsMainActivity
 				return R.id.home_from_drawer;
 			case R.id.boulder_from_bar:
 				return R.id.boulder_from_drawer;
-			case R.id.lead_from_bar:
-				return R.id.lead_from_drawer;
+			case R.id.sport_from_bar:
+				return R.id.sport_from_drawer;
 			case R.id.top_rope_from_bar:
 				return R.id.top_rope_from_drawer;
 			case R.id.trad_from_bar:
@@ -117,8 +133,8 @@ public class SsMainActivity
 				return R.id.home_from_bar;
 			case R.id.boulder_from_drawer:
 				return R.id.boulder_from_bar;
-			case R.id.lead_from_drawer:
-				return R.id.lead_from_bar;
+			case R.id.sport_from_drawer:
+				return R.id.sport_from_bar;
 			case R.id.top_rope_from_drawer:
 				return R.id.top_rope_from_bar;
 			case R.id.trad_from_drawer:
@@ -147,9 +163,9 @@ public class SsMainActivity
 	/**
 	 * @return The floating action button.
 	 */
-	private FloatingActionButton getFloatingButton()
+	private FloatingActionButton getFloatingActionButton()
 	{
-		return this.mFloatingButton;
+		return this.mFloatingActionButton;
 	}
 
 	/**
@@ -174,6 +190,41 @@ public class SsMainActivity
 	private SsSharedPreferences getSharedPreferences()
 	{
 		return this.mSharedPreferences;
+	}
+
+	/**
+	 * @return The toolbar subtitle based on the destination.
+	 *
+	 * @param  dst  The destination.
+	 */
+	private CharSequence getToolbarSubtitleByDestination(NavDestination dst)
+	{
+		SsSharedPreferences shared = this.getSharedPreferences();
+		SsSharedConstants cons = shared.getConstants();
+		int id = dst.getId();
+
+		if ((id == R.id.frg_home) || (id == R.id.frg_add_climb))
+		{
+			return "";
+		}
+		else
+		{
+			return cons.getIndoor();
+		}
+	}
+
+	/**
+	 * @return The toolbar title based on the destination.
+	 *
+	 * @param  dst  The destination.
+	 */
+	private CharSequence getToolbarTitleByDestination(NavDestination dst)
+	{
+		SsSharedPreferences shared = this.getSharedPreferences();
+		SsSharedConstants cons = shared.getConstants();
+		int id = dst.getId();
+
+		return (id == R.id.frg_home) ? cons.getAppName() : dst.getLabel();
 	}
 
 	/**
@@ -220,27 +271,27 @@ public class SsMainActivity
 	 */
 	private void navigateTo(int id)
 	{
-		NavController navController = this.getNavController();
+		NavController controller = this.getNavController();
 
 		if ((id == R.id.home_from_bar) || (id == R.id.home_from_drawer))
 		{
-			navController.navigate(R.id.frg_home);
+			controller.navigate(R.id.frg_home);
 		}
 		else if ((id == R.id.boulder_from_bar) || (id == R.id.boulder_from_drawer))
 		{
-			navController.navigate(R.id.frg_boulder);
+			controller.navigate(R.id.frg_boulder);
 		}
-		else if ((id == R.id.lead_from_bar) || (id == R.id.lead_from_drawer))
+		else if ((id == R.id.sport_from_bar) || (id == R.id.sport_from_drawer))
 		{
-			navController.navigate(R.id.frg_lead);
+			controller.navigate(R.id.frg_sport);
 		}
 		else if ((id == R.id.top_rope_from_bar) || (id == R.id.top_rope_from_drawer))
 		{
-			navController.navigate(R.id.frg_top_rope);
+			controller.navigate(R.id.frg_top_rope);
 		}
 		else if ((id == R.id.trad_from_bar) || (id == R.id.trad_from_drawer))
 		{
-			navController.navigate(R.id.frg_trad);
+			controller.navigate(R.id.frg_trad);
 		}
 	}
 
@@ -269,6 +320,22 @@ public class SsMainActivity
 	}
 
 	/**
+	 * Called when the floating action button has been clicked.
+	 */
+	@Override
+	public void onClick(View view)
+	{
+		NavController controller = this.getNavController();
+		int srcId = controller.getCurrentDestination().getId();
+		Bundle args = SsBundle.toAddClimbBundle(srcId);
+
+		Log.i(TAG, "onFabClicked! " + srcId);
+
+		controller.navigate(R.id.frg_add_climb, args);
+	}
+
+	/**
+	 * Create the main activity.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -282,10 +349,35 @@ public class SsMainActivity
 
 		this.mDrawerLayout = findViewById(R.id.drawer_layout);
 		this.mNavigationView = findViewById(R.id.nav_view);
+		this.mFloatingActionButton = findViewById(R.id.fab_add_climb);
 		this.mBottomBar = findViewById(R.id.bottom_navigation_bar);
 		this.mNavController = Navigation.findNavController(this, R.id.nav_host);
 
 		this.setupAppBar();
+	}
+
+	/**
+	 * Create the toolbar menu items.
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+		return true;
+	}
+
+	/**
+	 * Navigation destination has changed.
+	 */
+	@Override
+	public void onDestinationChanged(NavController controller, NavDestination dst,
+		Bundle args)
+	{
+		Log.i(TAG, "onDestinationChanged! " + dst.getLabel());
+		this.setToolbarTitle(dst);
+		this.setToolbarSubtitle(dst);
+		this.setFloatingActionButtonVisibility(dst);
+		this.setBottomBarVisibility(dst);
 	}
 
 	/**
@@ -297,6 +389,7 @@ public class SsMainActivity
 		int id = menuItem.getItemId();
 
 		this.navigateTo(id);
+		this.selectNavigationItem(id);
 		this.closeDrawer();
 		return true;
 	}
@@ -307,19 +400,10 @@ public class SsMainActivity
 	public boolean onSupportNavigateUp()
 	{
 		Log.i(TAG, "onSupportNavigateUp!");
-		NavController navController = this.getNavController();
+		NavController controller = this.getNavController();
 		DrawerLayout drawer = this.getDrawerLayout();
 
-		return NavigationUI.navigateUp(navController, drawer);
-	}
-
-	/**
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-		return true;
+		return NavigationUI.navigateUp(controller, drawer);
 	}
 
 	/**
@@ -333,9 +417,9 @@ public class SsMainActivity
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		Log.i(TAG, "onOptionsItemSelected!");
-		NavController navController = this.getNavController();
+		NavController controller = this.getNavController();
 
-		return NavigationUI.onNavDestinationSelected(item, navController)
+		return NavigationUI.onNavDestinationSelected(item, controller)
 			|| super.onOptionsItemSelected(item);
 	}
 
@@ -351,6 +435,7 @@ public class SsMainActivity
 
 		this.setupBottomBar();
 		this.setupNavigationView();
+		this.setupFloatingActionButton();
 		this.setupGoogleRatingDialog();
 	}
 
@@ -372,26 +457,138 @@ public class SsMainActivity
 	}
 
 	/**
+	 * Set bottom navigation bar visibility based on the current destination.
+	 *
+	 * @param  dst  The current destination.
+	 */
+	private void setBottomBarVisibility(NavDestination dst)
+	{
+		BottomNavigationView bottomBar = this.getBottomBar();
+		int id = dst.getId();
+
+		if (id == R.id.frg_add_climb)
+		{
+			bottomBar.setVisibility(View.GONE);
+		}
+		else
+		{
+			bottomBar.setVisibility(View.VISIBLE);
+		}
+	}
+
+	/**
+	 * Set floating action button visibility based on the current destination.
+	 *
+	 * @param  dst  The current destination.
+	 */
+	private void setFloatingActionButtonVisibility(NavDestination dst)
+	{
+		FloatingActionButton fab = this.getFloatingActionButton();
+		int id = dst.getId();
+
+		if ((id == R.id.frg_home) || (id == R.id.frg_add_climb))
+		{
+			fab.hide();
+		}
+		else
+		{
+			fab.show();
+		}
+	}
+
+	/**
+	 * Set the toolbar subtitle based on the current destination.
+	 *
+	 * @param  dst  The current destination.
+	 */
+	private void setToolbarSubtitle(NavDestination dst)
+	{
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar == null)
+		{
+			return;
+		}
+
+		CharSequence subtitle = this.getToolbarSubtitleByDestination(dst);
+		actionBar.setSubtitle(subtitle);
+	}
+
+	/**
+	 * Set the toolbar title based on the current destination.
+	 *
+	 * @param  dst  The current destination.
+	 */
+	private void setToolbarTitle(NavDestination dst)
+	{
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar == null)
+		{
+			return;
+		}
+
+		CharSequence title = this.getToolbarTitleByDestination(dst);
+		actionBar.setTitle(title);
+	}
+
+	/**
 	 * Setup the app bar for navigation.
 	 */
 	private void setupAppBar()
 	{
 		CollapsingToolbarLayout collapsingLayout = findViewById(
 			R.id.collapsing_toolbar_layout);
-		Toolbar toolbar = findViewById(R.id.toolbar);
+		MaterialToolbar toolbar = findViewById(R.id.toolbar);
 		DrawerLayout drawer = this.getDrawerLayout();
-		NavController navController = this.getNavController();
+		NavController controller = this.getNavController();
+		Set<Integer> topLevel = new HashSet<>(Arrays.asList(TOP_LEVEL_DST_IDS));
 
-		AppBarConfiguration appBarConfiguration =
-			new AppBarConfiguration.Builder(R.id.frg_home, R.id.frg_boulder,
-					R.id.frg_lead, R.id.frg_top_rope, R.id.frg_trad)
+		AppBarConfiguration appBarConfig = new AppBarConfiguration.Builder(topLevel)
 				.setDrawerLayout(drawer)
 				.build();
 				//.setOpenableLayout(drawer)
 
 		setSupportActionBar(toolbar);
-		NavigationUI.setupWithNavController(collapsingLayout, toolbar, navController,
-			appBarConfiguration);
+		NavigationUI.setupWithNavController(collapsingLayout, toolbar, controller,
+			appBarConfig);
+		//NavigationUI.setupWithNavController(toolbar, controller, appBarConfig);
+		collapsingLayout.setTitleEnabled(false);
+		controller.addOnDestinationChangedListener(this);
+	}
+
+	/**
+	 * Setup the floating action button.
+	 */
+	private void setupFloatingActionButton()
+	{
+		FloatingActionButton fab = this.getFloatingActionButton();
+		fab.setOnClickListener(this);
+	}
+
+	/**
+	 * Setup the toolbar.
+	 */
+	private void setupToolbar()
+	{
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar == null)
+		{
+			return;
+		}
+
+		SsSharedPreferences shared = this.getSharedPreferences();
+		BottomNavigationView bottomBar = this.getBottomBar();
+		Menu menu = bottomBar.getMenu();
+
+		boolean willBoulder = shared.getWillClimbBoulder();
+		boolean willSport = shared.getWillClimbSport();
+		boolean willTopRope = shared.getWillClimbTopRope();
+		boolean willTrad = shared.getWillClimbTrad();
+
+		menu.findItem(R.id.boulder_from_bar).setVisible(willBoulder);
+		menu.findItem(R.id.sport_from_bar).setVisible(willSport);
+		menu.findItem(R.id.top_rope_from_bar).setVisible(willTopRope);
+		menu.findItem(R.id.trad_from_bar).setVisible(willTrad);
+		bottomBar.setOnNavigationItemSelectedListener(this);
 	}
 
 	/**
@@ -404,12 +601,12 @@ public class SsMainActivity
 		Menu menu = bottomBar.getMenu();
 
 		boolean willBoulder = shared.getWillClimbBoulder();
-		boolean willLead = shared.getWillClimbLead();
+		boolean willSport = shared.getWillClimbSport();
 		boolean willTopRope = shared.getWillClimbTopRope();
 		boolean willTrad = shared.getWillClimbTrad();
 
 		menu.findItem(R.id.boulder_from_bar).setVisible(willBoulder);
-		menu.findItem(R.id.lead_from_bar).setVisible(willLead);
+		menu.findItem(R.id.sport_from_bar).setVisible(willSport);
 		menu.findItem(R.id.top_rope_from_bar).setVisible(willTopRope);
 		menu.findItem(R.id.trad_from_bar).setVisible(willTrad);
 		bottomBar.setOnNavigationItemSelectedListener(this);
@@ -452,12 +649,12 @@ public class SsMainActivity
 		int navId = this.bottomBarToDrawerId(barId);
 
 		boolean willBoulder = shared.getWillClimbBoulder();
-		boolean willLead = shared.getWillClimbLead();
+		boolean willSport = shared.getWillClimbSport();
 		boolean willTopRope = shared.getWillClimbTopRope();
 		boolean willTrad = shared.getWillClimbTrad();
 
 		menu.findItem(R.id.boulder_from_drawer).setVisible(willBoulder);
-		menu.findItem(R.id.lead_from_drawer).setVisible(willLead);
+		menu.findItem(R.id.sport_from_drawer).setVisible(willSport);
 		menu.findItem(R.id.top_rope_from_drawer).setVisible(willTopRope);
 		menu.findItem(R.id.trad_from_drawer).setVisible(willTrad);
 		nav.setCheckedItem(navId);

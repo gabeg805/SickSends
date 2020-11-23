@@ -15,7 +15,7 @@ public enum SsFeelType
 	/**
 	 * Value associated with an enum.
 	 */
-	private long mValue;
+	private final long mValue;
 
 	/**
 	 */

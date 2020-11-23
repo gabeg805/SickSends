@@ -88,16 +88,16 @@ public abstract class SsProblem
 	public boolean isOutdoor;
 
 	/**
-	 * Types of holds on the problem.
-	 */
-	@ColumnInfo(name="hold_type")
-	public long holdType;
-
-	/**
 	 * Types of route features on the problem.
 	 */
 	@ColumnInfo(name="route_type")
 	public long routeType;
+
+	/**
+	 * Types of holds on the problem.
+	 */
+	@ColumnInfo(name="hold_type")
+	public long holdType;
 
 	/**
 	 * Types of climbing techniques used on the problem.

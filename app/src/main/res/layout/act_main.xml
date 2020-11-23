@@ -8,29 +8,39 @@
 	android:fitsSystemWindows="true">
 
 	<!-- Container for everything on screen -->
-	<LinearLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="vertical">
 
 		<!-- Top action bar -->
 		<com.google.android.material.appbar.AppBarLayout
+			android:id="@+id/app_bar"
 			android:layout_width="match_parent"
-			android:layout_height="?android:attr/actionBarSize">
+			android:layout_height="wrap_content"
+			app:liftOnScroll="true">
 
 			<com.google.android.material.appbar.CollapsingToolbarLayout
 				android:id="@+id/collapsing_toolbar_layout"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				app:contentScrim="?attr/colorPrimary"
-				app:expandedTitleGravity="top"
-				app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+				app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-				<androidx.appcompat.widget.Toolbar
+		<!--
+				This might not work because the toolbar is setting the title not the
+				collapsing toolbar layout
+
+				app:expandedTitleMarginEnd="64dp"
+				app:expandedTitleMarginStart="48dp"
+				app:expandedTitleGravity="top"
+		-->
+
+				<com.google.android.material.appbar.MaterialToolbar
 					android:id="@+id/toolbar"
 					android:layout_width="match_parent"
 					android:layout_height="?attr/actionBarSize"
-					app:layout_collapseMode="pin"
+					app:layout_scrollFlags="scroll|enterAlways"
 					/>
 			</com.google.android.material.appbar.CollapsingToolbarLayout>
 		</com.google.android.material.appbar.AppBarLayout>
@@ -41,7 +51,8 @@
 			android:id="@+id/nav_host"
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
-			android:layout_weight="1"
+			app:layout_constraintTop_toBottomOf="@id/app_bar"
+			app:layout_constraintBottom_toBottomOf="parent"
 			app:defaultNavHost="true"
 			app:navGraph="@navigation/nav_graph"
 			/>
@@ -54,6 +65,8 @@
 			android:layout_gravity="bottom|end"
 			android:layout_marginBottom="@dimen/normal"
 			android:layout_marginEnd="@dimen/normal"
+			app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar"
+			app:layout_constraintEnd_toEndOf="parent"
 			android:src="@mipmap/plus"
 			/>
 
@@ -62,13 +75,13 @@
 			android:id="@+id/bottom_navigation_bar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			app:layout_constraintBottom_toBottomOf="parent"
 			app:labelVisibilityMode="labeled"
 			app:menu="@menu/menu_bottom_navigation"
 			/>
-	</LinearLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 	<!-- Navigation drawer contents -->
-	<!-- TODO Fix header layout -->
 	<com.google.android.material.navigation.NavigationView
 		android:id="@+id/nav_view"
 		android:layout_width="wrap_content"

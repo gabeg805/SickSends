@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/attempts_section"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<!-- Icon -->
+	<com.google.android.material.button.MaterialButton
+		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+		android:id="@+id/attempts_icon"
+		android:layout_width="@dimen/touch"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/zero"
+		android:clickable="false"
+		app:layout_constraintStart_toStartOf="parent"
+		app:iconGravity="textStart"
+		app:iconPadding="@dimen/zero"
+		app:iconSize="@dimen/isz_large"
+		app:icon="@mipmap/attempt"
+		/>
+
+	<!-- Title and Q/A -->
+	<LinearLayout
+		android:id="@+id/attempts_header"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/normal"
+		android:layout_marginEnd="@dimen/normal"
+		android:orientation="vertical"
+		app:layout_constraintTop_toTopOf="@id/attempts_icon"
+		app:layout_constraintBottom_toBottomOf="@id/attempts_icon"
+		app:layout_constraintStart_toEndOf="@id/attempts_icon"
+		app:layout_constraintEnd_toEndOf="parent">
+
+		<TextView
+			android:id="@+id/attempts_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:textSize="@dimen/tsz_normal"
+			android:text="@string/attempts"
+			/>
+
+		<TextView
+			android:id="@+id/attempts_qa"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_marginBottom="@dimen/medium"
+			android:textSize="@dimen/tsz_large"
+			android:textStyle="bold"
+			android:text="How many attempts did it take?"
+			android:visibility="gone"
+			/>
+	</LinearLayout>
+
+	<!-- Entry -->
+	<LinearLayout
+		android:id="@+id/attempts_entry"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/normal"
+		android:layout_marginEnd="@dimen/normal"
+		android:orientation="horizontal"
+		android:visibility="gone"
+		app:layout_constraintTop_toBottomOf="@id/attempts_header"
+		app:layout_constraintStart_toEndOf="@id/attempts_icon"
+		app:layout_constraintEnd_toEndOf="parent">
+		<!--
+		android:gravity="center"
+		android:layout_width="wrap_content"
+		android:paddingStart="@dimen/huge"
+		-->
+
+		<com.google.android.material.button.MaterialButton
+			style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+			android:id="@+id/attempts_decrement"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_marginEnd="@dimen/normal"
+			android:layout_gravity="center"
+			android:padding="@dimen/zero"
+			app:iconGravity="textStart"
+			app:iconPadding="@dimen/zero"
+			app:iconSize="@dimen/isz_normal"
+			app:icon="@mipmap/minus"
+			/>
+
+			<!--
+			style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+			-->
+		<com.google.android.material.textfield.TextInputLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/attempts_entry_edittext"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="@dimen/small"
+				android:gravity="center_horizontal"
+				android:inputType="number"
+				android:minWidth="@dimen/touch"
+				android:singleLine="true"
+				android:textSize="@dimen/tsz_large"
+				/>
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<com.google.android.material.button.MaterialButton
+			style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+			android:id="@+id/attempts_increment"
+			android:layout_width="@dimen/touch"
+			android:layout_height="@dimen/touch"
+			android:layout_marginStart="@dimen/normal"
+			android:layout_gravity="center"
+			android:padding="@dimen/zero"
+			app:iconGravity="textStart"
+			app:iconPadding="@dimen/zero"
+			app:iconSize="@dimen/isz_normal"
+			app:icon="@mipmap/plus"
+			/>
+	</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

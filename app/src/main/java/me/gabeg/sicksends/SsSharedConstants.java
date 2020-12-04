@@ -424,4 +424,147 @@ public class SsSharedConstants
 		return this.getString(R.string.outdoor);
 	}
 
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the Font grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeBoulderFont(String name)
+	{
+		return this.getGradeBoulderFont().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the UK grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeBoulderUk(String name)
+	{
+		return this.getGradeBoulderUk().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the V scale grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeBoulderVscale(String name)
+	{
+		return this.getGradeBoulderVscale().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the Australian grading system, and
+	 *     False otherwise.
+	 */
+	public boolean isGradeRopeAustralian(String name)
+	{
+		return this.getGradeRopeAustralian().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the Brasilian grading system, and
+	 *     False otherwise.
+	 */
+	public boolean isGradeRopeBrasilian(String name)
+	{
+		return this.getGradeRopeBrasilian().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the Finnish grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeRopeFinnish(String name)
+	{
+		return this.getGradeRopeFinnish().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the French grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeRopeFrench(String name)
+	{
+		return this.getGradeRopeFrench().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the Norway grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeRopeNorway(String name)
+	{
+		return this.getGradeRopeNorway().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the Poland grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeRopePoland(String name)
+	{
+		return this.getGradeRopePoland().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the Saxon grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeRopeSaxon(String name)
+	{
+		return this.getGradeRopeSaxon().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the UIAA grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeRopeUiaa(String name)
+	{
+		return this.getGradeRopeUiaa().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the USA grading system, and False
+	 *     otherwise.
+	 */
+	public boolean isGradeRopeUsa(String name)
+	{
+		return this.getGradeRopeUsa().equals(name);
+	}
+
+	/**
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return True if a name is the same as the British trad grading system, and
+	 *     False otherwise.
+	 */
+	public boolean isGradeTradBritish(String name)
+	{
+		return this.getGradeTradBritish().equals(name);
+	}
+
 }

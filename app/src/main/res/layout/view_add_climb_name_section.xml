@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/name_section"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<!-- Icon -->
+	<com.google.android.material.button.MaterialButton
+		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+		android:id="@+id/name_icon"
+		android:layout_width="@dimen/touch"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/zero"
+		android:clickable="false"
+		app:layout_constraintStart_toStartOf="parent"
+		app:iconGravity="textStart"
+		app:iconPadding="@dimen/zero"
+		app:iconSize="@dimen/isz_large"
+		app:icon="@mipmap/pencil"
+		/>
+
+	<!-- Title and Q/A -->
+	<LinearLayout
+		android:id="@+id/name_header"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/normal"
+		android:layout_marginEnd="@dimen/normal"
+		android:orientation="vertical"
+		app:layout_constraintTop_toTopOf="@id/name_icon"
+		app:layout_constraintBottom_toBottomOf="@id/name_icon"
+		app:layout_constraintStart_toEndOf="@id/name_icon"
+		app:layout_constraintEnd_toEndOf="parent">
+
+		<TextView
+			android:id="@+id/name_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:textSize="@dimen/tsz_normal"
+			android:text="@string/name"
+			/>
+
+		<TextView
+			android:id="@+id/name_qa"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_marginBottom="@dimen/medium"
+			android:textSize="@dimen/tsz_large"
+			android:textStyle="bold"
+			android:text="What was the name of the climb?"
+			android:visibility="gone"
+			/>
+	</LinearLayout>
+
+	<!-- Entry -->
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/name_entry"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/normal"
+		android:layout_marginEnd="@dimen/normal"
+		android:visibility="gone"
+		app:layout_constraintTop_toBottomOf="@id/name_header"
+		app:layout_constraintStart_toEndOf="@id/name_icon"
+		app:layout_constraintEnd_toEndOf="parent">
+		<!--
+		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+		-->
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/name_entry_edittext"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/small"
+			android:singleLine="true"
+			android:imeOptions="actionDone"
+			android:inputType="textCapSentences"
+			android:textSize="@dimen/tsz_large">
+		</com.google.android.material.textfield.TextInputEditText>
+	</com.google.android.material.textfield.TextInputLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

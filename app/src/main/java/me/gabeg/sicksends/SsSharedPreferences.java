@@ -179,30 +179,28 @@ public class SsSharedPreferences
 	}
 
 	/**
-	 * @return All possible boulder grades for a type of grade.
+	 * @param  name  Name of a grading system.
+	 *
+	 * @return All possible boulder grades for a grading system.
 	 */
-	public List<String> getAllBoulderGrades(String grade)
+	public List<String> getAllBoulderGrades(String name)
 	{
 		SsSharedConstants cons = this.getConstants();
 
-		if (cons.getGradeBoulderFont().equals(grade))
+		if (cons.isGradeBoulderFont(name))
 		{
-			Log.i(TAG, "Getting all font boulders!");
 			return cons.getGradeListBoulderFont();
 		}
-		else if (cons.getGradeBoulderUk().equals(grade))
+		else if (cons.isGradeBoulderUk(name))
 		{
-			Log.i(TAG, "Getting all uk boulders!");
 			return cons.getGradeListBoulderUk();
 		}
-		else if (cons.getGradeBoulderVscale().equals(grade))
+		else if (cons.isGradeBoulderVscale(name))
 		{
-			Log.i(TAG, "Getting all vscale boulders!");
 			return cons.getGradeListBoulderVscale();
 		}
 		else
 		{
-			Log.i(TAG, "Getting NO boulders!");
 			return null;
 		}
 	}
@@ -278,55 +276,55 @@ public class SsSharedPreferences
 	{
 		SsSharedConstants cons = this.getConstants();
 
-		if (cons.getGradeBoulderFont().equals(grade))
+		if (cons.isGradeBoulderFont(grade))
 		{
 			return cons.getExampleGradeBoulderFont();
 		}
-		else if (cons.getGradeBoulderUk().equals(grade))
+		else if (cons.isGradeBoulderUk(grade))
 		{
 			return cons.getExampleGradeBoulderUk();
 		}
-		else if (cons.getGradeBoulderVscale().equals(grade))
+		else if (cons.isGradeBoulderVscale(grade))
 		{
 			return cons.getExampleGradeBoulderVscale();
 		}
-		else if (cons.getGradeRopeAustralian().equals(grade))
+		else if (cons.isGradeRopeAustralian(grade))
 		{
 			return cons.getExampleGradeRopeAustralian();
 		}
-		else if (cons.getGradeRopeBrasilian().equals(grade))
+		else if (cons.isGradeRopeBrasilian(grade))
 		{
 			return cons.getExampleGradeRopeBrasilian();
 		}
-		else if (cons.getGradeRopeFinnish().equals(grade))
+		else if (cons.isGradeRopeFinnish(grade))
 		{
 			return cons.getExampleGradeRopeFinnish();
 		}
-		else if (cons.getGradeRopeFrench().equals(grade))
+		else if (cons.isGradeRopeFrench(grade))
 		{
 			return cons.getExampleGradeRopeFrench();
 		}
-		else if (cons.getGradeRopeNorway().equals(grade))
+		else if (cons.isGradeRopeNorway(grade))
 		{
 			return cons.getExampleGradeRopeNorway();
 		}
-		else if (cons.getGradeRopePoland().equals(grade))
+		else if (cons.isGradeRopePoland(grade))
 		{
 			return cons.getExampleGradeRopePoland();
 		}
-		else if (cons.getGradeRopeSaxon().equals(grade))
+		else if (cons.isGradeRopeSaxon(grade))
 		{
 			return cons.getExampleGradeRopeSaxon();
 		}
-		else if (cons.getGradeRopeUiaa().equals(grade))
+		else if (cons.isGradeRopeUiaa(grade))
 		{
 			return cons.getExampleGradeRopeUiaa();
 		}
-		else if (cons.getGradeRopeUsa().equals(grade))
+		else if (cons.isGradeRopeUsa(grade))
 		{
 			return cons.getExampleGradeRopeUsa();
 		}
-		else if (cons.getGradeTradBritish().equals(grade))
+		else if (cons.isGradeTradBritish(grade))
 		{
 			return cons.getExampleGradeTradBritish();
 		}

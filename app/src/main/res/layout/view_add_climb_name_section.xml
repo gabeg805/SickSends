@@ -51,7 +51,7 @@
 			android:layout_marginBottom="@dimen/medium"
 			android:textSize="@dimen/tsz_large"
 			android:textStyle="bold"
-			android:text="What was the name of the climb?"
+			android:text="@string/question_climb_name"
 			android:visibility="gone"
 			/>
 	</LinearLayout>

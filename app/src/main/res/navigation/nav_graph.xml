@@ -8,37 +8,37 @@
 
 	<!-- Add tools:layout -->
 	<fragment
-		android:name="me.gabeg.sicksends.SsHomeFragment"
+		android:name="me.gabeg.sicksends.main.SsHomeFragment"
 		android:id="@+id/frg_home"
 		android:label="@string/home"
 		/>
 
 	<fragment
-		android:name="me.gabeg.sicksends.SsBoulderFragment"
+		android:name="me.gabeg.sicksends.boulder.SsBoulderFragment"
 		android:id="@+id/frg_boulder"
 		android:label="@string/boulder"
 		/>
 
 	<fragment
-		android:name="me.gabeg.sicksends.SsSportFragment"
+		android:name="me.gabeg.sicksends.sport.SsSportFragment"
 		android:id="@+id/frg_sport"
 		android:label="@string/sport"
 		/>
 
 	<fragment
-		android:name="me.gabeg.sicksends.SsTopRopeFragment"
+		android:name="me.gabeg.sicksends.toprope.SsTopRopeFragment"
 		android:id="@+id/frg_top_rope"
 		android:label="@string/top_rope"
 		/>
 
 	<fragment
-		android:name="me.gabeg.sicksends.SsTradFragment"
+		android:name="me.gabeg.sicksends.trad.SsTradFragment"
 		android:id="@+id/frg_trad"
 		android:label="@string/trad"
 		/>
 
 	<fragment
-		android:name="me.gabeg.sicksends.SsAddClimbFragment"
+		android:name="me.gabeg.sicksends.addclimb.SsAddClimbFragment"
 		android:id="@+id/frg_add_climb"
 		android:label="Add climb"
 		/>

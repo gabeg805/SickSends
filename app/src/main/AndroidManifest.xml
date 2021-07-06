@@ -17,7 +17,7 @@
 
 		<!-- Main activity -->
 		<activity
-			android:name=".SsMainActivity"
+			android:name=".main.SsMainActivity"
 			android:label="@string/app_name"
 			android:windowSoftInputMode="stateAlwaysHidden">
 
@@ -29,7 +29,7 @@
 
 		<!-- Onboarding -->
 		<activity
-			android:name=".SsOnboardingActivity"
+			android:name=".onboarding.SsOnboardingActivity"
 			android:theme="@style/OnboardingTheme"
 			android:enabled="true"
 			android:exported="true">

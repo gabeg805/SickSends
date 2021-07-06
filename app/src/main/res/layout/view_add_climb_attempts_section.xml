@@ -51,7 +51,7 @@
 			android:layout_marginBottom="@dimen/medium"
 			android:textSize="@dimen/tsz_large"
 			android:textStyle="bold"
-			android:text="How many attempts did it take?"
+			android:text="@string/question_climb_attempts"
 			android:visibility="gone"
 			/>
 	</LinearLayout>

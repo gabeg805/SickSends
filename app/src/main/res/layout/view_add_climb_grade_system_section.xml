@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/grade_system_section"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<!-- Icon -->
+	<com.google.android.material.button.MaterialButton
+		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+		android:id="@+id/grade_system_icon"
+		android:layout_width="@dimen/touch"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/zero"
+		android:clickable="false"
+		app:layout_constraintStart_toStartOf="parent"
+		app:iconGravity="textStart"
+		app:iconPadding="@dimen/zero"
+		app:iconSize="@dimen/isz_large"
+		app:icon="@mipmap/camera"
+		/>
+
+	<!-- Title and Q/A -->
+	<LinearLayout
+		android:id="@+id/grade_system_header"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/normal"
+		android:layout_marginEnd="@dimen/normal"
+		android:orientation="vertical"
+		app:layout_constraintTop_toTopOf="@id/grade_system_icon"
+		app:layout_constraintBottom_toBottomOf="@id/grade_system_icon"
+		app:layout_constraintStart_toEndOf="@id/grade_system_icon"
+		app:layout_constraintEnd_toEndOf="parent">
+
+		<TextView
+			android:id="@+id/grade_system_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:textSize="@dimen/tsz_normal"
+			android:text="@string/grading_system"
+			/>
+
+		<TextView
+			android:id="@+id/grade_system_qa"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_marginBottom="@dimen/medium"
+			android:textSize="@dimen/tsz_large"
+			android:textStyle="bold"
+			android:text="@string/question_climb_grading_system"
+			android:visibility="gone"
+			/>
+	</LinearLayout>
+
+	<!-- Entry -->
+	<LinearLayout
+		android:id="@+id/grade_system_entry"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/normal"
+		android:layout_marginEnd="@dimen/normal"
+		android:orientation="vertical"
+		android:visibility="gone"
+		app:layout_constraintTop_toBottomOf="@id/grade_system_header"
+		app:layout_constraintStart_toEndOf="@id/grade_system_icon"
+		app:layout_constraintEnd_toEndOf="parent">
+
+		<!-- Grade system -->
+		<HorizontalScrollView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal">
+			<com.google.android.material.button.MaterialButtonToggleGroup
+				android:id="@+id/grade_system_entry_group"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				app:singleSelection="true"
+				/>
+		</HorizontalScrollView>
+	</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,11 +10,24 @@
 
 	<string name="name">Name</string>
 	<string name="grade">Grade</string>
+	<string name="grading_system">Grading system</string>
 	<string name="attempts">Attempts</string>
+
+
+
+	<!-- Questions -->
+	<string name="question_climb_name">What was the name of the climb?</string>
+	<string name="question_climb_attempts">How many attempts did it take?</string>
+	<string name="question_climb_grading_system">What grading system are you using?</string>
+	<string name="question_climb_grade">What was the grade?</string>
+
+
 
 	<!-- Misc -->
 	<string name="indoor">Indoor</string>
 	<string name="outdoor">Outdoor</string>
+
+
 
 	<!-- Onboarding -->
 	<string name="welcome">Welcome to the\nSick Sends climbing app!</string>
@@ -26,6 +39,7 @@
 	<string name="climbing_subtitle">Keep track of the different types of climbs you do. You can always change this later.</string>
 	<string name="grade_title">Grading systems</string>
 	<string name="grade_subtitle">Save your climbs with multiple grading systems. You can always change this later.</string>
+
 
 
 	<!-- Whether the user will climb a particular type -->
@@ -44,12 +58,14 @@
 	<string name="use_grade_trad">use_grade_trad</string>
 
 
+
 	<!-- Types of climbing -->
 	<string name="boulder">Boulder</string>
 	<string name="lead">Lead</string>
 	<string name="sport">Sport</string>
 	<string name="top_rope">Top rope</string>
 	<string name="trad">Trad</string>
+
 
 
 	<!-- Types of grades -->
@@ -68,6 +84,7 @@
 	<string name="grade_trad_bri">British</string>
 
 
+
 	<!-- Examples of types of grades -->
 	<string name="example_grade_boulder_font">Ex. 5, 5&#43;, 6A, &#8230;</string>
 	<string name="example_grade_boulder_uk">Ex. 5b, 5c, 6a, &#8230;</string>
@@ -82,6 +99,7 @@
 	<string name="example_grade_rope_uiaa">Ex. VII, VII&#43;, VIII&#8722;, &#8230;</string>
 	<string name="example_grade_rope_usa">Ex. 5.10a, 5.10b, 5.10c, &#8230;</string>
 	<string name="example_grade_trad_bri">Ex. E1 5b, E2 5c, E3 6a, &#8230;</string>
+
 
 
 	<!-- Whether the particular grade uses a plus or minus-->
@@ -120,8 +138,10 @@
 	-->
 
 
+
 	<!-- Error messages -->
 	<string name="error_message_no_climbing_type_selected">Please select a climbing type</string>
+
 
 
 	<!-- Settings -->

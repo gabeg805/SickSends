@@ -4,9 +4,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/grade_section"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:layout_marginTop="@dimen/medium"
-	android:layout_marginBottom="@dimen/medium">
+	android:layout_height="match_parent">
 
 	<!-- Icon -->
 	<com.google.android.material.button.MaterialButton
@@ -46,16 +44,6 @@
 			/>
 
 		<TextView
-			android:id="@+id/grade_subtitle"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_vertical"
-			android:layout_marginBottom="@dimen/medium"
-			android:textSize="@dimen/tsz_small"
-			android:visibility="gone"
-			/>
-
-		<TextView
 			android:id="@+id/grade_qa"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -63,7 +51,7 @@
 			android:layout_marginBottom="@dimen/medium"
 			android:textSize="@dimen/tsz_large"
 			android:textStyle="bold"
-			android:text="What was the grade?"
+			android:text="@string/question_climb_grade"
 			android:visibility="gone"
 			/>
 	</LinearLayout>
@@ -84,31 +72,18 @@
 		android:gravity="center"
 		-->
 
-		<!-- Grade system -->
-		<HorizontalScrollView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:visibility="gone">
-			<LinearLayout
-				android:id="@+id/grade_entry_system"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				/>
-		</HorizontalScrollView>
-
 		<!-- Grade level -->
 		<HorizontalScrollView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:visibility="gone">
-			<LinearLayout
+			android:layout_gravity="center_horizontal">
+			<com.google.android.material.button.MaterialButtonToggleGroup
 				android:id="@+id/grade_entry_level"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
+				android:visibility="gone"
+				app:singleSelection="true"
 				/>
 		</HorizontalScrollView>
 
@@ -116,13 +91,14 @@
 		<HorizontalScrollView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:visibility="gone">
-			<LinearLayout
+			android:layout_gravity="center_horizontal">
+			<com.google.android.material.button.MaterialButtonToggleGroup
 				android:id="@+id/grade_entry_letter"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
+				android:visibility="gone"
+				app:singleSelection="true"
 				/>
 		</HorizontalScrollView>
 
@@ -130,13 +106,14 @@
 		<HorizontalScrollView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:visibility="gone">
-			<LinearLayout
+			android:layout_gravity="center_horizontal">
+			<com.google.android.material.button.MaterialButtonToggleGroup
 				android:id="@+id/grade_entry_operator"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
+				android:visibility="gone"
+				app:singleSelection="true"
 				/>
 		</HorizontalScrollView>
 	</LinearLayout>

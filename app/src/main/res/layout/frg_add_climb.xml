@@ -31,10 +31,21 @@
 			layout="@layout/view_add_climb_attempts_section"
 			/>
 
+		<!-- Grade system -->
+		<include 
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/medium"
+			android:layout_marginBottom="@dimen/medium"
+			layout="@layout/view_add_climb_grade_system_section"
+			/>
+
 		<!-- Grade -->
 		<include 
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/medium"
+			android:layout_marginBottom="@dimen/medium"
 			layout="@layout/view_add_climb_grade_section"
 			/>
 

@@ -47,7 +47,8 @@ public class SsAddClimbAttemptsSection
 		super(root);
 
 		this.mSection = root.findViewById(R.id.attempts_section);
-		this.mQaTextView = root.findViewById(R.id.attempts_qa);
+		this.mQuestionTextView = root.findViewById(R.id.attempts_question);
+		this.mAnswerTextView = root.findViewById(R.id.attempts_answer);
 		this.mEntryLayout = root.findViewById(R.id.attempts_entry);
 		this.mAttemptsEntry = root.findViewById(R.id.attempts_entry_edittext);
 		this.mDecrementButton = root.findViewById(R.id.attempts_decrement);
@@ -88,6 +89,7 @@ public class SsAddClimbAttemptsSection
 	public void focus()
 	{
 		super.focus();
+
 		TextInputEditText entry = this.getAttemptsEntry();
 		Context context = entry.getContext();
 
@@ -116,14 +118,6 @@ public class SsAddClimbAttemptsSection
 	private MaterialButton getIncrementButton()
 	{
 		return this.mIncrementButton;
-	}
-
-	/**
-	 * @return The question to ask in the Q/A TextView.
-	 */
-	public int getQuestion()
-	{
-		return R.string.question_climb_attempts;
 	}
 
 	/**

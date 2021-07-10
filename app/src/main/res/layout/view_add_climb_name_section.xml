@@ -30,7 +30,6 @@
 		android:layout_marginEnd="@dimen/normal"
 		android:orientation="vertical"
 		app:layout_constraintTop_toTopOf="@id/name_icon"
-		app:layout_constraintBottom_toBottomOf="@id/name_icon"
 		app:layout_constraintStart_toEndOf="@id/name_icon"
 		app:layout_constraintEnd_toEndOf="parent">
 
@@ -44,7 +43,7 @@
 			/>
 
 		<TextView
-			android:id="@+id/name_qa"
+			android:id="@+id/name_question"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
@@ -52,6 +51,17 @@
 			android:textSize="@dimen/tsz_large"
 			android:textStyle="bold"
 			android:text="@string/question_climb_name"
+			android:visibility="gone"
+			/>
+
+		<TextView
+			android:id="@+id/name_answer"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_marginBottom="@dimen/medium"
+			android:textSize="@dimen/tsz_large"
+			android:textStyle="bold"
 			android:visibility="gone"
 			/>
 	</LinearLayout>

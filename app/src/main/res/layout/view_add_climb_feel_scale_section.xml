@@ -2,14 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/grade_system_section"
+	android:id="@+id/feel_scale_section"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="wrap_content">
 
 	<!-- Icon -->
 	<com.google.android.material.button.MaterialButton
 		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-		android:id="@+id/grade_system_icon"
+		android:id="@+id/feel_scale_icon"
 		android:layout_width="@dimen/touch"
 		android:layout_height="wrap_content"
 		android:padding="@dimen/zero"
@@ -18,79 +18,75 @@
 		app:iconGravity="textStart"
 		app:iconPadding="@dimen/zero"
 		app:iconSize="@dimen/isz_large"
-		app:icon="@mipmap/camera"
+		app:icon="@mipmap/attempt"
 		/>
 
 	<!-- Title and Q/A -->
 	<LinearLayout
-		android:id="@+id/grade_system_header"
+		android:id="@+id/feel_scale_header"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="@dimen/normal"
 		android:layout_marginEnd="@dimen/normal"
 		android:orientation="vertical"
-		app:layout_constraintTop_toTopOf="@id/grade_system_icon"
-		app:layout_constraintStart_toEndOf="@id/grade_system_icon"
+		app:layout_constraintTop_toTopOf="@id/feel_scale_icon"
+		app:layout_constraintStart_toEndOf="@id/feel_scale_icon"
 		app:layout_constraintEnd_toEndOf="parent">
 
 		<TextView
-			android:id="@+id/grade_system_title"
+			android:id="@+id/feel_scale_title"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
 			android:textSize="@dimen/tsz_normal"
-			android:text="@string/grading_system"
+			android:text="@string/feel_scale"
 			/>
 
 		<TextView
-			android:id="@+id/grade_system_question"
+			android:id="@+id/feel_scale_question"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
 			android:layout_marginBottom="@dimen/medium"
 			android:textSize="@dimen/tsz_large"
 			android:textStyle="bold"
-			android:text="@string/question_climb_grading_system"
+			android:text="@string/question_climb_feel_scale"
 			android:visibility="gone"
 			/>
 
 		<TextView
-			android:id="@+id/grade_system_answer"
+			android:id="@+id/feel_scale_answer"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
 			android:layout_marginBottom="@dimen/medium"
 			android:textSize="@dimen/tsz_large"
 			android:textStyle="bold"
+			android:text="@string/question_climb_feel_scale"
 			android:visibility="gone"
 			/>
 	</LinearLayout>
 
 	<!-- Entry -->
 	<LinearLayout
-		android:id="@+id/grade_system_entry"
+		android:id="@+id/feel_scale_entry"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/normal"
 		android:layout_marginEnd="@dimen/normal"
-		android:orientation="vertical"
+		android:orientation="horizontal"
 		android:visibility="gone"
-		app:layout_constraintTop_toBottomOf="@id/grade_system_header"
-		app:layout_constraintStart_toEndOf="@id/grade_system_icon"
+		app:layout_constraintTop_toBottomOf="@id/feel_scale_header"
+		app:layout_constraintStart_toEndOf="@id/feel_scale_icon"
 		app:layout_constraintEnd_toEndOf="parent">
 
-		<!-- Grade system -->
-		<HorizontalScrollView
+		<com.google.android.material.slider.Slider
+			android:id="@+id/feel_scale_entry_slider"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal">
-			<com.google.android.material.button.MaterialButtonToggleGroup
-				android:id="@+id/grade_system_entry_group"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				app:singleSelection="true"
-				/>
-		</HorizontalScrollView>
+			android:layout_height="@dimen/touch"
+			android:stepSize="1"
+			android:valueFrom="0"
+			android:valueTo="4"
+			android:value="2"
+			/>
 	</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,9 +30,14 @@ public abstract class SsAddClimbSection
 	protected TextView mTitleTextView;
 
 	/**
-	 * Q/A TextView.
+	 * Question TextView.
 	 */
-	protected TextView mQaTextView;
+	protected TextView mQuestionTextView;
+
+	/**
+	 * Answer TextView.
+	 */
+	protected TextView mAnswerTextView;
 
 	/**
 	 * Subtitle TextView.
@@ -84,9 +89,36 @@ public abstract class SsAddClimbSection
 	 */
 	public void focus()
 	{
-		this.getQaTextView().setText(this.getQuestion());
-		this.getQaTextView().setVisibility(View.VISIBLE);
-		this.getEntryLayout().setVisibility(View.VISIBLE);
+		TextView questionTv = this.getQuestionTextView();
+		TextView answerTv = this.getAnswerTextView();
+		ViewGroup entryLayout = this.getEntryLayout();
+
+		questionTv.setVisibility(View.VISIBLE);
+		answerTv.setVisibility(View.GONE);
+		entryLayout.setVisibility(View.VISIBLE);
+	}
+
+	/**
+	 * Check if the section is focused or not.
+	 *
+	 * @return True if the section is focused, and False otherwise.
+	 */
+	public boolean isFocused()
+	{
+		ViewGroup entryLayout = this.getEntryLayout();
+		int vis = entryLayout.getVisibility();
+
+		return vis == View.VISIBLE;
+	}
+
+	/**
+	 * Get the answer TextView.
+	 *
+	 * @return The answer TextView.
+	 */
+	public TextView getAnswerTextView()
+	{
+		return this.mAnswerTextView;
 	}
 
 	/**
@@ -106,17 +138,14 @@ public abstract class SsAddClimbSection
 	}
 
 	/**
-	 * @return The Q/A TextView.
+	 * Get the question TextView.
+	 *
+	 * @return The question TextView.
 	 */
-	public TextView getQaTextView()
+	public TextView getQuestionTextView()
 	{
-		return this.mQaTextView;
+		return this.mQuestionTextView;
 	}
-
-	/**
-	 * @return The question to ask in the Q/A TextView.
-	 */
-	public abstract int getQuestion();
 
 	/**
 	 * @return The entire section view.
@@ -165,17 +194,32 @@ public abstract class SsAddClimbSection
 
 	/**
 	 * Unfocus on the current section.
+	 *
+	 * If the section is not currently focused, this will do nothing.
 	 */
 	public void unfocus()
 	{
-		this.getQaTextView().setVisibility(View.VISIBLE);
-		this.getEntryLayout().setVisibility(View.GONE);
+		if (!this.isFocused())
+		{
+			return;
+		}
 
+		TextView questionTv = this.getQuestionTextView();
+		TextView answerTv = this.getAnswerTextView();
+		ViewGroup entryLayout = this.getEntryLayout();
 		String input = this.getUserInput();
 
-		if (!input.isEmpty())
+		questionTv.setVisibility(View.GONE);
+		entryLayout.setVisibility(View.GONE);
+
+		if (input.isEmpty())
 		{
-			this.getQaTextView().setText(input);
+			answerTv.setVisibility(View.GONE);
+		}
+		else
+		{
+			answerTv.setVisibility(View.VISIBLE);
+			answerTv.setText(input);
 		}
 	}
 

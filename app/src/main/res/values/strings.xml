@@ -9,9 +9,11 @@
 	<string name="about">About</string>
 
 	<string name="name">Name</string>
+	<string name="attempts">Attempts</string>
 	<string name="grade">Grade</string>
 	<string name="grading_system">Grading system</string>
-	<string name="attempts">Attempts</string>
+	<string name="feel_scale">Feel scale</string>
+	<string name="hold_type">Holds</string>
 
 
 
@@ -20,6 +22,8 @@
 	<string name="question_climb_attempts">How many attempts did it take?</string>
 	<string name="question_climb_grading_system">What grading system are you using?</string>
 	<string name="question_climb_grade">What was the grade?</string>
+	<string name="question_climb_feel_scale">How did the climb feel?</string>
+	<string name="question_climb_hold_type">What types of holds are there?</string>
 
 
 

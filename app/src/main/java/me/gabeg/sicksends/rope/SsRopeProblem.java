@@ -14,21 +14,97 @@ public abstract class SsRopeProblem
 	/**
 	 * Number of takes done on the problem.
 	 */
-	@ColumnInfo(name="take")
-	public int take;
+	@ColumnInfo(name="num_take")
+	public int mNumTake;
 
 	/**
-	 * Was the problem onsighted?
+	 * Whether the problem was onsighted or not.
 	 */
 	@ColumnInfo(name="is_onsight")
-	public boolean isOnsight;
+	public boolean mIsOnsight;
 
 	/**
-	 * Was the problem a redpoint?
+	 * Whether the problem was a redpoint or not.
 	 */
 	@ColumnInfo(name="is_redpoint")
-	public boolean isRedpoint;
+	public boolean mIsRedpoint;
 
 	// Number of pitches?
+
+	/**
+	 * Get whether the problem was onsighted or not.
+	 *
+	 * @return Whether the problem was onsighted or not.
+	 */
+	public boolean isOnsight()
+	{
+		return this.mIsOnsight;
+	}
+
+	/**
+	 * Get whether the problem was a redpoint or not.
+	 *
+	 * @return Whether the problem was a redpoint or not.
+	 */
+	public boolean isRedpoint()
+	{
+		return this.mIsRedpoint;
+	}
+
+	/**
+	 * @see #isOnsight()
+	 */
+	public boolean getIsOnsight()
+	{
+		return this.isOnsight();
+	}
+
+	/**
+	 * @see #isRedpoint()
+	 */
+	public boolean getIsRedpoint()
+	{
+		return this.isRedpoint();
+	}
+
+	/**
+	 * Get the number of takes done on the problem.
+	 *
+	 * @return The number of takes done on the problem.
+	 */
+	public int getNumTake()
+	{
+		return this.mNumTake;
+	}
+
+	/**
+	 * Set whether the problem was onsighted or not.
+	 *
+	 * @param  onsight  Whether the problem was onsighted or not.
+	 */
+	public void setIsOnsight(boolean onsight)
+	{
+		this.mIsOnsight = onsight;
+	}
+
+	/**
+	 * Set whether the problem was a redpoint or not.
+	 *
+	 * @param  redpoint  Whether the problem was a redpoint or not.
+	 */
+	public void setIsRedpoint(boolean redpoint)
+	{
+		this.mIsRedpoint = redpoint;
+	}
+
+	/**
+	 * Set the number of takes done on the problem.
+	 *
+	 * @param  take  The number of takes done on the problem.
+	 */
+	public void setNumTake(int take)
+	{
+		this.mNumTake = take;
+	}
 
 }

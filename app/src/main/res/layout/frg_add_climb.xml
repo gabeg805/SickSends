@@ -14,7 +14,7 @@
 		android:orientation="vertical">
 
 		<!-- Name -->
-		<include 
+		<include
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/medium"
@@ -23,7 +23,7 @@
 			/>
 
 		<!-- Attempts -->
-		<include 
+		<include
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/medium"
@@ -32,7 +32,7 @@
 			/>
 
 		<!-- Grade system -->
-		<include 
+		<include
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/medium"
@@ -41,7 +41,7 @@
 			/>
 
 		<!-- Grade -->
-		<include 
+		<include
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/medium"
@@ -49,9 +49,26 @@
 			layout="@layout/view_add_climb_grade_section"
 			/>
 
+		<!-- Feel scale -->
+		<include
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/medium"
+			android:layout_marginBottom="@dimen/medium"
+			layout="@layout/view_add_climb_feel_scale_section"
+			/>
+
+		<!-- Hold type -->
+		<include
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/medium"
+			android:layout_marginBottom="@dimen/medium"
+			layout="@layout/view_add_climb_hold_type_section"
+			/>
+
 		<!-- Location -->
 		<!-- Route type -->
-		<!-- Hold type -->
 		<!-- Technique type -->
 
 	</LinearLayout>

@@ -37,7 +37,8 @@ public class SsAddClimbGradingSystemSection
 		super(root);
 
 		this.mSection = root.findViewById(R.id.grade_system_section);
-		this.mQaTextView = root.findViewById(R.id.grade_system_qa);
+		this.mQuestionTextView = root.findViewById(R.id.grade_system_question);
+		this.mAnswerTextView = root.findViewById(R.id.grade_system_answer);
 		this.mEntryLayout = root.findViewById(R.id.grade_system_entry);
 		this.mGradingSystemToggleGroup = root.findViewById(R.id.grade_system_entry_group);
 
@@ -84,14 +85,6 @@ public class SsAddClimbGradingSystemSection
 		List<String> gradeNames = shared.getAllUseBoulderGrades();
 
 		return gradeNames;
-	}
-
-	/**
-	 * @return The question to ask in the Q/A TextView.
-	 */
-	public int getQuestion()
-	{
-		return R.string.question_climb_grading_system;
 	}
 
 	/**

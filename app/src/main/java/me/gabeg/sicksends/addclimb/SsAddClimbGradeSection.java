@@ -70,7 +70,8 @@ public class SsAddClimbGradeSection
 		this.mLayoutInflater = inflater;
 		this.mGradingSystemName = "";
 		this.mSection = root.findViewById(R.id.grade_section);
-		this.mQaTextView = root.findViewById(R.id.grade_qa);
+		this.mQuestionTextView = root.findViewById(R.id.grade_question);
+		this.mAnswerTextView = root.findViewById(R.id.grade_answer);
 		this.mEntryLayout = root.findViewById(R.id.grade_entry);
 		this.mLevelToggleGroup = root.findViewById(R.id.grade_entry_level);
 		this.mLetterToggleGroup = root.findViewById(R.id.grade_entry_letter);
@@ -275,14 +276,6 @@ public class SsAddClimbGradeSection
 		{
 			return Collections.emptySet();
 		}
-	}
-
-	/**
-	 * @return The question to ask in the Q/A TextView.
-	 */
-	public int getQuestion()
-	{
-		return R.string.question_climb_grade;
 	}
 
 	/**

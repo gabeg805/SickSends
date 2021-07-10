@@ -59,6 +59,16 @@ public class SsAddClimbFragment
 	private SsAddClimbGradeSection mGradeSection;
 
 	/**
+	 * Feel scale.
+	 */
+	private SsAddClimbFeelScaleSection mFeelScaleSection;
+
+	/**
+	 * Types of holds.
+	 */
+	private SsAddClimbHoldTypeSection mHoldTypeSection;
+
+	/**
 	 * @return The climbing source ID.
 	 */
 	private int getClimbingSourceId()
@@ -89,10 +99,13 @@ public class SsAddClimbFragment
 	{
 		int id = view.getId();
 
+		// Only need to unfocus the correct one
 		this.mNameSection.unfocus();
 		this.mAttemptsSection.unfocus();
 		this.mGradingSystemSection.unfocus();
 		this.mGradeSection.unfocus();
+		this.mFeelScaleSection.unfocus();
+		this.mHoldTypeSection.unfocus();
 		Log.i(TAG, "onClick()!");
 
 		if (id == R.id.name_section)
@@ -114,6 +127,16 @@ public class SsAddClimbFragment
 		{
 			Log.i(TAG, "Focusing the grade section");
 			this.mGradeSection.focus();
+		}
+		else if (id == R.id.feel_scale_section)
+		{
+			Log.i(TAG, "Focusing the feel scale section");
+			this.mFeelScaleSection.focus();
+		}
+		else if (id == R.id.hold_type_section)
+		{
+			Log.i(TAG, "Focusing the hold type section");
+			this.mHoldTypeSection.focus();
 		}
 	}
 
@@ -142,6 +165,8 @@ public class SsAddClimbFragment
 		this.mAttemptsSection = new SsAddClimbAttemptsSection(root);
 		this.mGradingSystemSection = new SsAddClimbGradingSystemSection(root, inflater);
 		this.mGradeSection = new SsAddClimbGradeSection(root, inflater);
+		this.mFeelScaleSection = new SsAddClimbFeelScaleSection(root);
+		this.mHoldTypeSection = new SsAddClimbHoldTypeSection(root);
 
 		Log.i(TAG, "onCreateView! " + this.mClimbingSourceId);
 
@@ -172,7 +197,17 @@ public class SsAddClimbFragment
 		}
 		else if (section instanceof SsAddClimbGradeSection)
 		{
-			Log.i(TAG, "Show next section after grade");
+			Log.i(TAG, "Show feel scale section");
+			this.mFeelScaleSection.focus();
+		}
+		else if (section instanceof SsAddClimbFeelScaleSection)
+		{
+			Log.i(TAG, "Show next section after feel scale");
+			this.mHoldTypeSection.focus();
+		}
+		else if (section instanceof SsAddClimbHoldTypeSection)
+		{
+			Log.i(TAG, "Show next section after hold type");
 		}
 		else
 		{
@@ -204,6 +239,10 @@ public class SsAddClimbFragment
 		this.mGradingSystemSection.setOnSectionDoneListener(this);
 		this.mGradeSection.setOnClickListener(this);
 		this.mGradeSection.setOnSectionDoneListener(this);
+		this.mFeelScaleSection.setOnClickListener(this);
+		this.mFeelScaleSection.setOnSectionDoneListener(this);
+		this.mHoldTypeSection.setOnClickListener(this);
+		this.mHoldTypeSection.setOnSectionDoneListener(this);
 	}
 
 }

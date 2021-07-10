@@ -35,7 +35,8 @@ public class SsAddClimbNameSection
 		super(root);
 
 		this.mSection = root.findViewById(R.id.name_section);
-		this.mQaTextView = root.findViewById(R.id.name_qa);
+		this.mQuestionTextView = root.findViewById(R.id.name_question);
+		this.mAnswerTextView = root.findViewById(R.id.name_answer);
 		this.mEntryLayout = root.findViewById(R.id.name_entry);
 		this.mNameEntry = root.findViewById(R.id.name_entry_edittext);
 
@@ -49,6 +50,7 @@ public class SsAddClimbNameSection
 	public void focus()
 	{
 		super.focus();
+
 		TextInputEditText entry = this.getNameEntry();
 		Context context = entry.getContext();
 
@@ -61,14 +63,6 @@ public class SsAddClimbNameSection
 	private TextInputEditText getNameEntry()
 	{
 		return this.mNameEntry;
-	}
-
-	/**
-	 * @return The question to ask in the Q/A TextView.
-	 */
-	public int getQuestion()
-	{
-		return R.string.question_climb_name;
 	}
 
 	/**

@@ -59,6 +59,25 @@ public class SsSharedConstants
 	}
 
 	/**
+	 * @return All trad grades.
+	 */
+	public List<String> getAllTradGrades()
+	{
+		String aus = this.getGradeRopeAustralian();
+		String bra = this.getGradeRopeBrasilian();
+		String bri = this.getGradeTradBritish();
+		String fin = this.getGradeRopeFinnish();
+		String fre = this.getGradeRopeFrench();
+		String nor = this.getGradeRopeNorway();
+		String pol = this.getGradeRopePoland();
+		String sax = this.getGradeRopeSaxon();
+		String uiaa = this.getGradeRopeUiaa();
+		String usa = this.getGradeRopeUsa();
+
+		return Arrays.asList(aus, bra, bri, fin, fre, nor, pol, sax, uiaa, usa);
+	}
+
+	/**
 	 * @return The app name.
 	 */
 	public String getAppName()
@@ -72,6 +91,69 @@ public class SsSharedConstants
 	public String getErrorMessageNoClimbingTypeSelected()
 	{
 		return this.getString(R.string.error_message_no_climbing_type_selected);
+	}
+
+	/**
+	 * @return An example of the given climbing grade.
+	 */
+	public String getExampleGrade(String grade)
+	{
+		if (this.isGradeBoulderFont(grade))
+		{
+			return this.getExampleGradeBoulderFont();
+		}
+		else if (this.isGradeBoulderUk(grade))
+		{
+			return this.getExampleGradeBoulderUk();
+		}
+		else if (this.isGradeBoulderVscale(grade))
+		{
+			return this.getExampleGradeBoulderVscale();
+		}
+		else if (this.isGradeRopeAustralian(grade))
+		{
+			return this.getExampleGradeRopeAustralian();
+		}
+		else if (this.isGradeRopeBrasilian(grade))
+		{
+			return this.getExampleGradeRopeBrasilian();
+		}
+		else if (this.isGradeRopeFinnish(grade))
+		{
+			return this.getExampleGradeRopeFinnish();
+		}
+		else if (this.isGradeRopeFrench(grade))
+		{
+			return this.getExampleGradeRopeFrench();
+		}
+		else if (this.isGradeRopeNorway(grade))
+		{
+			return this.getExampleGradeRopeNorway();
+		}
+		else if (this.isGradeRopePoland(grade))
+		{
+			return this.getExampleGradeRopePoland();
+		}
+		else if (this.isGradeRopeSaxon(grade))
+		{
+			return this.getExampleGradeRopeSaxon();
+		}
+		else if (this.isGradeRopeUiaa(grade))
+		{
+			return this.getExampleGradeRopeUiaa();
+		}
+		else if (this.isGradeRopeUsa(grade))
+		{
+			return this.getExampleGradeRopeUsa();
+		}
+		else if (this.isGradeTradBritish(grade))
+		{
+			return this.getExampleGradeTradBritish();
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	/**

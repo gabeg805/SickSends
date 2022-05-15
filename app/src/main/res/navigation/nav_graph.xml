@@ -4,14 +4,9 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/nav_graph"
-	app:startDestination="@id/frg_home">
+	app:startDestination="@id/frg_boulder">
 
 	<!-- Add tools:layout -->
-	<fragment
-		android:name="me.gabeg.sicksends.main.SsHomeFragment"
-		android:id="@+id/frg_home"
-		android:label="@string/home"
-		/>
 
 	<fragment
 		android:name="me.gabeg.sicksends.boulder.SsBoulderFragment"

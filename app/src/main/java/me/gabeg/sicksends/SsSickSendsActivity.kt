@@ -19,7 +19,7 @@ class SsSickSendsActivity : ComponentActivity()
 	{
 		super.onCreate(savedInstanceState)
 
-		// Create the app
+		// Show the app
 		setContent()
 		{
 			SsSickSendsApp()

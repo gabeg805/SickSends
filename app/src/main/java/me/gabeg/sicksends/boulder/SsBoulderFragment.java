@@ -62,7 +62,7 @@ public class SsBoulderFragment
 		rv.setLayoutManager(layoutManager);
 
 		this.mViewModel = new ViewModelProvider(this).get(SsBoulderViewModel.class);
-		this.mViewModel.getAllProblems().observe(this,
+		this.mViewModel.getAllProblems().observe(getViewLifecycleOwner(),
 			new Observer<List<SsBoulder>>()
 			{
 				@Override

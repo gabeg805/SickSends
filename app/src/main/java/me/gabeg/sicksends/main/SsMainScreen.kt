@@ -20,9 +20,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.gabeg.sicksends.R
+import me.gabeg.sicksends.boulder.SsBoulderRepository
+import me.gabeg.sicksends.problem.SsProblemDatabase
 import me.gabeg.sicksends.shared.SsSharedDataStore
 
 const val MAIN_SCREEN_ROUTE = "main_screen_route"
@@ -35,6 +38,17 @@ fun SsMainScreen(navController: NavController)
 {
 	val dataStore = SsSharedDataStore(LocalContext.current)
 	val scaffoldState = rememberScaffoldState()
+	val scope = rememberCoroutineScope()
+
+	// TODO: Move this to Application and remove scope when done testing
+	val db = SsProblemDatabase.getInstance(LocalContext.current, scope)
+	val boulderRepo = SsBoulderRepository(db.boulderDao())
+
+	scope.launch {
+		val flowOfLists: Flow<List<Int>> = flowOf(listOf(1, 2), listOf(3, 4))
+		val flatList: List<Int> = flowOfLists.flatMapConcat { it.asFlow() }.toList()
+		Log.i("YOOOOOOO", flatList.toString())
+	}
 
 	Scaffold(
 		scaffoldState = scaffoldState,
@@ -55,6 +69,10 @@ fun SsMainScreen(navController: NavController)
 		floatingActionButtonPosition = FabPosition.End,
 		floatingActionButton = { buildFloatingActionButton() },
 		content = { innerPadding ->
+			//for (problem in boulderRepo.allProblems)
+			//{
+			//}
+
 			val colors = listOf<Color>(Color.Cyan, Color.Red, Color.Green, Color.Magenta, Color.Yellow)
 			LazyColumn(contentPadding = innerPadding) {
 				items(count = 10) {

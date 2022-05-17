@@ -8,7 +8,7 @@ import me.gabeg.sicksends.problem.SsProblemAdapter;
  * Card adapter for sport problems.
  */
 public class SsSportAdapter
-	extends SsProblemAdapter<SsSport>
+	extends SsProblemAdapter<SsSportProblem>
 {
 
 	protected String TAG = "SsSportAdapter";

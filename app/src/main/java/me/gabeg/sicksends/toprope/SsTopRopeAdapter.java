@@ -8,7 +8,7 @@ import me.gabeg.sicksends.problem.SsProblemAdapter;
  * Card adapter for top rope problems.
  */
 public class SsTopRopeAdapter
-	extends SsProblemAdapter<SsTopRope>
+	extends SsProblemAdapter<SsTopRopeProblem>
 {
 
 	protected String TAG = "SsTopRopeAdapter";

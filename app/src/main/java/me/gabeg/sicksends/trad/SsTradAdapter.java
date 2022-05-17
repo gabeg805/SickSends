@@ -8,7 +8,7 @@ import me.gabeg.sicksends.problem.SsProblemAdapter;
  * Card adapter for trad problems.
  */
 public class SsTradAdapter
-	extends SsProblemAdapter<SsTrad>
+	extends SsProblemAdapter<SsTradProblem>
 {
 
 	protected String TAG = "SsTradAdapter";

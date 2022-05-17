@@ -42,9 +42,16 @@ abstract class SsProblem
 
 	/**
 	 * How how did it feel on a scale from easy to hard?
+	 *
+	 * 0 = Undefined
+	 * 1 = Easy
+	 * 2 = Pretty Easy
+	 * 3 = Normal
+	 * 4 = Pretty Hard
+	 * 5 = Hard
 	 */
-	@ColumnInfo(name = "feel_scale")
-	var feelScale = 0
+	@ColumnInfo(name = "how_did_it_feel_scale")
+	var howDidItFeelScale = 0
 
 	/**
 	 * Number of attempts done on the problem.
@@ -55,7 +62,7 @@ abstract class SsProblem
 	/**
 	 * Name of where the problem is located.
 	 */
-	@ColumnInfo(name = "location_lat")
+	@ColumnInfo(name = "location_name")
 	var locationName: String? = null
 
 	/**
@@ -117,5 +124,11 @@ abstract class SsProblem
 	 */
 	@ColumnInfo(name = "image_path")
 	var imagePath: String? = null
+
+	/**
+	 * Notes on the problem.
+	 */
+	@ColumnInfo(name = "note")
+	var note: String? = null
 
 }

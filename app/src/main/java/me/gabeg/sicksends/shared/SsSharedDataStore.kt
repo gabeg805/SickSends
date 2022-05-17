@@ -1,22 +1,13 @@
 package me.gabeg.sicksends.shared
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import me.gabeg.sicksends.R
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "sick_sends")
@@ -231,6 +222,7 @@ class SsSharedDataStore(context : Context)
 
 			// Get whether the type of climb will be climbed or not
 			 var willClimb = flow.first()
+			Log.i("SsSharedDataStore", name + "? " + willClimb)
 
 			// If the type of climb will be climbed, add it to the list
 			 if (willClimb)

@@ -9,7 +9,7 @@ import me.gabeg.sicksends.problem.SsProblemDao
  * Data access object for trad problems.
  */
 @Dao
-interface SsTradDao : SsProblemDao<SsTrad>
+interface SsTradDao : SsProblemDao<SsTradProblem>
 {
 
 	/**
@@ -24,6 +24,6 @@ interface SsTradDao : SsProblemDao<SsTrad>
 	 * @return All trad problems.
 	 */
 	@get:Query("SELECT * FROM trad")
-	override val all: Flow<List<SsTrad>>
+	override val all: Flow<List<SsTradProblem>>
 
 }

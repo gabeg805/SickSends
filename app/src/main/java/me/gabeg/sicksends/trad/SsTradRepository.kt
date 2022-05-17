@@ -6,4 +6,4 @@ import me.gabeg.sicksends.problem.SsProblemRepository
  * Repository for trad problems.
  */
 class SsTradRepository(dao : SsTradDao)
-	: SsProblemRepository<SsTradDao, SsTrad>(dao)
+	: SsProblemRepository<SsTradProblem>(dao)

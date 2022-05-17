@@ -26,10 +26,10 @@ fun SsSickSendsApp()
 		val navController = rememberNavController()
 		val dataStore = SsSharedDataStore(LocalContext.current)
 
-		LaunchedEffect(true)
-		{
-				dataStore.editIsAppFirstRun(true)
-		}
+		//LaunchedEffect(true)
+		//{
+		//		dataStore.editIsAppFirstRun(true)
+		//}
 
 		SsSickSendsNavHost(navController = navController)
 

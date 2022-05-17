@@ -6,4 +6,4 @@ import me.gabeg.sicksends.problem.SsProblemViewModel
  * Trad view model.
  */
 class SsTradViewModel(repo : SsTradRepository)
-	: SsProblemViewModel<SsTrad>(repo)
+	: SsProblemViewModel<SsTradProblem>(repo)

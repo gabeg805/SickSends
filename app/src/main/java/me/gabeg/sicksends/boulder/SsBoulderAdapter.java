@@ -8,7 +8,7 @@ import me.gabeg.sicksends.problem.SsProblemAdapter;
  * Card adapter for boulder problems.
  */
 public class SsBoulderAdapter
-	extends SsProblemAdapter<SsBoulder>
+	extends SsProblemAdapter<SsBoulderProblem>
 {
 
 	protected String TAG = "SsBoulderAdapter";

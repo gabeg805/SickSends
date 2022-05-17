@@ -63,10 +63,10 @@ public class SsBoulderFragment
 
 		this.mViewModel = new ViewModelProvider(this).get(SsBoulderViewModel.class);
 		this.mViewModel.getAllProblems().observe(getViewLifecycleOwner(),
-			new Observer<List<SsBoulder>>()
+			new Observer<List<SsBoulderProblem>>()
 			{
 				@Override
-				public void onChanged(@Nullable final List<SsBoulder> problems)
+				public void onChanged(@Nullable final List<SsBoulderProblem> problems)
 				{
 					Log.i(TAG, "Setting problems in fragment!");
 					adapter.setProblems(problems);

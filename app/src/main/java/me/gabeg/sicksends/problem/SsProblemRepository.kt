@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  */
-abstract class SsProblemRepository<T : SsProblemDao<S>, S : SsProblem>(
-	private val dao : T)
+abstract class SsProblemRepository<S : SsProblem>(
+	private val dao : SsProblemDao<S>)
 {
 
 	/**

@@ -7,4 +7,4 @@ import me.gabeg.sicksends.rope.SsRopeProblem
  * Aspects of a sport problem that are saved.
  */
 @Entity(tableName = "sport")
-class SsSport : SsRopeProblem()
+class SsSportProblem : SsRopeProblem()

@@ -24,7 +24,7 @@ fun SsSickSendsApp()
 	MaterialTheme()
 	{
 		val navController = rememberNavController()
-		val dataStore = SsSharedDataStore(LocalContext.current)
+		//val dataStore = SsSharedDataStore(LocalContext.current)
 
 		//LaunchedEffect(true)
 		//{
@@ -75,23 +75,23 @@ fun getStartNavDestination() : String
 
 	// Prepare to query the data store
 	val dataStore = SsSharedDataStore(LocalContext.current)
-	val scope = rememberCoroutineScope()
 
 	// Prepare to check whether or not this is the app's first run, as well as
 	// what the name of the desired navigation route is
 	var isAppFirstRun by remember { mutableStateOf(true) }
-	var startDestination by remember { mutableStateOf(ONBOARDING_SCREEN_ROUTE) }
+	var startDestination by remember { mutableStateOf(MAIN_SCREEN_ROUTE) }
 
 	// Check whether this is the app's first run and decide the navigation route
 	// accordingly
-	scope.launch {
+	LaunchedEffect(true)
+	{
 		isAppFirstRun = dataStore.getAppFirstRun().first()
 
 		// This is not the app's first run. Set the navigation route to the main
 		// screen
-		if (!isAppFirstRun)
+		if (isAppFirstRun)
 		{
-			startDestination = MAIN_SCREEN_ROUTE
+			startDestination = ONBOARDING_SCREEN_ROUTE
 		}
 	}
 

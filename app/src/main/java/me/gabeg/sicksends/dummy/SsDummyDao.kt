@@ -1,6 +1,5 @@
-package me.gabeg.sicksends.boulder
+package me.gabeg.sicksends.dummy
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import me.gabeg.sicksends.problem.SsProblemDao
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
  * Data access object for bouldering.
  */
 @Dao
-interface SsBoulderDao
+interface SsDummyDao
 {
 
 	/**
@@ -18,12 +17,12 @@ interface SsBoulderDao
 	 * @param  problem  Climbing problem.
 	 */
 	@Delete
-	fun delete(problem: SsBoulderProblem)
+	fun delete(problem: SsDummyProblem)
 
 	/**
 	 * @see SsProblemDao.deleteAll
 	 */
-	@Query("DELETE FROM boulder")
+	@Query("DELETE FROM dummy")
 	fun deleteAll()
 
 	/**
@@ -32,7 +31,7 @@ interface SsBoulderDao
 	 * @param  problem  Climbing problem.
 	 */
 	@Insert
-	suspend fun insert(problem: SsBoulderProblem)
+	suspend fun insert(problem: SsDummyProblem)
 
 	/**
 	 * Update an existing problem.
@@ -40,14 +39,14 @@ interface SsBoulderDao
 	 * @param  problem  Climbing problem.
 	 */
 	@Update
-	fun update(problem: SsBoulderProblem)
+	fun update(problem: SsDummyProblem)
 
 	/**
-	 * Get all boulder problems.
+	 * Get all dummy problems.
 	 *
-	 * @return All boulder problems.
+	 * @return All dummy problems.
 	 */
-	@Query("SELECT * FROM boulder ORDER BY timestamp DESC")
-	fun getAllProblems() : LiveData<List<SsBoulderProblem>>
+	@get:Query("SELECT * FROM dummy")
+	val all: Flow<List<SsDummyProblem>>
 
 }

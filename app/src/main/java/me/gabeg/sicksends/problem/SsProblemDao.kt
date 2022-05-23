@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SsProblemDao<T : SsProblem>
 {
+
 	/**
 	 * Delete a problem.
 	 *

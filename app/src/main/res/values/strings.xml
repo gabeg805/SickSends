@@ -90,19 +90,19 @@
 
 
 	<!-- Examples of types of grades -->
-	<string name="example_grade_boulder_font">Ex. 5, 5&#43;, 6A, &#8230;</string>
-	<string name="example_grade_boulder_uk">Ex. 5b, 5c, 6a, &#8230;</string>
-	<string name="example_grade_boulder_vscale">Ex. V1, V2, V3, &#8230;</string>
-	<string name="example_grade_rope_aus">Ex. 16, 17, 18, &#8230;</string>
-	<string name="example_grade_rope_bra">Ex. VI, VI sup, 7a, &#8230;</string>
-	<string name="example_grade_rope_fin">Ex. 7, 7&#43;, 8&#8722;, &#8230;</string>
-	<string name="example_grade_rope_fre">Ex. 6a, 6a&#43;, 6b, &#8230;</string>
-	<string name="example_grade_rope_nor">Ex. 7, 7&#43;, 7&#43;&#8725;8&#8722;, &#8230;</string>
-	<string name="example_grade_rope_pol">Ex. VI&#43;, VI.1, VI.1&#43;, &#8230;</string>
-	<string name="example_grade_rope_sax">Ex. VIIIa, VIIIb, VIIIc, &#8230;</string>
-	<string name="example_grade_rope_uiaa">Ex. VII, VII&#43;, VIII&#8722;, &#8230;</string>
-	<string name="example_grade_rope_usa">Ex. 5.10a, 5.10b, 5.10c, &#8230;</string>
-	<string name="example_grade_trad_bri">Ex. E1 5b, E2 5c, E3 6a, &#8230;</string>
+	<string name="example_grade_boulder_font">5, 5&#43;, 6A, &#8230;</string>
+	<string name="example_grade_boulder_uk">5b, 5c, 6a, &#8230;</string>
+	<string name="example_grade_boulder_vscale">V1, V2, V3, &#8230;</string>
+	<string name="example_grade_rope_aus">16, 17, 18, &#8230;</string>
+	<string name="example_grade_rope_bra">VI, VI sup, 7a, &#8230;</string>
+	<string name="example_grade_rope_fin">7, 7&#43;, 8&#8722;, &#8230;</string>
+	<string name="example_grade_rope_fre">6a, 6a&#43;, 6b, &#8230;</string>
+	<string name="example_grade_rope_nor">7, 7&#43;, 7&#43;&#8725;8&#8722;, &#8230;</string>
+	<string name="example_grade_rope_pol">VI&#43;, VI.1, VI.1&#43;, &#8230;</string>
+	<string name="example_grade_rope_sax">VIIIa, VIIIb, VIIIc, &#8230;</string>
+	<string name="example_grade_rope_uiaa">VII, VII&#43;, VIII&#8722;, &#8230;</string>
+	<string name="example_grade_rope_usa">5.10a, 5.10b, 5.10c, &#8230;</string>
+	<string name="example_grade_trad_bri">E1 5b, E2 5c, E3 6a, &#8230;</string>
 
 
 

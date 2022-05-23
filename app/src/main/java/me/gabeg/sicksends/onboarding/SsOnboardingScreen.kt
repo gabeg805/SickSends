@@ -2,6 +2,7 @@ package me.gabeg.sicksends.onboarding
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -11,12 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
+import me.gabeg.sicksends.R
 import me.gabeg.sicksends.main.MAIN_SCREEN_ROUTE
 import me.gabeg.sicksends.shared.SsSharedDataStore
 
@@ -38,7 +42,12 @@ fun SsOnboardingScreen(navController: NavHostController)
 	val dataStore = SsSharedDataStore(LocalContext.current)
 
 	// Onboarding screen
-	Column(modifier = Modifier.fillMaxSize())
+	// TODO: Change the color/grading system button color
+	Column(
+		modifier = Modifier
+			.fillMaxSize()
+			.background(Brush.verticalGradient(
+				colors = listOf(colorResource(R.color.cyan_300), colorResource(R.color.blue_600)))))
 	{
 
 		HorizontalPager(

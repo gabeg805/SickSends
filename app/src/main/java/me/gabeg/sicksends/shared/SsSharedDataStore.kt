@@ -2,6 +2,7 @@ package me.gabeg.sicksends.shared
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
@@ -71,6 +72,22 @@ class SsSharedDataStore(context : Context)
 	fun buildWillGradeTradWithKey(grade : String) : String
 	{
 		return KEY_WILL_GRADE_TRAD_WITH+grade
+	}
+
+	/**
+	 * Convert the name of a climb the user can do to an icon ID.
+	 *
+	 * @param  name  The name of a climb the user can do.
+	 *
+	 * @return The icon ID of a climb the user can do.
+	 */
+	fun climbNameToIcon(name : String) : Int
+	{
+		val possibleNames = getAllClimbNames()
+		val possibleIcons = getAllClimbIcons()
+		val index = possibleNames.indexOf(name)
+
+		return if (index >= 0) possibleIcons[index] else -1
 	}
 
 	/**
@@ -274,6 +291,34 @@ class SsSharedDataStore(context : Context)
 		}
 
 		return allIcons
+	}
+
+	/**
+	 * Get all the icons of the items the user can navigate to.
+	 *
+	 * @return All the icons of the items the user can navigate to.
+	 */
+	fun getAllNavigationIcons() : List<Int>
+	{
+		val icons = getAllClimbIcons().toMutableList()
+
+		icons.add(0, R.mipmap.home)
+
+		return icons.toList()
+	}
+
+	/**
+	 * Get all the names of the items the user can navigate to.
+	 *
+	 * @return All the names of the items the user can navigate to.
+	 */
+	fun getAllNavigationNames() : List<String>
+	{
+		val names = getAllClimbNames().toMutableList()
+
+		names.add(0, "Home")
+
+		return names.toList()
 	}
 
 	/**

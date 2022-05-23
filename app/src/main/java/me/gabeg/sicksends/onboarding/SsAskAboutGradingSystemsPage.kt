@@ -1,16 +1,16 @@
 package me.gabeg.sicksends.onboarding
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +30,8 @@ import com.google.accompanist.flowlayout.SizeMode
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import me.gabeg.sicksends.SsLongClickButton
+import me.gabeg.sicksends.SsLongClickOutlinedButton
 import me.gabeg.sicksends.shared.SsSharedConstants
 import me.gabeg.sicksends.shared.SsSharedDataStore
 
@@ -76,12 +78,14 @@ fun TypeOfGradingSystemPage()
 			modifier = Modifier
 				.fillMaxWidth()
 				.padding(bottom = 24.dp),
-			text = "This can always be changed later.",
+			text = "This can always be changed later.\nLong press on a grading system to see an example.",
 			fontSize = MaterialTheme.typography.subtitle1.fontSize,
 			fontWeight = FontWeight.Normal,
 			textAlign = TextAlign.Center)
 
 		// List all grading systems
+		// TODO: Maybe use a regular column instead so all items are always
+		// visible
 		LazyColumn(
 			modifier = Modifier
 				.fillMaxWidth())
@@ -155,14 +159,14 @@ fun buildGradingSystems(title : String, gradingSystems : List<String>,
 	// Whether or not the grading system for a type of climbing are visible
 	var isVisible by remember { mutableStateOf(false) }
 
-	// Things needed to convert a grading system to an example grade, when
-	// enabled
-	val cons = SsSharedConstants(LocalContext.current)
-	var example by remember { mutableStateOf("") }
-	val anim = remember { Animatable(0f) }
+	// Things needed to show an example of a grading system
+	val context = LocalContext.current
+	val cons = SsSharedConstants(context)
 
 	// Change the visibility state when the data store preference changes
-	scope.launch {
+	//scope.launch {
+	LaunchedEffect(true)
+	{
 		flow.collect { newState ->
 			isVisible = newState
 		}
@@ -171,40 +175,29 @@ fun buildGradingSystems(title : String, gradingSystems : List<String>,
 	// Animate the visibility of the grading systems
 	AnimatedVisibility(visible = isVisible)
 	{
-		Column()
+
+		Column(modifier = Modifier.padding(vertical = 8.dp))
 		{
+
 			// Type of climb
 			buildGradingSystemTitle(title)
 
 			// Buttons for each grading system
-			buildGradingSystemButtons(gradingSystems) { gradingSystem, isEnabled ->
+			buildGradingSystemButtons(gradingSystems,
+				onGradingSystemToggled = { gradingSystem : String, isEnabled : Boolean ->
+					onGradingSystemToggled(gradingSystem, isEnabled)
+				},
+				onGradingSystemLongClicked = { gradingSystem ->
+					var example = cons.getExampleGrade(gradingSystem)
 
-				// Call the given lambda expression when a grading system is
-				// toggled
-				onGradingSystemToggled(gradingSystem, isEnabled)
-
-				// Do not continue. Grading system is not enabled, so do not
-				// animate the example text
-				if (!isEnabled)
-				{
-					return@buildGradingSystemButtons
+					scope.launch {
+						Toast.makeText(context, example, Toast.LENGTH_SHORT).show()
+					}
 				}
-
-				// Get the example text
-				example = cons.getExampleGrade(gradingSystem)
-
-				// Animate the example text to make it appear and then
-				// disappear
-				scope.launch {
-					anim.animateTo(1f, animationSpec = tween(1000))
-					delay(1000)
-					anim.animateTo(0f, animationSpec = tween(750))
-				}
-
-			}
+			)
 
 			// Example of the grading system
-			buildGradingSystemExampleGrade(example, anim)
+			//buildGradingSystemExampleGrade(example, anim)
 		}
 	}
 
@@ -217,7 +210,8 @@ fun buildGradingSystems(title : String, gradingSystems : List<String>,
 @Composable
 fun buildGradingSystemButtons(gradingSystems : List<String>,
 	onGradingSystemToggled : (gradingSystem : String, isEnabled : Boolean)
-		-> Unit)
+		-> Unit,
+	onGradingSystemLongClicked : (gradingSystem : String) -> Unit)
 {
 
 	// Width of the buttons
@@ -243,7 +237,7 @@ fun buildGradingSystemButtons(gradingSystems : List<String>,
 			val textColor = if (isChecked) Color.White else Color.Black
 
 			// Create grading system button
-			OutlinedButton(
+			SsLongClickOutlinedButton(
 				modifier = Modifier
 					.width(buttonWidth),
 				colors = ButtonDefaults.buttonColors(
@@ -252,9 +246,10 @@ fun buildGradingSystemButtons(gradingSystems : List<String>,
 				onClick = {
 					isChecked = !isChecked
 
-					// Call the provided lambda expression when a button is
-					// toggled
 					onGradingSystemToggled(name, isChecked)
+				},
+				onLongClick = {
+					onGradingSystemLongClicked(name)
 				})
 			{
 				Text(name, softWrap = false)
@@ -263,22 +258,6 @@ fun buildGradingSystemButtons(gradingSystems : List<String>,
 		}
 
 	}
-}
-
-/**
- * Build the example grade for a grading system.
- */
-@Composable
-fun buildGradingSystemExampleGrade(example: String,
-	anim: Animatable<Float, AnimationVector1D>)
-{
-	Text(example,
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(vertical = 8.dp)
-			.graphicsLayer(alpha = anim.value),
-		textAlign = TextAlign.Center,
-		fontStyle = FontStyle.Italic)
 }
 
 /**

@@ -1,12 +1,12 @@
 package me.gabeg.sicksends.problem
 
 import androidx.annotation.WorkerThread
-import kotlinx.coroutines.flow.Flow
+import androidx.lifecycle.LiveData
 
 /**
  */
-abstract class SsProblemRepository<S : SsProblem>(
-	private val dao : SsProblemDao<S>)
+abstract class SsGenericProblemRepository<T : SsGenericProblem>(
+	private val dao : SsGenericProblemDao<T>)
 {
 
 	/**
@@ -14,14 +14,15 @@ abstract class SsProblemRepository<S : SsProblem>(
 	 *
 	 * @return The live data list of all climbing problems.
 	 */
-	//val allProblems: Flow<List<S>> = dao.all
-	val allProblems = dao.all
+	//val allProblems: Flow<List<T>> = dao.all
+	//val allProblems = dao.all
+	val allProblems : LiveData<List<T>> = dao.getAllProblems()
 
 	/**
 	 * Insert a type of climbing problem, asynchronously, into the database.
 	 */
 	@WorkerThread
-	suspend fun insert(problem: S)
+	suspend fun insert(problem: T)
 	{
 		dao.insert(problem)
 	}

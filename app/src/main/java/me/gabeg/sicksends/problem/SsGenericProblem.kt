@@ -1,47 +1,34 @@
-package me.gabeg.sicksends.dummy
+package me.gabeg.sicksends.problem
 
 import android.util.Log
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import me.gabeg.sicksends.problem.SsProblem
 
-/**
- * Aspects of a boulder problem that are saved.
- */
-@Entity(tableName = "dummy")
-data class SsDummyProblem(
+abstract class SsGenericProblem
+{
 
 	/**
 	 * Row ID of the table.
 	 */
-	@PrimaryKey(autoGenerate = true)
-	@ColumnInfo(name = "id")
-	var id: Long = 0,
+	abstract var id: Long
 
 	/**
 	 * Timestamp at which the problem was climbed.
 	 */
-	@ColumnInfo(name = "timestamp")
-	var timestamp: Long = 0,
+	abstract var timestamp: Long
 
 	/**
 	 * Name of the problem.
 	 */
-	@ColumnInfo(name = "name")
-	var name: String? = null,
+	abstract var name: String?
 
 	/**
 	 * Climbing grade of the problem.
 	 */
-	@ColumnInfo(name = "grade")
-	var grade: String? = null,
+	abstract var grade: String?
 
 	/**
 	 * Climbing grade that the user thinks the problem should be.
 	 */
-	@ColumnInfo(name = "perceived_grade")
-	var perceivedGrade: String? = null,
+	abstract var perceivedGrade: String?
 
 	/**
 	 * How how did it feel on a scale from easy to hard?
@@ -53,92 +40,73 @@ data class SsDummyProblem(
 	 * 4 = Hard
 	 * 5 = Very Hard
 	 */
-	@ColumnInfo(name = "how_did_it_feel_scale")
-	var howDidItFeelScale : Int = 0,
+	abstract var howDidItFeelScale : Int
 
 	/**
 	 * Number of attempts done on the problem.
 	 */
-	@ColumnInfo(name = "num_attempt")
-	var numAttempt : Long = 0,
+	abstract var numAttempt : Long
 
 	/**
 	 * Name of where the problem is located.
 	 */
-	@ColumnInfo(name = "location_name")
-	var locationName: String? = null,
+	abstract var locationName: String?
 
 	/**
 	 * Latitude coordinates of where the problem is located.
 	 */
-	@ColumnInfo(name = "location_lat")
-	var locationLat: String? = null,
+	abstract var locationLat: String?
 
 	/**
 	 * Longitude coordinates of where the problem is located.
 	 */
-	@ColumnInfo(name = "location_lon")
-	var locationLon: String? = null,
+	abstract var locationLon: String?
 
 	/**
 	 * Whether the problem is sent or not.
 	 */
-	@ColumnInfo(name = "is_send")
-	var isSend : Boolean = false,
+	abstract var isSend : Boolean
 
 	/**
 	 * Whether the problem is a project or not.
 	 */
-	@ColumnInfo(name = "is_project")
-	var isProject : Boolean = false,
+	abstract var isProject : Boolean
 
 	/**
 	 * Whether the problem is a flash or not.
 	 */
-	@ColumnInfo(name = "is_flash")
-	var isFlash : Boolean = false,
+	abstract var isFlash : Boolean
 
 	/**
 	 * Whether the problem is located outdoors or not.
 	 */
-	@ColumnInfo(name = "is_outdoor")
-	var isOutdoor : Boolean = false,
+	abstract var isOutdoor : Boolean
 
 	/**
 	 * Types of route features on the problem.
 	 */
-	@ColumnInfo(name = "route_feature_type")
-	var routeFeatureType: Long = 0,
+	abstract var routeFeatureType: Long
 
 	/**
 	 * Types of holds on the problem.
 	 */
-	@ColumnInfo(name = "hold_type")
-	var holdType: Long = 0,
+	abstract var holdType: Long
 
 	/**
 	 * Types of climbing techniques used on the problem.
 	 */
-	@ColumnInfo(name = "climbing_technique_type")
-	var climbingTechniqueType: Long = 0,
+	abstract var climbingTechniqueType: Long
 
 	/**
 	 * File path to the image.
 	 */
-	@ColumnInfo(name = "image_path")
-	var imagePath: String? = null,
+	abstract var imagePath: String?
 
 	/**
 	 * Notes on the problem.
 	 */
-	@ColumnInfo(name = "note")
-	var note: String? = null)
+	abstract var note: String?
 
-{
-
-	/**
-	 * Debug the attributes.
-	 */
 	fun debug()
 	{
 		Log.i("ProblemDebug", "id                    : $id")

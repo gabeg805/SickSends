@@ -1,29 +1,29 @@
 package me.gabeg.sicksends.toprope
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import me.gabeg.sicksends.problem.SsProblemDao
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
+import me.gabeg.sicksends.problem.SsGenericProblemDao
 
 /**
  * Data access object for top rope problems.
  */
 @Dao
-interface SsTopRopeDao : SsProblemDao<SsTopRopeProblem>
+interface SsTopRopeDao : SsGenericProblemDao<SsTopRopeProblem>
 {
 
 	/**
 	 * Delete all top rope problems.
 	 */
 	@Query("DELETE FROM top_rope")
-	override fun deleteAll()
+	override suspend fun deleteAll()
 
 	/**
 	 * Get all top rope problems.
 	 *
 	 * @return All top rope problems.
 	 */
-	@get:Query("SELECT * FROM top_rope")
-	override val all: Flow<List<SsTopRopeProblem>>
+	@Query("SELECT * FROM top_rope ORDER BY timestamp DESC")
+	override fun getAllProblems() : LiveData<List<SsTopRopeProblem>>
 
 }

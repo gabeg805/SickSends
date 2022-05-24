@@ -1,9 +1,9 @@
 package me.gabeg.sicksends.trad
 
-import me.gabeg.sicksends.problem.SsProblemViewModel
+import me.gabeg.sicksends.problem.SsGenericProblemViewModel
 
 /**
  * Trad view model.
  */
 class SsTradViewModel(repo : SsTradRepository)
-	: SsProblemViewModel<SsTradProblem>(repo)
+	: SsGenericProblemViewModel<SsTradProblem>(repo)

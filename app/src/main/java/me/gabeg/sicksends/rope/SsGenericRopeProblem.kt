@@ -1,32 +1,28 @@
 package me.gabeg.sicksends.rope
 
-import me.gabeg.sicksends.problem.SsProblem
-import androidx.room.ColumnInfo
+import me.gabeg.sicksends.problem.SsGenericProblem
 
 /**
  * Aspects of a Climbing problem, specifically for ropes, that are saved.
  *
  * TODO: Number of pitches?
  */
-abstract class SsRopeProblem : SsProblem()
+abstract class SsGenericRopeProblem : SsGenericProblem()
 {
 
 	/**
 	 * Number of takes done on the problem.
 	 */
-	@ColumnInfo(name = "num_take")
-	var numTake = 0
+	abstract var numTake : Int
 
 	/**
 	 * Whether the problem was onsighted or not.
 	 */
-	@ColumnInfo(name = "is_onsight")
-	var isOnsight = false
+	abstract var isOnsight : Boolean
 
 	/**
 	 * Whether the problem was a redpoint or not.
 	 */
-	@ColumnInfo(name = "is_redpoint")
-	var isRedpoint = false
+	abstract var isRedpoint : Boolean
 
 }

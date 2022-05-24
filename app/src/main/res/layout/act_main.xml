@@ -46,6 +46,7 @@
 		</com.google.android.material.appbar.AppBarLayout>
 
 		<!-- Main body of screen -->
+		<!--
 		<fragment
 			android:name="androidx.navigation.fragment.NavHostFragment"
 			android:id="@+id/nav_host"
@@ -56,6 +57,7 @@
 			app:defaultNavHost="true"
 			app:navGraph="@navigation/nav_graph"
 			/>
+			-->
 
 		<!-- FAB to add climbs -->
 		<com.google.android.material.floatingactionbutton.FloatingActionButton

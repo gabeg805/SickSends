@@ -1,9 +1,9 @@
 package me.gabeg.sicksends.toprope
 
-import me.gabeg.sicksends.problem.SsProblemViewModel
+import me.gabeg.sicksends.problem.SsGenericProblemViewModel
 
 /**
  * Top rope view model.
  */
 class SsTopRopeViewModel(repo : SsTopRopeRepository)
-	: SsProblemViewModel<SsTopRopeProblem>(repo)
+	: SsGenericProblemViewModel<SsTopRopeProblem>(repo)

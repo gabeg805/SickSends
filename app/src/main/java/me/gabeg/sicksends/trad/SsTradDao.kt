@@ -1,29 +1,29 @@
 package me.gabeg.sicksends.trad
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
-import me.gabeg.sicksends.problem.SsProblemDao
+import me.gabeg.sicksends.problem.SsGenericProblemDao
 
 /**
  * Data access object for trad problems.
  */
 @Dao
-interface SsTradDao : SsProblemDao<SsTradProblem>
+interface SsTradDao : SsGenericProblemDao<SsTradProblem>
 {
 
 	/**
 	 * Delete all trad problems.
 	 */
 	@Query("DELETE FROM trad")
-	override fun deleteAll()
+	override suspend fun deleteAll()
 
 	/**
 	 * Get all trad problems.
 	 *
 	 * @return All trad problems.
 	 */
-	@get:Query("SELECT * FROM trad")
-	override val all: Flow<List<SsTradProblem>>
+	@Query("SELECT * FROM trad ORDER BY timestamp DESC")
+	override fun getAllProblems() : LiveData<List<SsTradProblem>>
 
 }

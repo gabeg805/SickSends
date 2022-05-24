@@ -1,9 +1,9 @@
 package me.gabeg.sicksends.sport
 
-import me.gabeg.sicksends.problem.SsProblemViewModel
+import me.gabeg.sicksends.problem.SsGenericProblemViewModel
 
 /**
  * Sport view model.
  */
 class SsSportViewModel(repo : SsSportRepository)
-	: SsProblemViewModel<SsSportProblem>(repo)
+	: SsGenericProblemViewModel<SsSportProblem>(repo)

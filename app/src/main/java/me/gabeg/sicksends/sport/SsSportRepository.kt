@@ -1,9 +1,9 @@
 package me.gabeg.sicksends.sport
 
-import me.gabeg.sicksends.problem.SsProblemRepository
+import me.gabeg.sicksends.problem.SsGenericProblemRepository
 
 /**
  * Repository for sport problems.
  */
 class SsSportRepository(dao : SsSportDao)
-	: SsProblemRepository<SsSportProblem>(dao)
+	: SsGenericProblemRepository<SsSportProblem>(dao)

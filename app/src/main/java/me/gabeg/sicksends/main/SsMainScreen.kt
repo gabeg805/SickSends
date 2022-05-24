@@ -1,19 +1,9 @@
 package me.gabeg.sicksends.main
 
-import android.os.Build
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,48 +12,29 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
-import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import me.gabeg.sicksends.R
 import me.gabeg.sicksends.boulder.SsBoulderProblem
 import me.gabeg.sicksends.boulder.SsBoulderRepository
 import me.gabeg.sicksends.boulder.SsBoulderViewModel
-import me.gabeg.sicksends.dummy.SsDummyRepository
-import me.gabeg.sicksends.dummy.SsDummyViewModel
+import me.gabeg.sicksends.problem.SsGenericProblem
 import me.gabeg.sicksends.problem.SsProblemDatabase
 import me.gabeg.sicksends.shared.SsSharedDataStore
 import me.gabeg.sicksends.shared.howDidItFeelScaleToString
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.util.*
 
 const val MAIN_SCREEN_ROUTE = "main_screen_route"
@@ -106,7 +77,7 @@ fun SsMainScreen(navController: NavController)
 		},
 		floatingActionButtonPosition = FabPosition.End,
 		floatingActionButton = { buildFloatingActionButton() },
-		content = { innerPadding -> buildAllBoulderProblems(allProblems, innerPadding) })
+		content = { innerPadding -> buildAllProblems(allProblems, innerPadding) })
 }
 
 /**
@@ -224,121 +195,238 @@ fun buildFloatingActionButton()
 }
 
 /**
- * Build all boulder problems.
+ * Convert a problem timestamp to a date.
  */
-@Composable
-fun buildAllBoulderProblems(allProblems : List<SsBoulderProblem>,
-	innerPadding : PaddingValues)
+fun convertTimestampToDate(problem: SsGenericProblem) : String
 {
-	var newDayIndices = mutableListOf<Int>()
-	//var prevDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-	//var prevDate = prevDateFormat.parse("1970-01-01T00:00:00")
-	var prevDate = Date(0)
-	var normalDateFormat = SimpleDateFormat("yyyy-MM-dd")
-	//var prevDate = LocalDateTime.parse("1970-01-01T00:00:00")
 
-	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+	// No problem entered
+	if (problem == null)
 	{
-		for ((i, p) in allProblems.withIndex())
-		{
-			var curDate = Date(p.timestamp * 1000)
-			var prevStr = normalDateFormat.format(prevDate)
-			var curStr = normalDateFormat.format(curDate)
-
-			Log.i("YOOOOOO", "Timestamp : " + p.timestamp + " || Date : " + curDate)
-
-			if (i == 0)
-			{
-				prevDate = curDate
-			}
-			else if (prevStr != curStr)
-			{
-				newDayIndices.add(i-1)
-				prevDate = curDate
-				Log.i("AHHHHHHHHH", "Adding index : " + (i-1))
-			}
-		}
+		return ""
 	}
 
-	newDayIndices.add(allProblems.size-1)
+	// Get today's date and the date of the problem
+	var today = Date()
+	var date = Date(problem.timestamp*1000)
 
-	var sublist = mutableListOf<List<SsBoulderProblem>>()
+	// Compare the two dates to see what the date text should say
+	if (isSameDate(today, date))
+	{
+		return "Today"
+	}
+	else if (isDayBeforeDate(today, date))
+	{
+		return "Yesterday"
+	}
+	else if (isSameYear(today, date))
+	{
+		return SimpleDateFormat("EEE, MMM d").format(date)
+	}
+	else
+	{
+		return SimpleDateFormat("MMM d, yyyy").format(date)
+	}
+}
+
+/**
+ * Check if a date occurs before another date.
+ */
+fun isDayBeforeDate(date1 : Date, date2 : Date) : Boolean
+{
+
+	// Get calendar instances
+	val cal1 = Calendar.getInstance()
+	val cal2 = Calendar.getInstance()
+
+	// Setup the calendars
+	cal1.setTime(date1)
+	cal2.setTime(date2)
+	cal2.add(Calendar.DAY_OF_MONTH, 1)
+
+	// Get the year, month, and day
+	// TODO: Can I just do this with year and day-of-year?
+	val year1 = cal1.get(Calendar.YEAR)
+	val year2 = cal2.get(Calendar.YEAR)
+	val month1 = cal1.get(Calendar.MONTH)
+	val month2 = cal2.get(Calendar.MONTH)
+	val day1 = cal1.get(Calendar.DAY_OF_MONTH)
+	val day2 = cal2.get(Calendar.DAY_OF_MONTH)
+
+	return (year1 == year2) && (month1 == month2) && (day1 == day2)
+}
+
+/**
+ * Check if two dates occur on the same date.
+ */
+fun isSameDate(date1 : Date, date2 : Date) : Boolean
+{
+
+	// Get calendar instances
+	val cal1 = Calendar.getInstance()
+	val cal2 = Calendar.getInstance()
+
+	// Setup the calendars
+	cal1.setTime(date1)
+	cal2.setTime(date2)
+
+	// Get the year, month, and day
+	// TODO: Can I just do this with year and day-of-year?
+	val year1 = cal1.get(Calendar.YEAR)
+	val year2 = cal2.get(Calendar.YEAR)
+	val month1 = cal1.get(Calendar.MONTH)
+	val month2 = cal2.get(Calendar.MONTH)
+	val day1 = cal1.get(Calendar.DAY_OF_MONTH)
+	val day2 = cal2.get(Calendar.DAY_OF_MONTH)
+
+	return (year1 == year2) && (month1 == month2) && (day1 == day2)
+}
+
+/**
+ * Check if two dates occur in the same year.
+ */
+fun isSameYear(date1 : Date, date2 : Date) : Boolean
+{
+
+	// Get calendar instances
+	val cal1 = Calendar.getInstance()
+	val cal2 = Calendar.getInstance()
+
+	// Setup the calendars
+	cal1.setTime(date1)
+	cal2.setTime(date2)
+
+	// Get the year
+	val year1 = cal1.get(Calendar.YEAR)
+	val year2 = cal2.get(Calendar.YEAR)
+
+	return (year1 == year2)
+}
+
+/**
+ * Find each group of problems that have occur on the same day.
+ */
+fun findEachGroupOfProblemsWithSameDay(allProblems: List<SsGenericProblem>)
+	: List<List<SsGenericProblem>>
+{
+
+	// Store the group of problems that occur on the same day
+	var sameDayList = mutableListOf<List<SsGenericProblem>>()
+
+	// Find the indices of each new day
+	var newDayIndices = findIndexForNewDays(allProblems)
 	var prevIndex = 0
 
+	// Iterate over each index of the new day list
 	for (i in newDayIndices.indices)
 	{
+
+		// Get the current index
 		var index = newDayIndices[i]
 
+		// Something wrong with the indices. Continue to next element
 		if ((prevIndex < 0) || (index < 0))
 		{
 			Log.i("POOPOPOPOPOP", "CONTINUE")
 			continue
 		}
 
-		sublist.add(allProblems.subList(prevIndex, index+1))
+		// Get the group of problems that occur on the same day
+		var sameDayGroup = allProblems.subList(prevIndex, index+1)
+
+		// Add the group to the list
+		sameDayList.add(sameDayGroup)
 		Log.i("POOPOPOPOPOP", "Getting sublist : $prevIndex to " + index)
 
+		// Increment the previous index
 		prevIndex = index+1
 	}
 
+	return sameDayList.toList()
+}
+
+/**
+ * Find the indices that correspond to new days.
+ */
+fun findIndexForNewDays(allProblems: List<SsGenericProblem>) : List<Int>
+{
+	//if (allProblems !is List<T>)
+	//{
+	//	return listOf()
+	//}
+
+	// No problems found
+	if (allProblems.size == 0)
+	{
+		return listOf()
+	}
+
+	// Store the indices
+	var newDayIndices = mutableListOf<Int>()
+
+	// Used to compare the previous date that was encountered with the current
+	// date that is being looked at
+	var prevDate = Date(0)
+
+	// Iterate over each problem
+	for ((i, p) in allProblems.withIndex())
+	{
+
+		// Get the date of the problem
+		var curDate = Date(p.timestamp * 1000)
+		//var curDate = Date(1000)
+		//Log.i("YOOOOOO", "Timestamp : " + p.timestamp + " || Date : " + curDate)
+
+		// This is the first problem. There is no previous date to compare with
+		if (i == 0)
+		{
+			prevDate = curDate
+		}
+		// The previous date and the current date do not match. Save this index
+		else if (!isSameDate(prevDate, curDate))
+		{
+			newDayIndices.add(i-1)
+			prevDate = curDate
+			//Log.i("AHHHHHHHHH", "Adding index : " + (i-1))
+		}
+	}
+
+	// Add the last index in the list so that the last set of days are included
+	newDayIndices.add(allProblems.size-1)
+
+	return newDayIndices.toList()
+}
+
+/**
+ * Build all problems.
+ */
+@Composable
+fun buildAllProblems(allProblems : List<SsGenericProblem>,
+	innerPadding : PaddingValues)
+{
+
+	// Organize all problems so that they are grouped by day
+	val problemsGroupedByDay = findEachGroupOfProblemsWithSameDay(allProblems)
+
+	// Number of problems to show per row
+	val cols = 1
+
+	// Create the scrollable column that will show all problems
 	LazyColumn(contentPadding = innerPadding)
 	{
 
-		val cols = 1
-
-		for (daySet in sublist)
+		// Iterate over each group of problems, where each group corresponds to
+		// a day
+		for (problemsOnSameDay in problemsGroupedByDay)
 		{
 
-			// Display each chunk of problem(s) on a row
-			item {
-				var timestamp = daySet.get(0).timestamp
-				var dateFormat = SimpleDateFormat("yyyy-MM-dd")
-				var date = dateFormat.format(Date(timestamp*1000))
+			// Display the date that all these problems occur on
+			buildDateText(problemsOnSameDay[0])
 
-				Row(modifier = Modifier
-					.fillMaxWidth()
-					.padding(vertical = 16.dp))
-				{
-					Text(date)
-				}
-			}
-
-				// Do this for all problems. Chunk out problems by how many columns the
-			// user wants to see
-			//itemsIndexed(allProblems.chunked(cols))
-			itemsIndexed(daySet.chunked(cols))
-			{ itemIndex, problemChunk ->
-
-				// Display each chunk of problem(s) on a row
-				Row()
-				{
-
-					// Iterate over each problem in the chunk
-					for ((chunkIndex, p) in problemChunk.withIndex())
-					{
-
-						// Compute the fraction of the full width that a problem
-						// should take up
-						var fractionOfWidth = 1f / (cols - chunkIndex)
-
-						// Padding around each problem
-						var startPad = if (chunkIndex == 0) 12.dp else 0.dp
-						var endPad = 12.dp
-						var topPad = if (itemIndex == 0) 16.dp else 0.dp
-						var bottomPad = 16.dp
-
-						// Build a box and put each problem in the box
-						Box(
-							modifier = Modifier
-								.fillMaxWidth(fractionOfWidth)
-								.padding(start = startPad, end = endPad,
-									top = topPad, bottom = bottomPad))
-						{
-							buildProblemCard(p)
-						}
-					}
-				}
-			}
+			// Display all these problems that occur on the same day, and
+			// organize them further so that the desired number of problems are
+			// shown on each row
+			buildProblemCardRow(problemsOnSameDay, cols)
 		}
 
 	}
@@ -346,14 +434,78 @@ fun buildAllBoulderProblems(allProblems : List<SsBoulderProblem>,
 }
 
 /**
+ * Build the date text.
+ */
+fun LazyListScope.buildDateText(problem: SsGenericProblem)
+{
+	item {
+		var date = convertTimestampToDate(problem)
+
+		Row(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(vertical = 16.dp),
+			horizontalArrangement = Arrangement.Center,
+			verticalAlignment = Alignment.CenterVertically)
+		{
+			Text(date,
+				modifier = Modifier
+					.alpha(1f),
+				fontWeight = FontWeight.Bold,
+				color = Color.Gray)
+		}
+	}
+}
+
+/**
+ * Build a row of one or more problems.
+ */
+fun LazyListScope.buildProblemCardRow(problemList : List<SsGenericProblem>,
+	numPerRow : Int)
+{
+
+	// Divvy out the list of problems into chunks, depending on how many
+	// problems it is desired to be on a row
+	itemsIndexed(problemList.chunked(numPerRow)) { itemIndex, problemChunk ->
+
+		// Row for the problems
+		Row()
+		{
+
+			// Iterate over each problem that will be in the row
+			for ((chunkIndex, p) in problemChunk.withIndex())
+			{
+
+				// Compute the fraction of the full width that a problem
+				// should take up
+				var fractionOfWidth = 1f / (numPerRow - chunkIndex)
+
+				// Padding around each problem
+				var startPad = if (chunkIndex == 0) 12.dp else 0.dp
+				var endPad = 12.dp
+				var topPad = if (itemIndex == 0) 16.dp else 0.dp
+				var bottomPad = 16.dp
+
+				// Build a box and put each problem in the box
+				Box(
+					modifier = Modifier
+						.fillMaxWidth(fractionOfWidth)
+						.padding(start = startPad, end = endPad,
+							top = topPad, bottom = bottomPad))
+				{
+					buildProblemCard(p)
+				}
+			}
+		}
+	}
+}
+
+/**
  * Build a problem.
  */
 @Composable
-fun buildProblemCard(problem : SsBoulderProblem)
+fun buildProblemCard(problem : SsGenericProblem)
 {
-
-	//Text("Timestamp    : ${problem.timestamp}")
-	//Text("Num Attempt : ${problem.numAttempt}")
 
 	// Problem card
 	Card(
@@ -403,6 +555,7 @@ fun buildProblemCard(problem : SsBoulderProblem)
 
 		}
 
+		//Text("Num Attempt : ${problem.numAttempt}")
 		//Text("Hold Type    : ${problem.holdType}")
 		//Text("Route Feature: ${problem.routeFeatureType}")
 		//Text("Technique    : ${problem.climbingTechniqueType}")
@@ -414,7 +567,7 @@ fun buildProblemCard(problem : SsBoulderProblem)
  * Build the text of the grade for a problem.
  */
 @Composable
-fun ConstraintLayoutScope.buildGradeText(problem: SsBoulderProblem,
+fun ConstraintLayoutScope.buildGradeText(problem: SsGenericProblem,
 	leftRef: ConstrainedLayoutReference, gradeRef: ConstrainedLayoutReference,
 	rightRef: ConstrainedLayoutReference)
 {
@@ -439,7 +592,7 @@ fun ConstraintLayoutScope.buildGradeText(problem: SsBoulderProblem,
 }
 
 @Composable
-fun buildGradeSubtitleText(problem: SsBoulderProblem)
+fun buildGradeSubtitleText(problem: SsGenericProblem)
 {
 	val feelScale = problem.howDidItFeelScale
 	val altGrade = problem.perceivedGrade
@@ -473,7 +626,7 @@ fun buildGradeSubtitleText(problem: SsBoulderProblem)
  * Build the spacer between the subtitle and name.
  */
 @Composable
-fun buildGradeSubtitleToNameSpacer(problem: SsBoulderProblem)
+fun buildGradeSubtitleToNameSpacer(problem: SsGenericProblem)
 {
 	var hasAltGrade = !problem.perceivedGrade.isNullOrEmpty()
 	var hasFeelScale = (problem.howDidItFeelScale > 0) && (problem.howDidItFeelScale != 3)
@@ -491,7 +644,7 @@ fun buildGradeSubtitleToNameSpacer(problem: SsBoulderProblem)
  * Build the icon indicating if a problem was a flash or not.
  */
 @Composable
-fun ConstraintLayoutScope.buildFlashIcon(problem : SsBoulderProblem,
+fun ConstraintLayoutScope.buildFlashIcon(problem : SsGenericProblem,
 	ref : ConstrainedLayoutReference)
 {
 
@@ -516,7 +669,7 @@ fun ConstraintLayoutScope.buildFlashIcon(problem : SsBoulderProblem,
  * Build the text of the location name.
  */
 @Composable
-fun buildLocationNameText(problem: SsBoulderProblem)
+fun buildLocationNameText(problem: SsGenericProblem)
 {
 	val locationName = problem.locationName
 
@@ -536,7 +689,7 @@ fun buildLocationNameText(problem: SsBoulderProblem)
  * Build the text of the problem's name.
  */
 @Composable
-fun buildNameText(problem: SsBoulderProblem)
+fun buildNameText(problem: SsGenericProblem)
 {
 	val name = problem.name
 
@@ -558,7 +711,7 @@ fun buildNameText(problem: SsBoulderProblem)
  * Build the icon indicating if a problem was climbed outdoors or not.
  */
 @Composable
-fun ConstraintLayoutScope.buildOutdoorIcon(problem : SsBoulderProblem,
+fun ConstraintLayoutScope.buildOutdoorIcon(problem : SsGenericProblem,
 	ref : ConstrainedLayoutReference)
 {
 	// Outdoor (Icon=Forest not found)
@@ -582,7 +735,7 @@ fun ConstraintLayoutScope.buildOutdoorIcon(problem : SsBoulderProblem,
  * Build the icon indicating if a problem is a project or not.
  */
 @Composable
-fun ConstraintLayoutScope.buildProjectIcon(problem : SsBoulderProblem,
+fun ConstraintLayoutScope.buildProjectIcon(problem : SsGenericProblem,
 	ref : ConstrainedLayoutReference)
 {
 
@@ -603,204 +756,204 @@ fun ConstraintLayoutScope.buildProjectIcon(problem : SsBoulderProblem,
 		contentDescription = "Project")
 }
 
-@Composable
-fun buildProblemCardV1(it : SsBoulderProblem, width : Dp)
-{
-	// Problem card
-	Card(
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(horizontal = 16.dp, vertical = 8.dp),
-		elevation = 10.dp)
-	{
-
-		// Container for all the content in the card
-		Row(
-			modifier = Modifier
-				.fillMaxWidth()
-				.height(IntrinsicSize.Min)
-				.padding(12.dp))
-		{
-
-			// Show the grade and how the climb felt
-			Column(
-				modifier = Modifier
-					.fillMaxHeight(),
-				horizontalAlignment = Alignment.CenterHorizontally,
-				verticalArrangement = Arrangement.Center)
-			{
-
-				// Grade
-				Text("${it.grade}",
-					textAlign = TextAlign.Center,
-					fontSize = MaterialTheme.typography.h5.fontSize,
-					fontWeight = FontWeight.Bold)
-
-				// How the climb felt, if specified
-				if (it.howDidItFeelScale > 0 && it.howDidItFeelScale != 3)
-				{
-					Text(howDidItFeelScaleToString(it.howDidItFeelScale),
-						//modifier = Modifier
-						//	.width(IntrinsicSize.Min),
-						fontSize = MaterialTheme.typography.caption.fontSize)
-					//textAlign = TextAlign.Start)
-				}
-			}
-
-			//Text("Timestamp    : ${it.timestamp}")
-
-			Divider(
-				modifier = Modifier
-					.fillMaxHeight()
-					.padding(horizontal = 12.dp)
-					.width(1.dp),
-				color = Color.Black)
-
-			//Column()
-			//	{
-
-			//		Text("Num Attempt : ${it.numAttempt}")
-			//	}
-
-			//Spacer(modifier = Modifier.weight(1f))
-
-			Column()
-			{
-
-				// Align the icons in a row
-				Row(
-					modifier = Modifier
-						.fillMaxWidth(),
-					horizontalArrangement = Arrangement.End)
-				{
-
-					//// Project
-					//	if (it.isProject)
-					//	{
-					//		Icon(Icons.Default.Construction,
-					//			modifier = Modifier
-					//				.size(18.dp),
-					//			contentDescription = "Project")
-					//	}
-
-					//	// Flash
-					//	if (it.isFlash)
-					//	{
-					//		Icon(Icons.Default.Bolt,
-					//			modifier = Modifier
-					//				.size(18.dp),
-					//			contentDescription = "Flash")
-					//	}
-
-					//	// Outdoor (Icon=Forest not found)
-					//	if (it.isOutdoor)
-					//	{
-					//		Icon(Icons.Default.Park,
-					//			modifier = Modifier
-					//				.size(18.dp),
-					//			contentDescription = "Outdoor")
-					//	}
-
-				}
-
-				Row(
-					modifier = Modifier
-						.weight(1f))
-				{
-					Column(
-						modifier = Modifier
-							.width(IntrinsicSize.Max))
-					{
-
-						// Location of the climb
-						if (!it.locationName.isNullOrEmpty())
-						{
-							Text("${it.locationName}",
-								modifier = Modifier.fillMaxWidth(),
-								fontSize = MaterialTheme.typography.body2.fontSize,
-								textAlign = TextAlign.Start)
-						}
-
-						// Name of the climb
-						if (!it.name.isNullOrEmpty())
-						{
-							Text("${it.name}",
-								modifier = Modifier.fillMaxWidth(),
-								fontSize = MaterialTheme.typography.body2.fontSize,
-								//fontStyle = FontStyle.Italic,
-								textAlign = TextAlign.Start)
-						}
-
-						// How the climb felt, if specified
-						//if (it.howDidItFeelScale > 0 && it.howDidItFeelScale != 3)
-						//	{
-						//		Text(howDidItFeelScaleToString(it.howDidItFeelScale),
-						//			fontSize = MaterialTheme.typography.caption.fontSize,
-						//			textAlign = TextAlign.Start)
-						//	}
-
-					}
-				}
-
-				Row(
-					modifier = Modifier
-						.fillMaxWidth())
-				{
-					Row(
-						horizontalArrangement = Arrangement.Start)
-					{
-
-						// Project
-						if (it.isProject)
-						{
-							Icon(Icons.Default.Construction,
-								modifier = Modifier
-									.size(18.dp),
-								contentDescription = "Project")
-						}
-
-						// Flash
-						if (it.isFlash)
-						{
-							Icon(Icons.Default.Bolt,
-								modifier = Modifier
-									.size(18.dp),
-								contentDescription = "Flash")
-						}
-
-						// Outdoor (Icon=Forest not found)
-						if (it.isOutdoor)
-						{
-							Icon(Icons.Default.Park,
-								modifier = Modifier
-									.size(18.dp),
-								contentDescription = "Outdoor")
-						}
-
-					}
-
-					Spacer(modifier = Modifier.weight(1f))
-
-					Row(
-						horizontalArrangement = Arrangement.End)
-					{
-						Icon(Icons.Default.ExpandMore,
-							modifier = Modifier
-								.size(18.dp),
-							contentDescription = "Expand")
-					}
-				}
-
-			}
-
-		}
-
-		//Text("Hold Type    : ${it.holdType}")
-		//Text("Route Feature: ${it.routeFeatureType}")
-		//Text("Technique    : ${it.climbingTechniqueType}")
-		//Text("Note         : ${it.note}")
-	}
-}
+//@Composable
+//fun buildProblemCardV1(it : SsGenericProblem, width : Dp)
+//{
+//	// Problem card
+//	Card(
+//		modifier = Modifier
+//			.fillMaxWidth()
+//			.padding(horizontal = 16.dp, vertical = 8.dp),
+//		elevation = 10.dp)
+//	{
+//
+//		// Container for all the content in the card
+//		Row(
+//			modifier = Modifier
+//				.fillMaxWidth()
+//				.height(IntrinsicSize.Min)
+//				.padding(12.dp))
+//		{
+//
+//			// Show the grade and how the climb felt
+//			Column(
+//				modifier = Modifier
+//					.fillMaxHeight(),
+//				horizontalAlignment = Alignment.CenterHorizontally,
+//				verticalArrangement = Arrangement.Center)
+//			{
+//
+//				// Grade
+//				Text("${it.grade}",
+//					textAlign = TextAlign.Center,
+//					fontSize = MaterialTheme.typography.h5.fontSize,
+//					fontWeight = FontWeight.Bold)
+//
+//				// How the climb felt, if specified
+//				if (it.howDidItFeelScale > 0 && it.howDidItFeelScale != 3)
+//				{
+//					Text(howDidItFeelScaleToString(it.howDidItFeelScale),
+//						//modifier = Modifier
+//						//	.width(IntrinsicSize.Min),
+//						fontSize = MaterialTheme.typography.caption.fontSize)
+//					//textAlign = TextAlign.Start)
+//				}
+//			}
+//
+//			//Text("Timestamp    : ${it.timestamp}")
+//
+//			Divider(
+//				modifier = Modifier
+//					.fillMaxHeight()
+//					.padding(horizontal = 12.dp)
+//					.width(1.dp),
+//				color = Color.Black)
+//
+//			//Column()
+//			//	{
+//
+//			//		Text("Num Attempt : ${it.numAttempt}")
+//			//	}
+//
+//			//Spacer(modifier = Modifier.weight(1f))
+//
+//			Column()
+//			{
+//
+//				// Align the icons in a row
+//				Row(
+//					modifier = Modifier
+//						.fillMaxWidth(),
+//					horizontalArrangement = Arrangement.End)
+//				{
+//
+//					//// Project
+//					//	if (it.isProject)
+//					//	{
+//					//		Icon(Icons.Default.Construction,
+//					//			modifier = Modifier
+//					//				.size(18.dp),
+//					//			contentDescription = "Project")
+//					//	}
+//
+//					//	// Flash
+//					//	if (it.isFlash)
+//					//	{
+//					//		Icon(Icons.Default.Bolt,
+//					//			modifier = Modifier
+//					//				.size(18.dp),
+//					//			contentDescription = "Flash")
+//					//	}
+//
+//					//	// Outdoor (Icon=Forest not found)
+//					//	if (it.isOutdoor)
+//					//	{
+//					//		Icon(Icons.Default.Park,
+//					//			modifier = Modifier
+//					//				.size(18.dp),
+//					//			contentDescription = "Outdoor")
+//					//	}
+//
+//				}
+//
+//				Row(
+//					modifier = Modifier
+//						.weight(1f))
+//				{
+//					Column(
+//						modifier = Modifier
+//							.width(IntrinsicSize.Max))
+//					{
+//
+//						// Location of the climb
+//						if (!it.locationName.isNullOrEmpty())
+//						{
+//							Text("${it.locationName}",
+//								modifier = Modifier.fillMaxWidth(),
+//								fontSize = MaterialTheme.typography.body2.fontSize,
+//								textAlign = TextAlign.Start)
+//						}
+//
+//						// Name of the climb
+//						if (!it.name.isNullOrEmpty())
+//						{
+//							Text("${it.name}",
+//								modifier = Modifier.fillMaxWidth(),
+//								fontSize = MaterialTheme.typography.body2.fontSize,
+//								//fontStyle = FontStyle.Italic,
+//								textAlign = TextAlign.Start)
+//						}
+//
+//						// How the climb felt, if specified
+//						//if (it.howDidItFeelScale > 0 && it.howDidItFeelScale != 3)
+//						//	{
+//						//		Text(howDidItFeelScaleToString(it.howDidItFeelScale),
+//						//			fontSize = MaterialTheme.typography.caption.fontSize,
+//						//			textAlign = TextAlign.Start)
+//						//	}
+//
+//					}
+//				}
+//
+//				Row(
+//					modifier = Modifier
+//						.fillMaxWidth())
+//				{
+//					Row(
+//						horizontalArrangement = Arrangement.Start)
+//					{
+//
+//						// Project
+//						if (it.isProject)
+//						{
+//							Icon(Icons.Default.Construction,
+//								modifier = Modifier
+//									.size(18.dp),
+//								contentDescription = "Project")
+//						}
+//
+//						// Flash
+//						if (it.isFlash)
+//						{
+//							Icon(Icons.Default.Bolt,
+//								modifier = Modifier
+//									.size(18.dp),
+//								contentDescription = "Flash")
+//						}
+//
+//						// Outdoor (Icon=Forest not found)
+//						if (it.isOutdoor)
+//						{
+//							Icon(Icons.Default.Park,
+//								modifier = Modifier
+//									.size(18.dp),
+//								contentDescription = "Outdoor")
+//						}
+//
+//					}
+//
+//					Spacer(modifier = Modifier.weight(1f))
+//
+//					Row(
+//						horizontalArrangement = Arrangement.End)
+//					{
+//						Icon(Icons.Default.ExpandMore,
+//							modifier = Modifier
+//								.size(18.dp),
+//							contentDescription = "Expand")
+//					}
+//				}
+//
+//			}
+//
+//		}
+//
+//		//Text("Hold Type    : ${it.holdType}")
+//		//Text("Route Feature: ${it.routeFeatureType}")
+//		//Text("Technique    : ${it.climbingTechniqueType}")
+//		//Text("Note         : ${it.note}")
+//	}
+//}
 
 
 

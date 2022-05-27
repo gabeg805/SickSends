@@ -30,21 +30,12 @@ interface SsBoulderDao : SsGenericProblemDao<SsBoulderProblem>
 	 *
 	 * @return All boulder problems.
 	 */
-	//@Query("SELECT * FROM boulder ORDER BY timestamp DESC " +
-	//	"WHERE is_outdoor = :isOutdoor AND is_outdoor != :isIndoor " +
-	//	"is_project = :isProject AND is_project != :isSend " +
-	//	"is_flash = :isFlash AND is_flash != :isFlash")
-	//"is_flash = :isFlash AND is_flash != :isNormal")
-	//"is_outdoor = :isOutdoor AND " +
-	//"is_project = :isProject AND " +
-	//"is_flash = :isFlash")
-	@Query("SELECT * FROM boulder WHERE is_outdoor = :isOutdoor AND is_project = :isProject AND is_flash = :isFlash")
-	fun getProblemsWhere(
-		isOutdoor : Boolean,
-		isProject : Boolean,
-		isFlash : Boolean) : LiveData<List<SsBoulderProblem>>
-	//isIndoor : Boolean, isOutdoor : Boolean,
-	//isProject : Boolean, isSend : Boolean,
-	//isFlash : Boolean, isNormal : Boolean) : LiveData<List<SsBoulderProblem>>
+	@Query("SELECT * FROM boulder " +
+		"WHERE (:isOutdoor IS NULL OR is_outdoor = :isOutdoor) " +
+		"AND   (:isProject IS NULL OR is_project = :isProject) " +
+		"AND   (:isFlash   IS NULL OR is_flash   = :isFlash) " +
+		"ORDER BY timestamp DESC")
+	fun getProblemsWhere(isOutdoor : Boolean?, isProject : Boolean?,
+		isFlash : Boolean?) : LiveData<List<SsBoulderProblem>>
 
 }

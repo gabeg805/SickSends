@@ -2,6 +2,11 @@ package me.gabeg.sicksends.problem
 
 import android.util.Log
 
+/**
+ * Generic problem attributes.
+ *
+ * TODO: Make sure nullable fields are nullable, and likewise for not nullable.
+ */
 abstract class SsGenericProblem
 {
 

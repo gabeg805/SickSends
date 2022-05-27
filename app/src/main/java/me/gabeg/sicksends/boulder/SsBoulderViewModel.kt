@@ -15,13 +15,11 @@ class SsBoulderViewModel(repo : SsBoulderRepository)
 	 *
 	 * @return The live data list of all climbing problems.
 	 */
-	fun getProblemsWhere(
-		isIndoor : Boolean, isOutdoor : Boolean,
-		isProject : Boolean, isSend : Boolean,
-		isFlash : Boolean, isNormal : Boolean) : LiveData<List<SsBoulderProblem>>
+	fun getProblemsWhere(isOutdoor : Boolean?, isProject : Boolean?,
+		isFlash : Boolean?) : LiveData<List<SsBoulderProblem>>
 	{
-		return (repo as SsBoulderRepository).getProblemsWhere(
-			isIndoor, isOutdoor, isProject, isSend, isFlash, isNormal)
+		return (repo as SsBoulderRepository).getProblemsWhere(isOutdoor,
+			isProject, isFlash)
 	}
 
 }

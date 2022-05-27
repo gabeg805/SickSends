@@ -1,6 +1,8 @@
 package me.gabeg.sicksends.problem
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.Card
@@ -71,15 +73,27 @@ fun SsProblemScreen(allProblems : List<SsGenericProblem>,
 /**
  * Build the date text.
  */
+@OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.buildDateText(problem: SsGenericProblem)
 {
+
+	// Add some spacing above the date header
 	item {
+		Spacer(modifier = Modifier.padding(vertical = 4.dp))
+	}
+
+	// Build the date as a sticky header
+	// Note: If the background color changes, the above and below spacing will
+	// look weird
+	stickyHeader {
+
 		var date = convertProblemToRelativeDate(problem)
 
 		Row(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(vertical = 16.dp),
+				.background(Color.White)
+				.padding(vertical = 4.dp),
 			horizontalArrangement = Arrangement.Center,
 			verticalAlignment = Alignment.CenterVertically)
 		{
@@ -90,6 +104,12 @@ fun LazyListScope.buildDateText(problem: SsGenericProblem)
 				color = Color.Gray)
 		}
 	}
+
+	// Add some spacing below the date header
+	item {
+		Spacer(modifier = Modifier.padding(vertical = 4.dp))
+	}
+
 }
 
 /**

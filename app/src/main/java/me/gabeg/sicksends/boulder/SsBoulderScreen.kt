@@ -35,10 +35,12 @@ fun SsBoulderScreen(db : SsProblemDatabase, innerPadding : PaddingValues,
 	else
 	{
 		Log.i("YOOOOOOOOOOO", "Finding where problems")
-		val findProblems: List<SsBoulderProblem> by boulderViewModel.getProblemsWhere(
-			whereProblem.isIndoor, whereProblem.isOutdoor,
-			whereProblem.isProject, whereProblem.isSend,
-			whereProblem.isFlash, whereProblem.isNormal).observeAsState(listOf())
+		val findProblems: List<SsBoulderProblem> by boulderViewModel
+			.getProblemsWhere(
+				whereProblem.isOutdoor,
+				whereProblem.isProject,
+				whereProblem.isFlash)
+			.observeAsState(listOf())
 		problems = findProblems
 	}
 

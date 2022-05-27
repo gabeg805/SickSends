@@ -9,10 +9,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -28,6 +25,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.relocationRequester
 import androidx.compose.ui.platform.LocalContext
@@ -37,10 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.*
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.asLiveData
@@ -61,6 +56,7 @@ import me.gabeg.sicksends.toprope.SsTopRopeScreen
 import me.gabeg.sicksends.trad.SsTradScreen
 import me.gabeg.sicksends.ui.SsDrawerState
 import me.gabeg.sicksends.ui.SsEndDrawer
+import me.gabeg.sicksends.ui.SsTopDrawer
 import me.gabeg.sicksends.ui.ToggleButton
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -70,7 +66,7 @@ const val MAIN_SCREEN_ROUTE = "main_screen_route"
 // TODO: Look into the back button at the top bar and also subtitles in the top
 //  bar
 // TODO: Hide the floating action button when in the Home screen
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun SsMainScreen(navController: NavHostController)
 {
@@ -161,20 +157,13 @@ fun SsMainScreen(navController: NavHostController)
 		floatingActionButtonPosition = FabPosition.End,
 		content = { innerPadding ->
 
-			SsEndDrawer(
+			SsTopDrawer(
 				scaffoldPadding = innerPadding,
 				modifier = Modifier
-					.padding(16.dp)
-					.width(IntrinsicSize.Max),
-				state = drawerState)
+					.padding(16.dp),
+					//.width(IntrinsicSize.Max),
+			state = drawerState)
 			{
-
-				Text("Filter by...",
-					modifier = Modifier
-						.padding(bottom = 16.dp),
-					fontWeight = FontWeight.SemiBold,
-					//fontStyle = FontStyle.Italic,
-					textAlign = TextAlign.Center)
 
 				var filterNames = remember { listOf(
 					"Indoor", "Outdoor",
@@ -190,33 +179,40 @@ fun SsMainScreen(navController: NavHostController)
 
 				val size = filterNames.size
 
+				//Text("Filter by...",
+				//		modifier = Modifier
+				//			.padding(bottom = 16.dp),
+				//		fontWeight = FontWeight.SemiBold,
+				//		//fontStyle = FontStyle.Italic,
+				//		textAlign = TextAlign.Center)
+
 				// TODO: Maybe? This is entirely redrawn when a button is clicked
-				for (i in 0 until size-2 step 2)
-				{
+				//for (i in 0 until size-2 step 2)
+			//	{
 
-					Row()
-					{
-						for (j in i until i + 2)
-						{
-							ToggleButton(filterNames[j], state = isFilterSelected[j])
-							{ text, isSelected ->
+			//		Row()
+			//		{
+			//			for (j in i until i + 2)
+			//			{
+			//				ToggleButton(filterNames[j], state = isFilterSelected[j])
+			//				{ text, isSelected ->
 
-								isFilterSelected[j] = isSelected
+			//					isFilterSelected[j] = isSelected
 
-								if (isSelected)
-								{
-									isFilterSelected[size-1] = false
-								}
-							}
+			//					if (isSelected)
+			//					{
+			//						isFilterSelected[size-1] = false
+			//					}
+			//				}
 
-							if ((j % 2) == 0)
-							{
-								Spacer(modifier = Modifier.padding(2.dp))
-							}
-						}
-					}
+			//				if ((j % 2) == 0)
+			//				{
+			//					Spacer(modifier = Modifier.padding(2.dp))
+			//				}
+			//			}
+			//		}
 
-				}
+			//	}
 
 				//Row()
 			//	{
@@ -247,23 +243,225 @@ fun SsMainScreen(navController: NavHostController)
 			//		ToggleButton("Normal")
 			//	}
 
-				Row()
-				{
-					ToggleButton("All", state = isFilterSelected.last())
-					{ text, isSelected ->
+				//Row()
+			//	{
+			//		ToggleButton("All", state = isFilterSelected.last())
+			//		{ text, isSelected ->
 
-						if (isSelected)
+			//			if (isSelected)
+			//			{
+			//				for (i in isFilterSelected.indices)
+			//				{
+			//					isFilterSelected[i] = false
+			//				}
+			//			}
+
+			//			isFilterSelected[size-1] = isSelected
+
+			//			drawerState.close()
+			//		}
+			//	}
+
+
+				val outdoorOptions = listOf("Either", "Indoor", "Outdoor")
+				val projectOptions = listOf("Either", "Project", "Send")
+				val flashOptions = listOf("Either", "Flash", "Not flashed")
+
+				var isOutdoorExpanded by remember { mutableStateOf(false) }
+				var isProjectExpanded by remember { mutableStateOf(false) }
+				var isFlashExpanded by remember { mutableStateOf(false) }
+
+				var selectedOutdoorOption by remember { mutableStateOf(outdoorOptions[0]) }
+				var selectedProjectOption by remember { mutableStateOf(projectOptions[0]) }
+				var selectedFlashOption by remember { mutableStateOf(flashOptions[0]) }
+
+				val iconPadding = 16.dp
+				var textWidth = with(LocalDensity.current) {
+					//MaterialTheme.typography.body1.fontSize.toDp() * (outdoorOptions[2].length+1) //* 3 / 2
+					MaterialTheme.typography.body1.fontSize.toDp() * flashOptions[2].length //* 3 / 2
+				}
+
+				Row(
+					modifier = Modifier.fillMaxWidth(),
+					verticalAlignment = Alignment.CenterVertically)
+				{
+
+					Icon(Icons.Default.Park,
+						modifier = Modifier
+							.padding(horizontal = iconPadding)
+							then(Modifier.size(16.dp)),
+						contentDescription = "Outdoor")
+
+					Text("Outdoor or Indoor?",
+						modifier = Modifier
+							.weight(1f),
+						fontWeight = FontWeight.SemiBold)
+					//modifier = Modifier.padding(end = 8.dp))
+
+					//Spacer(modifier = Modifier.weight(1f))
+
+					ExposedDropdownMenuBox(
+						//modifier = Modifier.weight(2f),
+						expanded = isOutdoorExpanded,
+						onExpandedChange = {
+							isOutdoorExpanded = !isOutdoorExpanded
+						})
+					{
+						TextField(
+							modifier = Modifier.width(textWidth),
+							value = selectedOutdoorOption,
+							onValueChange = { },
+							trailingIcon = {
+								ExposedDropdownMenuDefaults.TrailingIcon(
+									expanded = isOutdoorExpanded
+								)
+							},
+							readOnly = true,
+							colors = ExposedDropdownMenuDefaults.textFieldColors())
+
+						ExposedDropdownMenu(
+							modifier = Modifier
+								.exposedDropdownSize(true),
+							expanded = isOutdoorExpanded,
+							onDismissRequest = {
+								isOutdoorExpanded = false
+							})
 						{
-							for (i in isFilterSelected.indices)
-							{
-								isFilterSelected[i] = false
+							outdoorOptions.forEach { option ->
+								DropdownMenuItem(
+									onClick = {
+										selectedOutdoorOption = option
+										isOutdoorExpanded = false
+									})
+								{
+									Text(option)
+								}
 							}
 						}
-
-						isFilterSelected[size-1] = isSelected
-
-						drawerState.close()
 					}
+
+				}
+
+				Row(
+					modifier = Modifier.fillMaxWidth(),
+					verticalAlignment = Alignment.CenterVertically)
+				{
+
+					Icon(Icons.Default.Construction,
+						modifier = Modifier
+							.padding(horizontal = iconPadding)
+							then(Modifier.size(18.dp)),
+					contentDescription = "Project")
+
+					Text("Project or Send?",
+						modifier = Modifier
+							.weight(1f),
+						fontWeight = FontWeight.SemiBold)
+					//modifier = Modifier.padding(end = 8.dp))
+
+					//Spacer(modifier = Modifier.weight(1f))
+
+					ExposedDropdownMenuBox(
+						//modifier = Modifier.weight(2f),
+						expanded = isProjectExpanded,
+						onExpandedChange = {
+							isProjectExpanded = !isProjectExpanded
+						})
+					{
+						TextField(
+							modifier = Modifier.width(textWidth),
+							value = selectedProjectOption,
+							onValueChange = { },
+							trailingIcon = {
+								ExposedDropdownMenuDefaults.TrailingIcon(
+									expanded = isProjectExpanded
+								)
+							},
+							readOnly = true,
+							colors = ExposedDropdownMenuDefaults.textFieldColors())
+
+						ExposedDropdownMenu(
+							modifier = Modifier
+								.exposedDropdownSize(true),
+							expanded = isProjectExpanded,
+							onDismissRequest = {
+								isProjectExpanded = false
+							})
+						{
+							projectOptions.forEach { option ->
+								DropdownMenuItem(
+									onClick = {
+										selectedProjectOption = option
+										isProjectExpanded = false
+									})
+								{
+									Text(option)
+								}
+							}
+						}
+					}
+
+				}
+
+				Row(
+					modifier = Modifier.fillMaxWidth(),
+					verticalAlignment = Alignment.CenterVertically)
+				{
+
+					Icon(Icons.Default.Bolt,
+						modifier = Modifier
+							.padding(horizontal = iconPadding)
+							then(Modifier.size(20.dp)),
+					contentDescription = "Flash")
+
+					Text("Flash or not?",
+						modifier = Modifier
+							.weight(1f),
+						fontWeight = FontWeight.SemiBold)
+					//modifier = Modifier.padding(end = 8.dp))
+
+					//Spacer(modifier = Modifier.weight(1f))
+
+					ExposedDropdownMenuBox(
+						//modifier = Modifier.weight(2f),
+						expanded = isFlashExpanded,
+						onExpandedChange = {
+							isFlashExpanded = !isFlashExpanded
+						})
+					{
+						TextField(
+							modifier = Modifier.width(textWidth),
+							value = selectedFlashOption,
+							onValueChange = { },
+							trailingIcon = {
+								ExposedDropdownMenuDefaults.TrailingIcon(
+									expanded = isFlashExpanded
+								)
+							},
+							readOnly = true,
+							colors = ExposedDropdownMenuDefaults.textFieldColors())
+
+						ExposedDropdownMenu(
+							modifier = Modifier
+								.exposedDropdownSize(true),
+							expanded = isFlashExpanded,
+							onDismissRequest = {
+								isFlashExpanded = false
+							})
+						{
+							flashOptions.forEach { option ->
+								DropdownMenuItem(
+									onClick = {
+										selectedFlashOption = option
+										isFlashExpanded = false
+									})
+								{
+									Text(option)
+								}
+							}
+						}
+					}
+
 				}
 
 				Button(
@@ -279,21 +477,26 @@ fun SsMainScreen(navController: NavHostController)
 					//	whereProblem.isNormal = isFilterSelected[5]
 
 						var wp = WhereProblem()
-						wp.isIndoor = isFilterSelected[0]
-						wp.isOutdoor  = isFilterSelected[1]
-						wp.isProject = isFilterSelected[2]
-						wp.isSend = isFilterSelected[3]
-						wp.isFlash = isFilterSelected[4]
-						wp.isNormal = isFilterSelected[5]
+
+						wp.isOutdoor  = if (selectedOutdoorOption == outdoorOptions[0]) null else (selectedOutdoorOption == outdoorOptions[2])
+						wp.isProject = if (selectedProjectOption == projectOptions[0]) null else (selectedProjectOption == projectOptions[1])
+						wp.isFlash = if (selectedFlashOption == flashOptions[0]) null else (selectedFlashOption == flashOptions[1])
+
+						//wp.isIndoor = isFilterSelected[0]
+						//wp.isOutdoor  = isFilterSelected[1]
+						//wp.isProject = isFilterSelected[2]
+						//wp.isSend = isFilterSelected[3]
+						//wp.isFlash = isFilterSelected[4]
+						//wp.isNormal = isFilterSelected[5]
 
 						whereProblem.value = wp
 
-						Log.i("isIndoor?", isFilterSelected[0].toString())
-						Log.i("isOutdoor?", isFilterSelected[1].toString())
-						Log.i("isProject?", isFilterSelected[2].toString())
-						Log.i("isSend?", isFilterSelected[3].toString())
-						Log.i("isFlash?", isFilterSelected[4].toString())
-						Log.i("isNormal?", isFilterSelected[5].toString())
+						//Log.i("isIndoor?", isFilterSelected[0].toString())
+						//Log.i("isOutdoor?", isFilterSelected[1].toString())
+						//Log.i("isProject?", isFilterSelected[2].toString())
+						//Log.i("isSend?", isFilterSelected[3].toString())
+						//Log.i("isFlash?", isFilterSelected[4].toString())
+						//Log.i("isNormal?", isFilterSelected[5].toString())
 					})
 				{
 					Text("Apply")
@@ -345,18 +548,14 @@ fun SsMainScreen(navController: NavHostController)
 }
 
 data class WhereProblem(
-	var isOutdoor : Boolean = false,
-	var isProject : Boolean = false,
-	var isFlash : Boolean = false,
-	var isIndoor : Boolean = false,
-	var isSend : Boolean = false,
-	var isNormal : Boolean = false)
+	var isOutdoor : Boolean? = null,
+	var isProject : Boolean? = null,
+	var isFlash : Boolean? = null)
 {
 
 	fun isAll() : Boolean
 	{
-		return !isOutdoor && !isProject && !isFlash
-			&& !isIndoor && !isSend && !isNormal
+		return (isOutdoor == null) && (isProject == null) && (isFlash == null)
 	}
 
 }

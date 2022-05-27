@@ -15,10 +15,8 @@ class SsBoulderRepository(dao : SsBoulderDao)
 	 *
 	 * @return The live data list of all climbing problems.
 	 */
-	fun getProblemsWhere(
-		isIndoor : Boolean, isOutdoor : Boolean,
-		isProject : Boolean, isSend : Boolean,
-		isFlash : Boolean, isNormal : Boolean) : LiveData<List<SsBoulderProblem>>
+	fun getProblemsWhere(isOutdoor : Boolean?, isProject : Boolean?,
+		isFlash : Boolean?) : LiveData<List<SsBoulderProblem>>
 	{
 		return (dao as SsBoulderDao).getProblemsWhere(
 			isOutdoor, isProject, isFlash)

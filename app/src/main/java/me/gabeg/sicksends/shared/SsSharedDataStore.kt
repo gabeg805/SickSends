@@ -3,6 +3,7 @@ package me.gabeg.sicksends.shared
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
@@ -20,7 +21,7 @@ class SsSharedDataStore(context : Context)
 	private val dataStore = context.dataStore
 
 	// List of names of all types of climbs a user can do
-	private var mAllClimbNames = listOf<String>()
+	//private var mAllClimbNames = listOf<String>()
 
 	// Key names
 	val KEY_IS_APP_FIRST_RUN         = "key_is_app_first_run"
@@ -33,10 +34,10 @@ class SsSharedDataStore(context : Context)
 	val KEY_WILL_GRADE_TOP_ROPE_WITH = "key_will_grade_top_rope_with_"
 	val KEY_WILL_GRADE_TRAD_WITH     = "key_will_grade_trad_with_"
 
-	init
-	{
-		setupAllClimbNames(context)
-	}
+	//init
+	//{
+	//	setupAllClimbNames(context)
+	//}
 
 	/**
 	 * Build the key that is used to determine if a boulder grade will be used
@@ -81,6 +82,7 @@ class SsSharedDataStore(context : Context)
 	 *
 	 * @return The icon ID of a climb the user can do.
 	 */
+	@Composable
 	fun climbNameToIcon(name : String) : Int
 	{
 		val possibleNames = getAllClimbNames()
@@ -213,45 +215,6 @@ class SsSharedDataStore(context : Context)
 	}
 
 	/**
-	 * Get all the names of climbs that a user can do.
-	 *
-	 * @return List of all the names of climbs that a user can do.
-	 */
-	fun getAllClimbNames() : List<String>
-	{
-		return mAllClimbNames
-	}
-
-	/**
-	 * Get all the names of the climbs a user will do. This can be Boulder,
-	 * Sport, Top Rope, and/or Trad, depending on what the user has indicated.
-	 *
-	 * @return List of all the names of climbs a user will do.
-	 */
-	suspend fun getAllClimbNamesWillClimb() : List<String>
-	{
-		val possibleNames = getAllClimbNames()
-		val willClimbFlows = getAllWillClimb()
-		val allNames = mutableListOf<String>()
-
-		// Iterate over both lists
-		possibleNames.zip(willClimbFlows).forEach { (name, flow) ->
-
-			// Get whether the type of climb will be climbed or not
-			 var willClimb = flow.first()
-			Log.i("SsSharedDataStore", name + "? " + willClimb)
-
-			// If the type of climb will be climbed, add it to the list
-			 if (willClimb)
-			 {
-				  allNames.add(name)
-			 }
-		}
-
-		return allNames
-	}
-
-	/**
 	 * Get all the icons of climbs that a user can do.
 	 *
 	 * @return List of all the icons of climbs that a user can do.
@@ -294,6 +257,50 @@ class SsSharedDataStore(context : Context)
 	}
 
 	/**
+	 * Get all the names of climbs that a user can do.
+	 *
+	 * @return List of all the names of climbs that a user can do.
+	 */
+	@Composable
+	fun getAllClimbNames() : List<String>
+	{
+		return listOf<String>(
+			stringResource(R.string.boulder),
+			stringResource(R.string.sport),
+			stringResource(R.string.top_rope),
+			stringResource(R.string.trad))
+	}
+
+	/**
+	 * Get all the names of the climbs a user will do. This can be Boulder,
+	 * Sport, Top Rope, and/or Trad, depending on what the user has indicated.
+	 *
+	 * @return List of all the names of climbs a user will do.
+	 */
+	//suspend fun getAllClimbNamesWillClimb() : List<String>
+	//{
+	//	val possibleNames = getAllClimbNames()
+	//	val willClimbFlows = getAllWillClimb()
+	//	val allNames = mutableListOf<String>()
+
+	//	// Iterate over both lists
+	//	possibleNames.zip(willClimbFlows).forEach { (name, flow) ->
+
+	//		// Get whether the type of climb will be climbed or not
+	//		var willClimb = flow.first()
+	//		Log.i("SsSharedDataStore", name + "? " + willClimb)
+
+	//		// If the type of climb will be climbed, add it to the list
+	//		if (willClimb)
+	//		{
+	//			allNames.add(name)
+	//		}
+	//	}
+
+	//	return allNames
+	//}
+
+	/**
 	 * Get all the icons of the items the user can navigate to.
 	 *
 	 * @return All the icons of the items the user can navigate to.
@@ -312,11 +319,12 @@ class SsSharedDataStore(context : Context)
 	 *
 	 * @return All the names of the items the user can navigate to.
 	 */
+	@Composable
 	fun getAllNavigationNames() : List<String>
 	{
 		val names = getAllClimbNames().toMutableList()
 
-		names.add(0, "Home")
+		names.add(0, stringResource(R.string.home))
 
 		return names.toList()
 	}
@@ -463,13 +471,13 @@ class SsSharedDataStore(context : Context)
 	/**
 	 * Setup all the climb names.
 	 */
-	private fun setupAllClimbNames(context : Context)
-	{
-		mAllClimbNames = listOf<String>(
-			context.resources.getString(R.string.boulder),
-			context.resources.getString(R.string.sport),
-			context.resources.getString(R.string.top_rope),
-			context.resources.getString(R.string.trad))
-	}
+	//private fun setupAllClimbNames(context : Context)
+	//{
+	//	mAllClimbNames = listOf<String>(
+	//		context.resources.getString(R.string.boulder),
+	//		context.resources.getString(R.string.sport),
+	//		context.resources.getString(R.string.top_rope),
+	//		context.resources.getString(R.string.trad))
+	//}
 
 }

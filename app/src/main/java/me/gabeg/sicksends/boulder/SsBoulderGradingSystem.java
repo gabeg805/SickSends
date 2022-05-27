@@ -4,6 +4,9 @@ import me.gabeg.sicksends.problem.gradingsystem.SsGradingSystem;
 
 /**
  * Boulder grading systems.
+ *
+ * TODO: Figure out how this should be organized with respect to the
+ * problem.type.SsRopeGradingSystem class
  */
 public class SsBoulderGradingSystem
 {

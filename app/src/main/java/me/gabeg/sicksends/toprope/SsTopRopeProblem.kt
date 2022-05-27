@@ -3,7 +3,7 @@ package me.gabeg.sicksends.toprope
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import me.gabeg.sicksends.rope.SsGenericRopeProblem
+import me.gabeg.sicksends.problem.SsGenericRopeProblem
 
 /**
  * Aspects of a top rope problem that are saved.

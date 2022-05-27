@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 /**
  */
 abstract class SsGenericProblemRepository<T : SsGenericProblem>(
-	private val dao : SsGenericProblemDao<T>)
+	protected val dao : SsGenericProblemDao<T>)
 {
 
 	/**
@@ -14,8 +14,6 @@ abstract class SsGenericProblemRepository<T : SsGenericProblem>(
 	 *
 	 * @return The live data list of all climbing problems.
 	 */
-	//val allProblems: Flow<List<T>> = dao.all
-	//val allProblems = dao.all
 	val allProblems : LiveData<List<T>> = dao.getAllProblems()
 
 	/**

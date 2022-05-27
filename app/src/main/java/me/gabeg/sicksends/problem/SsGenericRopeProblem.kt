@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.rope
+package me.gabeg.sicksends.problem
 
 import me.gabeg.sicksends.problem.SsGenericProblem
 

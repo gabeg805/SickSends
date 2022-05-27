@@ -17,48 +17,44 @@ import me.gabeg.sicksends.onboarding.ONBOARDING_SCREEN_ROUTE
 import me.gabeg.sicksends.onboarding.SsOnboardingScreen
 import me.gabeg.sicksends.shared.SsSharedDataStore
 
+
 @OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun SsSickSendsApp()
 {
 	MaterialTheme()
 	{
-		val navController = rememberNavController()
-		//val dataStore = SsSharedDataStore(LocalContext.current)
 
+		//val dataStore = SsSharedDataStore(LocalContext.current)
 		//LaunchedEffect(true)
 		//{
 		//		dataStore.editIsAppFirstRun(true)
 		//}
 
-		SsSickSendsNavHost(navController = navController)
+		// Navigation controller
+		val navController = rememberNavController()
 
-	}
-}
+		// Get the starting navigation destination
+		val startDestination = getStartNavDestination()
 
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
-@Composable
-fun SsSickSendsNavHost(navController: NavHostController)
-{
+		// Determine which activity to start first
+		NavHost(
+			navController = navController,
+			startDestination = startDestination)
+		{
 
-	// Get the starting navigation destination
-	val startDestination = getStartNavDestination()
+			// Start the onboarding screen
+			composable(route = ONBOARDING_SCREEN_ROUTE) {
+				SsOnboardingScreen(navController = navController)
+			}
 
-	// Determine which activity to start first
-	NavHost(
-		navController = navController,
-		startDestination = startDestination)
-	{
+			// Start the main screen
+			composable(route = MAIN_SCREEN_ROUTE) {
+				val otherNavController = rememberNavController()
 
-		// Start the onboarding screen
-		composable(route = ONBOARDING_SCREEN_ROUTE) {
-			SsOnboardingScreen(navController = navController)
-		}
+				SsMainScreen(navController = otherNavController)
+			}
 
-		// Start the main screen
-		composable(route = MAIN_SCREEN_ROUTE) {
-			SsMainScreen(navController = navController)
 		}
 
 	}

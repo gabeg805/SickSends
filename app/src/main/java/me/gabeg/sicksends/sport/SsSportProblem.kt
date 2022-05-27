@@ -3,7 +3,7 @@ package me.gabeg.sicksends.sport
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import me.gabeg.sicksends.rope.SsGenericRopeProblem
+import me.gabeg.sicksends.problem.SsGenericRopeProblem
 
 /**
  * Aspects of a sport problem that are saved.

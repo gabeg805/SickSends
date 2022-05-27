@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
  * Problem view model.
  */
 abstract class SsGenericProblemViewModel<T : SsGenericProblem>(
-	private val repo : SsGenericProblemRepository<T>) : ViewModel()
+	protected val repo : SsGenericProblemRepository<T>) : ViewModel()
 {
 
 	/**
@@ -28,7 +28,7 @@ abstract class SsGenericProblemViewModel<T : SsGenericProblem>(
 
 	companion object
 	{
-		const val TAG = "SsGenericProblemViewModel"
+		const val TAG = "SsGenericProblemViewMod"
 	}
 
 }

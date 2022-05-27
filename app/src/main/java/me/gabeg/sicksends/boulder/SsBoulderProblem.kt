@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import me.gabeg.sicksends.problem.SsGenericProblem
+import java.util.*
 
 /**
  * Aspects of a boulder problem that are saved.
@@ -82,6 +83,8 @@ data class SsBoulderProblem (
 
 	/**
 	 * Whether the problem is sent or not.
+	 *
+	 * TODO: Remove this.
 	 */
 	@ColumnInfo(name = "is_send")
 	override var isSend : Boolean = false,

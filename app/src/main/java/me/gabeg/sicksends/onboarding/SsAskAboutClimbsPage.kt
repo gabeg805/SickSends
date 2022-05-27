@@ -62,7 +62,8 @@ fun TypeOfClimbingPage()
 		val scope = rememberCoroutineScope()
 
 		// Create a row for each climbing type
-		for (name in climbingTypes) {
+		for (name in climbingTypes)
+		{
 			val isChecked = remember { mutableStateOf(false) }
 
 			Row(
@@ -72,7 +73,7 @@ fun TypeOfClimbingPage()
 					.clickable {
 						isChecked.value = !isChecked.value
 						scope.launch {
-							saveTypeOfClimbUserWillDo(dataStore, name, isChecked.value)
+							saveTypeOfClimbUserWillDo(dataStore, climbingTypes, name, isChecked.value)
 						}
 					},
 				horizontalArrangement = Arrangement.Start,
@@ -85,7 +86,7 @@ fun TypeOfClimbingPage()
 					onCheckedChange = {
 						isChecked.value = it
 						scope.launch {
-							saveTypeOfClimbUserWillDo(dataStore, name, isChecked.value)
+							saveTypeOfClimbUserWillDo(dataStore, climbingTypes, name, isChecked.value)
 						}
 					})
 
@@ -103,9 +104,9 @@ fun TypeOfClimbingPage()
  * Save the type of climb a user will do.
  */
 suspend fun saveTypeOfClimbUserWillDo(dataStore: SsSharedDataStore,
-	name : String, status : Boolean)
+	climbingTypes : List<String>, name : String, status : Boolean)
 {
-	val climbingTypes = dataStore.getAllClimbNames()
+	//val climbingTypes = dataStore.getAllClimbNames()
 
 	when (name)
 	{

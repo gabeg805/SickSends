@@ -115,7 +115,7 @@ abstract class SsGenericProblem
 		Log.i("ProblemDebug", "grade                 : $grade")
 		Log.i("ProblemDebug", "perceivedGrade        : $perceivedGrade")
 		Log.i("ProblemDebug", "howDidItFeel          : $howDidItFeelScale")
-		Log.i("ProblemDebug", "numAttemp             : $numAttempt")
+		Log.i("ProblemDebug", "numAttempt            : $numAttempt")
 		Log.i("ProblemDebug", "locationName          : $locationName")
 		Log.i("ProblemDebug", "locationLat           : $locationLat")
 		Log.i("ProblemDebug", "locationLon           : $locationLon")

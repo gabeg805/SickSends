@@ -1,10 +1,10 @@
 package me.gabeg.sicksends.boulder
 
-import androidx.lifecycle.LiveData
 import me.gabeg.sicksends.problem.SsGenericProblemRepository
+import javax.inject.Inject
 
 /**
  * Repository for boulder problems.
  */
-class SsBoulderRepository(dao : SsBoulderDao)
+class SsBoulderRepository @Inject constructor(dao : SsBoulderDao)
 	: SsGenericProblemRepository<SsBoulderProblem>(dao)

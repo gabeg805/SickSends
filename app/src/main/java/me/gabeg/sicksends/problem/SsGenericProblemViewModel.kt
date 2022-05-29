@@ -1,7 +1,7 @@
 package me.gabeg.sicksends.problem
 
-import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -10,7 +10,8 @@ import kotlinx.coroutines.launch
  * Problem view model.
  */
 abstract class SsGenericProblemViewModel<T : SsGenericProblem>(
-	protected val repo : SsGenericProblemRepository<T>) : ViewModel()
+	private val savedStateHandle: SavedStateHandle,
+	private val repo : SsGenericProblemRepository<T>) : ViewModel()
 {
 
 	/**
@@ -37,20 +38,3 @@ abstract class SsGenericProblemViewModel<T : SsGenericProblem>(
 	}
 
 }
-
-//class SsProblemViewModelFactory(private val repo: SsGenericProblemRepository)
-//	: ViewModelProvider.Factory
-//{
-//
-//	override fun <T : ViewModel> create(modelClass: Class<T>): T
-//	{
-//
-//		if (modelClass.isAssignableFrom(SsGenericProblemViewModel::class.java)) {
-//			@Suppress("UNCHECKED_CAST")
-//			return SsGenericProblemViewModel(repo) as T
-//		}
-//
-//		throw IllegalArgumentException("Unknown ViewModel class")
-//	}
-//
-//}

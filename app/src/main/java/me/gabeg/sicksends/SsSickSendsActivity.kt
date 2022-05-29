@@ -3,25 +3,24 @@ package me.gabeg.sicksends
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import com.google.accompanist.pager.ExperimentalPagerApi
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * The application's starting activity.
  */
+@AndroidEntryPoint
 class SsSickSendsActivity : ComponentActivity()
 {
 
 	/**
 	 */
-	@OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
 
-		// Show the app
 		setContent()
 		{
+			// Show the app
 			SsSickSendsApp()
 		}
 	}

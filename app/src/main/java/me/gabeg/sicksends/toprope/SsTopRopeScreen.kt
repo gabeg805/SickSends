@@ -1,20 +1,20 @@
 package me.gabeg.sicksends.toprope
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import me.gabeg.sicksends.db.SsProblemDatabase
+import androidx.hilt.navigation.compose.hiltViewModel
 import me.gabeg.sicksends.problem.SsProblemScreen
+import me.gabeg.sicksends.ui.SsSearchFilterQueryState
 
 @Composable
-fun SsTopRopeScreen(db : SsProblemDatabase, innerPadding : PaddingValues)
+fun SsTopRopeScreen(
+	queryState: SsSearchFilterQueryState,
+	lazyListState : LazyListState,
+	innerPadding : PaddingValues,
+	viewModel: SsTopRopeViewModel = hiltViewModel())
 {
-	val topRopeDao = db.topRopeDao()
-	val topRopeRepo = SsTopRopeRepository(topRopeDao)
-	val topRopeViewModel = SsTopRopeViewModel(topRopeRepo)
 	val allProblems :  List<SsTopRopeProblem> = listOf()
-	//val allProblems :  List<SsTopRopeProblem> by topRopeViewModel.allProblems.observeAsState(listOf())
 
 	SsProblemScreen(allProblems, innerPadding = innerPadding)
 }

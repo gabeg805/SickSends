@@ -1,18 +1,16 @@
 package me.gabeg.sicksends
 
-import androidx.compose.material.MaterialTheme
-import androidx.navigation.compose.rememberNavController
-import me.gabeg.sicksends.main.MAIN_SCREEN_ROUTE
-import me.gabeg.sicksends.main.SsMainScreen
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import me.gabeg.sicksends.main.MAIN_SCREEN_ROUTE
+import me.gabeg.sicksends.main.SsMainScreen
 import me.gabeg.sicksends.onboarding.ONBOARDING_SCREEN_ROUTE
 import me.gabeg.sicksends.onboarding.SsOnboardingScreen
 import me.gabeg.sicksends.shared.SsSharedDataStore

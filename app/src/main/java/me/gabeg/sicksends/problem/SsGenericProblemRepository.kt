@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 /**
  */
 abstract class SsGenericProblemRepository<T : SsGenericProblem>(
-	protected val dao : SsGenericProblemDao<T>)
+	private val dao : SsGenericProblemDao<T>)
 {
 
 	/**

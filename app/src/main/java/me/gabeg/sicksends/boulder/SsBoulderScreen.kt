@@ -6,27 +6,27 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import me.gabeg.sicksends.db.SsProblemDatabase
+import androidx.hilt.navigation.compose.hiltViewModel
 import me.gabeg.sicksends.problem.SsProblemScreen
 import me.gabeg.sicksends.ui.SsSearchFilterQueryState
 
 @Composable
-fun SsBoulderScreen(db : SsProblemDatabase, innerPadding : PaddingValues,
-	lazyListState : LazyListState, queryState: SsSearchFilterQueryState)
+fun SsBoulderScreen(
+	queryState: SsSearchFilterQueryState,
+	lazyListState : LazyListState,
+	innerPadding : PaddingValues,
+	viewModel: SsBoulderViewModel = hiltViewModel())
 {
-	val boulderDao = db.boulderDao()
-	val boulderRepo = SsBoulderRepository(boulderDao)
-	val boulderViewModel = SsBoulderViewModel(boulderRepo)
 	val problems :  List<SsBoulderProblem>
 
 	if (queryState.hasNoFilter())
 	{
-		val allProblems: List<SsBoulderProblem> by boulderViewModel.allProblems.observeAsState(listOf())
+		val allProblems: List<SsBoulderProblem> by viewModel.allProblems.observeAsState(listOf())
 		problems = allProblems
 	}
 	else
 	{
-		val findProblems: List<SsBoulderProblem> by boulderViewModel
+		val findProblems: List<SsBoulderProblem> by viewModel
 			.findProblems(
 				queryState.outdoor,
 				queryState.project,

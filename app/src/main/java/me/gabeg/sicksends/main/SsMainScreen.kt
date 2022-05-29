@@ -1,52 +1,33 @@
 package me.gabeg.sicksends.main
 
 import android.util.Log
-import android.widget.SearchView
-import androidx.compose.animation.*
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.relocationRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.*
-import androidx.compose.ui.zIndex
-import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import me.gabeg.sicksends.R
 import me.gabeg.sicksends.boulder.SsBoulderScreen
 import me.gabeg.sicksends.db.SsProblemDatabase
@@ -56,14 +37,12 @@ import me.gabeg.sicksends.toprope.SsTopRopeScreen
 import me.gabeg.sicksends.trad.SsTradScreen
 import me.gabeg.sicksends.ui.*
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 const val MAIN_SCREEN_ROUTE = "main_screen_route"
 
 // TODO: Look into the back button at the top bar and also subtitles in the top
 //  bar
 // TODO: Hide the floating action button when in the Home screen
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun SsMainScreen(navController: NavHostController)
 {
@@ -153,35 +132,35 @@ fun SsMainScreen(navController: NavHostController)
 				composable(route = navItemNames[0])
 				{
 					isFabVisible = false
-					SsHomeScreen(db, innerPadding)
+					SsHomeScreen(innerPadding)
 				}
 
 				// Boulder
 				composable(route = navItemNames[1])
 				{
 					isFabVisible = true
-					SsBoulderScreen(db, innerPadding, lazyListState, queryState)
+					SsBoulderScreen(queryState, lazyListState, innerPadding)
 				}
 
 				// Sport
 				composable(route = navItemNames[2])
 				{
 					isFabVisible = true
-					SsSportScreen(db, innerPadding)
+					SsSportScreen(queryState, lazyListState, innerPadding)
 				}
 
 				// Top rope
 				composable(route = navItemNames[3])
 				{
 					isFabVisible = true
-					SsTopRopeScreen(db, innerPadding)
+					SsTopRopeScreen(queryState, lazyListState, innerPadding)
 				}
 
 				// Trad
 				composable(route = navItemNames[4])
 				{
 					isFabVisible = true
-					SsTradScreen(db, innerPadding)
+					SsTradScreen(queryState, lazyListState, innerPadding)
 				}
 
 			}

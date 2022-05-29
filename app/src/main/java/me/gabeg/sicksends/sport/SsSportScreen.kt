@@ -13,7 +13,8 @@ fun SsSportScreen(db : SsProblemDatabase, innerPadding : PaddingValues)
 	val sportDao = db.sportDao()
 	val sportRepo = SsSportRepository(sportDao)
 	val sportViewModel = SsSportViewModel(sportRepo)
-	val allProblems :  List<SsSportProblem> by sportViewModel.allProblems.observeAsState(listOf())
+	val allProblems :  List<SsSportProblem> = listOf()
+	//val allProblems :  List<SsSportProblem> by sportViewModel.allProblems.observeAsState(listOf())
 
 	SsProblemScreen(allProblems, innerPadding = innerPadding)
 }

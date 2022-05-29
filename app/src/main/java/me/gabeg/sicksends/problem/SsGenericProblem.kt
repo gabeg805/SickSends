@@ -11,6 +11,20 @@ abstract class SsGenericProblem
 {
 
 	/**
+	 */
+	companion object
+	{
+
+		const val WHERE =
+			"WHERE (:isOutdoor IS NULL OR is_outdoor = :isOutdoor) " +
+			"AND   (:isProject IS NULL OR is_project = :isProject) " +
+			"AND   (:isFlash   IS NULL OR is_flash   = :isFlash) "
+
+		const val ORDER_BY = "ORDER BY timestamp DESC"
+
+	}
+
+	/**
 	 * Row ID of the table.
 	 */
 	abstract var id: Long

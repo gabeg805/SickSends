@@ -21,34 +21,16 @@ import androidx.compose.ui.zIndex
 /**
  * State of a navigation drawer.
  */
-class SsDrawerState()
+data class SsDrawerState(
+	val info : MutableState<DrawerValue> = mutableStateOf(DrawerValue.Closed))
 {
-
-	/**
-	 * The mutable state that stores the actual state of the drawer.
-	 */
-	var state : MutableState<DrawerValue>
-
-	/**
-	 */
-	init
-	{
-		state = mutableStateOf(DrawerValue.Closed)
-	}
-
-	/**
-	 */
-	constructor(value : DrawerValue) : this()
-	{
-		state.value = value
-	}
 
 	/**
 	 * Close the navigation drawer.
 	 */
 	fun close()
 	{
-		state.value = DrawerValue.Closed
+		info.value = DrawerValue.Closed
 	}
 
 	/**
@@ -58,7 +40,7 @@ class SsDrawerState()
 	 */
 	fun isClosed() : Boolean
 	{
-		return state.value == DrawerValue.Closed
+		return info.value == DrawerValue.Closed
 	}
 
 	/**
@@ -68,7 +50,7 @@ class SsDrawerState()
 	 */
 	fun isOpen() : Boolean
 	{
-		return state.value == DrawerValue.Open
+		return info.value == DrawerValue.Open
 	}
 
 	/**
@@ -76,7 +58,7 @@ class SsDrawerState()
 	 */
 	fun open()
 	{
-		state.value = DrawerValue.Open
+		info.value = DrawerValue.Open
 	}
 
 	/**

@@ -10,19 +10,46 @@ abstract class SsGenericProblemRepository<T : SsGenericProblem>(
 {
 
 	/**
-	 * Live data list of all climbing problems of a particular type.
-	 *
-	 * @return The live data list of all climbing problems.
+	 * All climbing problems in a table.
 	 */
 	val allProblems : LiveData<List<T>> = dao.getAllProblems()
 
 	/**
-	 * Insert a type of climbing problem, asynchronously, into the database.
+	 * Delete a climbing problem from the database.
+	 */
+	@WorkerThread
+	suspend fun delete(problem: T)
+	{
+		dao.delete(problem)
+	}
+
+	/**
+	 * Find problems in a table.
+	 *
+	 * @return The live data list of problems found.
+	 */
+	fun findProblems(isOutdoor : Boolean? = null, isProject : Boolean? = null,
+		isFlash : Boolean? = null) : LiveData<List<T>>
+	{
+		return dao.findProblems(isOutdoor, isProject, isFlash)
+	}
+
+	/**
+	 * Insert a climbing problem into the database.
 	 */
 	@WorkerThread
 	suspend fun insert(problem: T)
 	{
 		dao.insert(problem)
+	}
+
+	/**
+	 * Update an existing climbing problem in the database.
+	 */
+	@WorkerThread
+	suspend fun update(problem: T)
+	{
+		dao.update(problem)
 	}
 
 }

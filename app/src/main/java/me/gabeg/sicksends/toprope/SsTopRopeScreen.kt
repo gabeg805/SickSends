@@ -13,7 +13,8 @@ fun SsTopRopeScreen(db : SsProblemDatabase, innerPadding : PaddingValues)
 	val topRopeDao = db.topRopeDao()
 	val topRopeRepo = SsTopRopeRepository(topRopeDao)
 	val topRopeViewModel = SsTopRopeViewModel(topRopeRepo)
-	val allProblems :  List<SsTopRopeProblem> by topRopeViewModel.allProblems.observeAsState(listOf())
+	val allProblems :  List<SsTopRopeProblem> = listOf()
+	//val allProblems :  List<SsTopRopeProblem> by topRopeViewModel.allProblems.observeAsState(listOf())
 
 	SsProblemScreen(allProblems, innerPadding = innerPadding)
 }

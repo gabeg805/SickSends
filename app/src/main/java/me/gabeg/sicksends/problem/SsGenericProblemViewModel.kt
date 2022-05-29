@@ -14,21 +14,26 @@ abstract class SsGenericProblemViewModel<T : SsGenericProblem>(
 {
 
 	/**
-	 * Live data list of all climbing problems of a particular type.
+	 * All climbing problems in a table.
 	 */
 	val allProblems : LiveData<List<T>> = repo.allProblems
+
+	/**
+	 * Find problems in a table.
+	 *
+	 * @return The live data list of problems found.
+	 */
+	fun findProblems(isOutdoor : Boolean? = null, isProject : Boolean? = null,
+		isFlash : Boolean? = null) : LiveData<List<T>>
+	{
+		return repo.findProblems(isOutdoor, isProject, isFlash)
+	}
 
 	/**
 	 * Insert a type of climbing problem into the database via the repository.
 	 */
 	fun insert(problem : T) = viewModelScope.launch {
-		Log.i(TAG, "Inserting problem into the repository!")
 		repo.insert(problem)
-	}
-
-	companion object
-	{
-		const val TAG = "SsGenericProblemViewMod"
 	}
 
 }

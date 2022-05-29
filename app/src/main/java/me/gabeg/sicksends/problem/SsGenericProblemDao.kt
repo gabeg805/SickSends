@@ -2,13 +2,11 @@ package me.gabeg.sicksends.problem
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
-import me.gabeg.sicksends.boulder.SsBoulderProblem
 
 /**
  * Data access object for climbing problems.
  */
-@Dao
+//@Dao
 interface SsGenericProblemDao<T : SsGenericProblem>
 {
 
@@ -23,7 +21,7 @@ interface SsGenericProblemDao<T : SsGenericProblem>
 	/**
 	 * Delete all problems.
 	 */
-	abstract suspend fun deleteAll()
+	//abstract suspend fun deleteAll()
 
 	/**
 	 * Insert a new problem.
@@ -46,6 +44,16 @@ interface SsGenericProblemDao<T : SsGenericProblem>
 	 *
 	 * @return All climbing problems.
 	 */
-	abstract fun getAllProblems() : LiveData<List<T>>
+	abstract fun getAllProblems() : LiveData<List<@JvmSuppressWildcards T>>
+
+	/**
+	 * Find climbing problems that match a set of criteria.
+	 *
+	 * @return The climbing problems that were found.
+	 */
+	abstract fun findProblems(
+		isOutdoor : Boolean? = null,
+		isProject : Boolean? = null,
+		isFlash : Boolean? = null) : LiveData<List<T>>
 
 }

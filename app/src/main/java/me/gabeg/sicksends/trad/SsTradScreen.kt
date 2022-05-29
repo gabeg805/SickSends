@@ -13,7 +13,8 @@ fun SsTradScreen(db : SsProblemDatabase, innerPadding : PaddingValues)
 	val tradDao = db.tradDao()
 	val tradRepo = SsTradRepository(tradDao)
 	val tradViewModel = SsTradViewModel(tradRepo)
-	val allProblems :  List<SsTradProblem> by tradViewModel.allProblems.observeAsState(listOf())
+	val allProblems :  List<SsTradProblem> = listOf()
+	//val allProblems :  List<SsTradProblem> by tradViewModel.allProblems.observeAsState(listOf())
 
 	SsProblemScreen(allProblems, innerPadding = innerPadding)
 }

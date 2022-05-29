@@ -54,10 +54,7 @@ import me.gabeg.sicksends.shared.SsSharedDataStore
 import me.gabeg.sicksends.sport.SsSportScreen
 import me.gabeg.sicksends.toprope.SsTopRopeScreen
 import me.gabeg.sicksends.trad.SsTradScreen
-import me.gabeg.sicksends.ui.SsDrawerState
-import me.gabeg.sicksends.ui.SsEndDrawer
-import me.gabeg.sicksends.ui.SsTopDrawer
-import me.gabeg.sicksends.ui.ToggleButton
+import me.gabeg.sicksends.ui.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -119,9 +116,8 @@ fun SsMainScreen(navController: NavHostController)
 		}
 	}
 
-	//var whereProblem = remember { WhereProblem() }
-	var whereProblem = remember { mutableStateOf(WhereProblem()) }
 	var drawerState = remember { SsDrawerState() }
+	var queryState = remember { SsSearchFilterQueryState() }
 
 	Scaffold(
 		modifier = Modifier
@@ -143,366 +139,11 @@ fun SsMainScreen(navController: NavHostController)
 				navController.navigate(name)
 			}
 		},
-		floatingActionButton = {
-
-			AnimatedVisibility(
-				visible = isFabVisible,
-				enter = scaleIn(),
-				exit = scaleOut())
-			{
-				buildFloatingActionButton()
-			}
-
-		},
+		floatingActionButton = { SsAnimateFloatingActionButton(isFabVisible) },
 		floatingActionButtonPosition = FabPosition.End,
 		content = { innerPadding ->
 
-			SsTopDrawer(
-				scaffoldPadding = innerPadding,
-				modifier = Modifier
-					.padding(16.dp),
-					//.width(IntrinsicSize.Max),
-			state = drawerState)
-			{
-
-				var filterNames = remember { listOf(
-					"Indoor", "Outdoor",
-					"Project", "Send",
-					"Flash", "Normal",
-					"All" )}
-
-				var isFilterSelected = remember { mutableStateListOf(
-					false, false,
-					false, false,
-					false, false,
-					true )}
-
-				val size = filterNames.size
-
-				//Text("Filter by...",
-				//		modifier = Modifier
-				//			.padding(bottom = 16.dp),
-				//		fontWeight = FontWeight.SemiBold,
-				//		//fontStyle = FontStyle.Italic,
-				//		textAlign = TextAlign.Center)
-
-				// TODO: Maybe? This is entirely redrawn when a button is clicked
-				//for (i in 0 until size-2 step 2)
-			//	{
-
-			//		Row()
-			//		{
-			//			for (j in i until i + 2)
-			//			{
-			//				ToggleButton(filterNames[j], state = isFilterSelected[j])
-			//				{ text, isSelected ->
-
-			//					isFilterSelected[j] = isSelected
-
-			//					if (isSelected)
-			//					{
-			//						isFilterSelected[size-1] = false
-			//					}
-			//				}
-
-			//				if ((j % 2) == 0)
-			//				{
-			//					Spacer(modifier = Modifier.padding(2.dp))
-			//				}
-			//			}
-			//		}
-
-			//	}
-
-				//Row()
-			//	{
-			//		ToggleButton("Indoor", state = !isAllClicked)
-			//		{ text, isSelected ->
-			//			isAllClicked = !isSelected.value
-			//		}
-
-			//		Spacer(modifier = Modifier.padding(2.dp))
-
-			//		ToggleButton("Outdoor", state = !isAllClicked)
-			//		{ text, isSelected ->
-			//			isAllClicked = !isSelected.value
-			//		}
-			//	}
-
-			//	Row()
-			//	{
-			//		ToggleButton("Project")
-			//		Spacer(modifier = Modifier.padding(2.dp))
-			//		ToggleButton("Send")
-			//	}
-
-			//	Row()
-			//	{
-			//		ToggleButton("Flash")
-			//		Spacer(modifier = Modifier.padding(2.dp))
-			//		ToggleButton("Normal")
-			//	}
-
-				//Row()
-			//	{
-			//		ToggleButton("All", state = isFilterSelected.last())
-			//		{ text, isSelected ->
-
-			//			if (isSelected)
-			//			{
-			//				for (i in isFilterSelected.indices)
-			//				{
-			//					isFilterSelected[i] = false
-			//				}
-			//			}
-
-			//			isFilterSelected[size-1] = isSelected
-
-			//			drawerState.close()
-			//		}
-			//	}
-
-
-				val outdoorOptions = listOf("Either", "Indoor", "Outdoor")
-				val projectOptions = listOf("Either", "Project", "Send")
-				val flashOptions = listOf("Either", "Flash", "Not flashed")
-
-				var isOutdoorExpanded by remember { mutableStateOf(false) }
-				var isProjectExpanded by remember { mutableStateOf(false) }
-				var isFlashExpanded by remember { mutableStateOf(false) }
-
-				var selectedOutdoorOption by remember { mutableStateOf(outdoorOptions[0]) }
-				var selectedProjectOption by remember { mutableStateOf(projectOptions[0]) }
-				var selectedFlashOption by remember { mutableStateOf(flashOptions[0]) }
-
-				val iconPadding = 16.dp
-				var textWidth = with(LocalDensity.current) {
-					//MaterialTheme.typography.body1.fontSize.toDp() * (outdoorOptions[2].length+1) //* 3 / 2
-					MaterialTheme.typography.body1.fontSize.toDp() * flashOptions[2].length //* 3 / 2
-				}
-
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					verticalAlignment = Alignment.CenterVertically)
-				{
-
-					Icon(Icons.Default.Park,
-						modifier = Modifier
-							.padding(horizontal = iconPadding)
-							then(Modifier.size(16.dp)),
-						contentDescription = "Outdoor")
-
-					Text("Outdoor or Indoor?",
-						modifier = Modifier
-							.weight(1f),
-						fontWeight = FontWeight.SemiBold)
-					//modifier = Modifier.padding(end = 8.dp))
-
-					//Spacer(modifier = Modifier.weight(1f))
-
-					ExposedDropdownMenuBox(
-						//modifier = Modifier.weight(2f),
-						expanded = isOutdoorExpanded,
-						onExpandedChange = {
-							isOutdoorExpanded = !isOutdoorExpanded
-						})
-					{
-						TextField(
-							modifier = Modifier.width(textWidth),
-							value = selectedOutdoorOption,
-							onValueChange = { },
-							trailingIcon = {
-								ExposedDropdownMenuDefaults.TrailingIcon(
-									expanded = isOutdoorExpanded
-								)
-							},
-							readOnly = true,
-							colors = ExposedDropdownMenuDefaults.textFieldColors())
-
-						ExposedDropdownMenu(
-							modifier = Modifier
-								.exposedDropdownSize(true),
-							expanded = isOutdoorExpanded,
-							onDismissRequest = {
-								isOutdoorExpanded = false
-							})
-						{
-							outdoorOptions.forEach { option ->
-								DropdownMenuItem(
-									onClick = {
-										selectedOutdoorOption = option
-										isOutdoorExpanded = false
-									})
-								{
-									Text(option)
-								}
-							}
-						}
-					}
-
-				}
-
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					verticalAlignment = Alignment.CenterVertically)
-				{
-
-					Icon(Icons.Default.Construction,
-						modifier = Modifier
-							.padding(horizontal = iconPadding)
-							then(Modifier.size(18.dp)),
-					contentDescription = "Project")
-
-					Text("Project or Send?",
-						modifier = Modifier
-							.weight(1f),
-						fontWeight = FontWeight.SemiBold)
-					//modifier = Modifier.padding(end = 8.dp))
-
-					//Spacer(modifier = Modifier.weight(1f))
-
-					ExposedDropdownMenuBox(
-						//modifier = Modifier.weight(2f),
-						expanded = isProjectExpanded,
-						onExpandedChange = {
-							isProjectExpanded = !isProjectExpanded
-						})
-					{
-						TextField(
-							modifier = Modifier.width(textWidth),
-							value = selectedProjectOption,
-							onValueChange = { },
-							trailingIcon = {
-								ExposedDropdownMenuDefaults.TrailingIcon(
-									expanded = isProjectExpanded
-								)
-							},
-							readOnly = true,
-							colors = ExposedDropdownMenuDefaults.textFieldColors())
-
-						ExposedDropdownMenu(
-							modifier = Modifier
-								.exposedDropdownSize(true),
-							expanded = isProjectExpanded,
-							onDismissRequest = {
-								isProjectExpanded = false
-							})
-						{
-							projectOptions.forEach { option ->
-								DropdownMenuItem(
-									onClick = {
-										selectedProjectOption = option
-										isProjectExpanded = false
-									})
-								{
-									Text(option)
-								}
-							}
-						}
-					}
-
-				}
-
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					verticalAlignment = Alignment.CenterVertically)
-				{
-
-					Icon(Icons.Default.Bolt,
-						modifier = Modifier
-							.padding(horizontal = iconPadding)
-							then(Modifier.size(20.dp)),
-					contentDescription = "Flash")
-
-					Text("Flash or not?",
-						modifier = Modifier
-							.weight(1f),
-						fontWeight = FontWeight.SemiBold)
-					//modifier = Modifier.padding(end = 8.dp))
-
-					//Spacer(modifier = Modifier.weight(1f))
-
-					ExposedDropdownMenuBox(
-						//modifier = Modifier.weight(2f),
-						expanded = isFlashExpanded,
-						onExpandedChange = {
-							isFlashExpanded = !isFlashExpanded
-						})
-					{
-						TextField(
-							modifier = Modifier.width(textWidth),
-							value = selectedFlashOption,
-							onValueChange = { },
-							trailingIcon = {
-								ExposedDropdownMenuDefaults.TrailingIcon(
-									expanded = isFlashExpanded
-								)
-							},
-							readOnly = true,
-							colors = ExposedDropdownMenuDefaults.textFieldColors())
-
-						ExposedDropdownMenu(
-							modifier = Modifier
-								.exposedDropdownSize(true),
-							expanded = isFlashExpanded,
-							onDismissRequest = {
-								isFlashExpanded = false
-							})
-						{
-							flashOptions.forEach { option ->
-								DropdownMenuItem(
-									onClick = {
-										selectedFlashOption = option
-										isFlashExpanded = false
-									})
-								{
-									Text(option)
-								}
-							}
-						}
-					}
-
-				}
-
-				Button(
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(vertical = 16.dp),
-					onClick = {
-						//whereProblem.isIndoor = isFilterSelected[0]
-					//	whereProblem.isOutdoor  = isFilterSelected[1]
-					//	whereProblem.isProject = isFilterSelected[2]
-					//	whereProblem.isSend = isFilterSelected[3]
-					//	whereProblem.isFlash = isFilterSelected[4]
-					//	whereProblem.isNormal = isFilterSelected[5]
-
-						var wp = WhereProblem()
-
-						wp.isOutdoor  = if (selectedOutdoorOption == outdoorOptions[0]) null else (selectedOutdoorOption == outdoorOptions[2])
-						wp.isProject = if (selectedProjectOption == projectOptions[0]) null else (selectedProjectOption == projectOptions[1])
-						wp.isFlash = if (selectedFlashOption == flashOptions[0]) null else (selectedFlashOption == flashOptions[1])
-
-						//wp.isIndoor = isFilterSelected[0]
-						//wp.isOutdoor  = isFilterSelected[1]
-						//wp.isProject = isFilterSelected[2]
-						//wp.isSend = isFilterSelected[3]
-						//wp.isFlash = isFilterSelected[4]
-						//wp.isNormal = isFilterSelected[5]
-
-						whereProblem.value = wp
-
-						//Log.i("isIndoor?", isFilterSelected[0].toString())
-						//Log.i("isOutdoor?", isFilterSelected[1].toString())
-						//Log.i("isProject?", isFilterSelected[2].toString())
-						//Log.i("isSend?", isFilterSelected[3].toString())
-						//Log.i("isFlash?", isFilterSelected[4].toString())
-						//Log.i("isNormal?", isFilterSelected[5].toString())
-					})
-				{
-					Text("Apply")
-				}
-			}
-
+			SsSearchTopDrawer(drawerState, queryState, innerPadding)
 
 			// Navigation host which allows navigation to occur
 			NavHost(navController, startDestination = navItemNames[0])
@@ -519,7 +160,7 @@ fun SsMainScreen(navController: NavHostController)
 				composable(route = navItemNames[1])
 				{
 					isFabVisible = true
-					SsBoulderScreen(db, innerPadding, lazyListState, whereProblem.value)
+					SsBoulderScreen(db, innerPadding, lazyListState, queryState)
 				}
 
 				// Sport
@@ -545,19 +186,6 @@ fun SsMainScreen(navController: NavHostController)
 
 			}
 		})
-}
-
-data class WhereProblem(
-	var isOutdoor : Boolean? = null,
-	var isProject : Boolean? = null,
-	var isFlash : Boolean? = null)
-{
-
-	fun isAll() : Boolean
-	{
-		return (isOutdoor == null) && (isProject == null) && (isFlash == null)
-	}
-
 }
 
 /**
@@ -628,6 +256,8 @@ fun buildBottomNavigationBar(dataStore : SsSharedDataStore,
 
 /**
  * Build the top bar.
+ *
+ * TODO: Expand this so that user can search for words.
  */
 @Composable
 fun buildTopBar(offsetHeight : MutableState<Float>,
@@ -686,10 +316,26 @@ fun buildTopBarDropdownMenu(onMenuItemClicked : (menuItem : String) -> Unit)
 }
 
 /**
- * Build the floating action button.
+ * Animate the floating action button when scrolling.
+ */
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun SsAnimateFloatingActionButton(isVisible : Boolean)
+{
+	AnimatedVisibility(
+		visible = isVisible,
+		enter = scaleIn(),
+		exit = scaleOut())
+	{
+		SsFloatingActionButton()
+	}
+}
+
+/**
+ * The floating action button.
  */
 @Composable
-fun buildFloatingActionButton()
+fun SsFloatingActionButton()
 {
 	FloatingActionButton(
 		modifier = Modifier
@@ -707,6 +353,98 @@ fun buildFloatingActionButton()
 	{
 		Icon(Icons.Default.Add, contentDescription = "Add a problem")
 	}
+}
+
+@Composable
+fun SsSearchTopDrawer(drawerState : SsDrawerState,
+	queryState: SsSearchFilterQueryState, padding : PaddingValues)
+{
+
+	val outdoorOptions = listOf("Either", "Outdoor", "Indoor")
+	val projectOptions = listOf("Either", "Project", "Send")
+	val flashOptions = listOf("Either", "Flash", "Not flashed")
+
+	val outdoorSearchFilter = remember { SsDropdownSearchFilterState(outdoorOptions) }
+	val projectSearchFilter = remember { SsDropdownSearchFilterState(projectOptions) }
+	val flashSearchFilter = remember { SsDropdownSearchFilterState(flashOptions) }
+
+	SsTopDrawer(
+		scaffoldPadding = padding,
+		modifier = Modifier
+			.padding(16.dp),
+		state = drawerState)
+	{
+
+		val iconPadding = 16.dp
+		var textWidth = with(LocalDensity.current) {
+			//MaterialTheme.typography.body1.fontSize.toDp() * (outdoorOptions[1].length+1) //* 3 / 2
+			MaterialTheme.typography.body1.fontSize.toDp() * flashOptions[2].length //* 3 / 2
+		}
+
+		/**
+		 */
+		SsDropdownSearchFilter(
+			state = outdoorSearchFilter,
+			allOptions = outdoorOptions,
+			description = "Outdoor or Indoor?",
+			dropdownWidth = textWidth)
+		{
+			Icon(Icons.Default.Park,
+				modifier = Modifier
+					.padding(horizontal = iconPadding)
+					then(Modifier.size(16.dp)),
+				contentDescription = "Outdoor")
+		}
+
+		/**
+		 */
+		SsDropdownSearchFilter(
+			state = projectSearchFilter,
+			allOptions = projectOptions,
+			description = "Project or Send?",
+			dropdownWidth = textWidth)
+		{
+			Icon(Icons.Default.Construction,
+				modifier = Modifier
+					.padding(horizontal = iconPadding)
+					then(Modifier.size(18.dp)),
+				contentDescription = "Project")
+		}
+
+		/**
+		 */
+		SsDropdownSearchFilter(
+			state = flashSearchFilter,
+			allOptions = flashOptions,
+			description = "Flash or not?",
+			dropdownWidth = textWidth)
+		{
+			Icon(Icons.Default.Bolt,
+				modifier = Modifier
+					.padding(horizontal = iconPadding)
+					then(Modifier.size(20.dp)),
+				contentDescription = "Flash")
+		}
+
+		/**
+		 */
+		Button(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(vertical = 16.dp),
+			onClick = {
+				queryState.outdoor = outdoorSearchFilter.toQuery()
+				queryState.project = projectSearchFilter.toQuery()
+				queryState.flash = flashSearchFilter.toQuery()
+
+				drawerState.close()
+			})
+		{
+			Text("Apply")
+		}
+
+	}
+
 }
 
 /**

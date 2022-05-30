@@ -86,7 +86,7 @@ fun SsEndDrawer(
 	modifier : Modifier = Modifier,
 	zIndex : Float = 1000f,
 	state : SsDrawerState = SsDrawerState(),
-	backgroundColor : Color = Color.Green,
+	backgroundColor : Color = Color.White,
 	occlusionColor: Color = Color(0xB0888888),
 	content : @Composable () -> Unit = {})
 {
@@ -167,7 +167,7 @@ fun SsTopDrawer(
 	modifier : Modifier = Modifier,
 	zIndex : Float = 1000f,
 	state : SsDrawerState = SsDrawerState(),
-	backgroundColor : Color = Color.Green,
+	backgroundColor : Color = Color.White,
 	occlusionColor: Color = Color(0xB0888888),
 	content : @Composable () -> Unit = {})
 {

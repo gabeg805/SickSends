@@ -1,5 +1,6 @@
 package me.gabeg.sicksends.main
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -16,9 +17,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.*
+import me.gabeg.sicksends.boulder.SsBoulderGradingSystem
+import me.gabeg.sicksends.shared.SsSharedDataStore
+import me.gabeg.sicksends.shared.getAllBoulderGradesForGradingSystem
+import me.gabeg.sicksends.shared.getAllBoulderGradingSystems
+import me.gabeg.sicksends.ui.SsDropdownMenu
+import me.gabeg.sicksends.ui.SsDropdownMenuState
 
 @Composable
 fun SsHomeScreen(innerPadding : PaddingValues)
@@ -34,7 +42,7 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 		var showGradeBody by remember { mutableStateOf(true) }
 		var gradeSubtitle by remember { mutableStateOf("") }
 
-		SsIconBubble(ref = gradeIcon)
+		SsIcon(ref = gradeIcon)
 		{
 			Icon(Icons.Default.CloudDone,
 				modifier = Modifier
@@ -43,35 +51,9 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 				contentDescription = "Yo")
 		}
 
-		Column(
-			modifier = Modifier
-				.constrainAs(gradeBody) {
-					top.linkTo(gradeIcon.top)
-					start.linkTo(gradeIcon.end)
-				}
-				.padding(top = 0.dp, bottom = 16.dp, start = 8.dp, end = 8.dp))
+		SsGradeBody(gradeBody, gradeIcon, showGradeBody)
 		{
-
-			Text("Grade",
-				fontWeight = FontWeight.Bold)
-
-			Text("V-scale",
-				fontSize = MaterialTheme.typography.caption.fontSize,
-				fontWeight = FontWeight.Light)
-
-			AnimatedVisibility(visible = showGradeBody) {
-
-				Button(onClick = { /*TODO*/ })
-				{
-					Text("Dummy")
-				}
-			}
-
-			Button(onClick = { showGradeBody = !showGradeBody })
-			{
-				Text("Done")
-			}
-
+			//showGradeBody = false
 		}
 
 		SsVerticalLine(
@@ -79,7 +61,7 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 			topRef = gradeIcon,
 			bottomRef = gradeBody)
 
-		SsIconBubble(
+		SsIcon(
 			ref = feelIcon,
 			anchor = gradeLine.bottom)
 		{
@@ -95,10 +77,206 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 }
 
 /**
+ * Create the body.
+ */
+@Composable
+fun ConstraintLayoutScope.SsBody(
+	title : String,
+	subtitle : String,
+	bodyRef : ConstrainedLayoutReference,
+	iconRef : ConstrainedLayoutReference,
+	content : @Composable () -> Unit = {})
+{
+
+	Column(
+		modifier = Modifier
+			.constrainAs(bodyRef) {
+				top.linkTo(iconRef.top)
+				start.linkTo(iconRef.end)
+			}
+			.padding(top = 0.dp, bottom = 16.dp, start = 8.dp, end = 8.dp))
+	{
+
+		// Title
+		Text(title,
+			fontSize = MaterialTheme.typography.h5.fontSize,
+			fontWeight = FontWeight.Bold)
+
+		// Subtitle
+		Text(subtitle,
+			modifier = Modifier
+				.padding(bottom = 24.dp),
+			fontSize = MaterialTheme.typography.body1.fontSize,
+			fontWeight = FontWeight.Light)
+
+		// Body content
+		content()
+
+	}
+
+}
+
+/**
+ * Grade.
+ */
+@Composable
+fun ConstraintLayoutScope.SsGradeBody(
+	bodyRef : ConstrainedLayoutReference,
+	iconRef : ConstrainedLayoutReference,
+	visible : Boolean = true,
+	onDone : () -> Unit = {})
+{
+
+	// Get all the grading systems that the user will use
+	val dataStore = SsSharedDataStore(LocalContext.current)
+	val allGradingSystemsWillUse = dataStore.getAllBoulderGradingSystemsWillUse()
+
+	// Choose a grading system
+	var selectedGradingSystem = remember { mutableStateOf("V Scale") }
+	var selectedGrade = remember { mutableStateOf("") }
+	var subtitle = remember {
+		derivedStateOf {
+			if (selectedGrade.value.isNullOrEmpty())
+			{
+				selectedGradingSystem.value
+			}
+			else
+			{
+				selectedGradingSystem.value + ", " + selectedGrade.value
+			}
+		}
+	}
+	//var subtitle by remember { mutableStateOf(selectedGradingSystem.value) }
+
+	// Get all grades for that grading system
+	val allGrades = getAllBoulderGradesForGradingSystem(
+			selectedGradingSystem.value)
+		.toMutableList()
+	allGrades.add(0, "Change grading system...")
+
+	// Save the state of the dropdown menu
+	val menuState = remember { SsDropdownMenuState() }
+
+	// Whether or not to show the change grading system dialog
+	val showDialog = remember { mutableStateOf(false) }
+
+	// Regular body of the grade section
+	SsBody("Grade", subtitle.value, bodyRef, iconRef)
+	{
+
+		AnimatedVisibility(visible = visible)
+		{
+
+			// Dropdown menu with all the grades
+			SsDropdownMenu(options = allGrades, state = menuState)
+			{ index, name ->
+
+				// Show the change the grading system dialog
+				if (index == 0)
+				{
+					menuState.clearSelected()
+					showDialog.value = true
+				}
+				// Done with this section
+				else
+				{
+					selectedGrade.value = name
+					onDone()
+				}
+
+			}
+
+		}
+
+	}
+
+	// Show the dialog to choose/change the grading system
+	if (showDialog.value)
+	{
+		SsChooseGradingSystemDialog(selectedGradingSystem, showDialog)
+		{ name ->
+			selectedGradingSystem.value = name
+			selectedGrade.value = ""
+		}
+	}
+
+}
+
+@Composable
+fun SsChooseGradingSystemDialog(
+	selectedGradingSystem : MutableState<String>,
+	showDialog : MutableState<Boolean>,
+	onConfirmButton : (String) -> Unit = {})
+{
+
+	// The currently selected item in the dropdown menu
+	var selectedName by remember { mutableStateOf("") }
+
+	// Prepare the dropdown menu to contain all grading systems, as well as
+	// automatically select the currently selected grading system
+	val allGradingSystems  = getAllBoulderGradingSystems()
+	val index = allGradingSystems.indexOf(selectedGradingSystem.value)
+	val menuState = remember { SsDropdownMenuState(index) }
+
+	// Show the dialog
+	AlertDialog(
+
+		// Title
+		title = {
+			Text("Choose a grading system...",
+				fontWeight = FontWeight.Bold)
+		},
+
+		// Body
+		text = {
+
+			Column()
+			{
+
+				// Space between the title and the dropdown menu
+				Text("")
+
+				// Dropdown menu
+				SsDropdownMenu(options = allGradingSystems, state = menuState)
+				{ index, name ->
+					selectedName = name
+				}
+
+			}
+		},
+
+		onDismissRequest = {
+			showDialog.value = false
+		},
+
+		confirmButton = {
+			TextButton(
+				onClick = {
+					showDialog.value = false
+					onConfirmButton(selectedName)
+				})
+			{
+				Text("OK")
+			}
+		},
+
+		dismissButton = {
+			TextButton(
+				onClick = {
+					showDialog.value = false
+				})
+			{
+				Text("CANCEL")
+			}
+		})
+
+}
+
+/**
  * Create an icon bubble that appears next to each question.
  */
 @Composable
-fun ConstraintLayoutScope.SsIconBubble(
+fun ConstraintLayoutScope.SsIcon(
 	ref : ConstrainedLayoutReference,
 	anchor : ConstraintLayoutBaseScope.HorizontalAnchor? = null,
 	content : @Composable BoxScope.() -> Unit = {})

@@ -343,9 +343,9 @@ fun SsSearchTopDrawer(drawerState : SsDrawerState,
 	val projectOptions = listOf("Either", "Project", "Send")
 	val flashOptions = listOf("Either", "Flash", "Not flashed")
 
-	val outdoorSearchFilter = remember { SsDropdownSearchFilterState(outdoorOptions) }
-	val projectSearchFilter = remember { SsDropdownSearchFilterState(projectOptions) }
-	val flashSearchFilter = remember { SsDropdownSearchFilterState(flashOptions) }
+	val outdoorSearchFilter = remember { SsDropdownSearchFilterState(0) }
+	val projectSearchFilter = remember { SsDropdownSearchFilterState(0) }
+	val flashSearchFilter = remember { SsDropdownSearchFilterState(0) }
 
 	SsTopDrawer(
 		scaffoldPadding = padding,

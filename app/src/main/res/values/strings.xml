@@ -75,7 +75,7 @@
 	<!-- Types of grades -->
 	<string name="grade_boulder_font">Fontainebleau</string>
 	<string name="grade_boulder_uk">UK</string>
-	<string name="grade_boulder_vscale">V scale</string>
+	<string name="grade_boulder_vscale">V Scale</string>
 	<string name="grade_rope_aus">Australian</string>
 	<string name="grade_rope_bra">Brasilian</string>
 	<string name="grade_rope_fin">Finnish</string>

@@ -3,10 +3,13 @@ package me.gabeg.sicksends.shared
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -212,6 +215,33 @@ class SsSharedDataStore(context : Context)
 		val key = buildWillGradeTradWithKey(grade)
 
 		editBoolean(key, willGrade)
+	}
+
+	/**
+	 * Get all the grading systems for bouldering that the user will use.
+	 *
+	 * @return All the grading systems for bouldering that the user will use.
+	 */
+	@Composable
+	fun getAllBoulderGradingSystemsWillUse() : List<String>
+	{
+		val allGradingSystems = getAllBoulderGradingSystems()
+		var allGradingSystemsWillUse = mutableListOf<String>()
+
+		// Iterate over each grading system
+		for (system in allGradingSystems)
+		{
+			// Check if the grading system will be used
+			val willUse by getWillGradeBoulderWith(system).asLiveData().observeAsState()
+
+			// The grading system will be used. Add it to the list
+			if (willUse == true)
+			{
+				allGradingSystemsWillUse.add(system)
+			}
+		}
+
+		return allGradingSystemsWillUse
 	}
 
 	/**

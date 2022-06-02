@@ -1,17 +1,15 @@
 package me.gabeg.sicksends.ui
 
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SsDropdownMenu(
 	options : List<String>,
-	state : SsDropdownMenuBaseState,
+	index : Int = -1,
+	state : SsDropdownMenuBaseState = rememberSsDropdownMenuState(index),
 	modifier : Modifier = Modifier,
 	onMenuItemClickedListener : (Int, String) -> Unit = {_,_ -> })
 {
@@ -53,7 +51,6 @@ fun SsDropdownMenu(
 			options.forEachIndexed { index, name ->
 				DropdownMenuItem(
 					onClick = {
-						//state.select(name)
 						state.select(index)
 						state.collapse()
 						onMenuItemClickedListener(index, name)
@@ -145,3 +142,12 @@ abstract class SsDropdownMenuBaseState(
  */
 data class SsDropdownMenuState(
 	val index : Int = -1) : SsDropdownMenuBaseState(index)
+
+/**
+ * Remember the state of the dropdown menu.
+ */
+@Composable
+fun rememberSsDropdownMenuState(index: Int = -1): SsDropdownMenuState
+{
+	return remember { SsDropdownMenuState(index) }
+}

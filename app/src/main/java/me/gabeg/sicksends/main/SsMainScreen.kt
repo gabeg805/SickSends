@@ -31,6 +31,9 @@ import androidx.navigation.compose.composable
 import me.gabeg.sicksends.R
 import me.gabeg.sicksends.boulder.SsBoulderScreen
 import me.gabeg.sicksends.db.SsProblemDatabase
+import me.gabeg.sicksends.problem.ui.SsFlashIcon
+import me.gabeg.sicksends.problem.ui.SsOutdoorIcon
+import me.gabeg.sicksends.problem.ui.SsProjectIcon
 import me.gabeg.sicksends.shared.SsSharedDataStore
 import me.gabeg.sicksends.sport.SsSportScreen
 import me.gabeg.sicksends.toprope.SsTopRopeScreen
@@ -368,11 +371,10 @@ fun SsSearchTopDrawer(drawerState : SsDrawerState,
 			description = "Outdoor or Indoor?",
 			dropdownWidth = textWidth)
 		{
-			Icon(Icons.Default.Park,
+			SsOutdoorIcon(
 				modifier = Modifier
 					.padding(horizontal = iconPadding)
-					then(Modifier.size(16.dp)),
-				contentDescription = "Outdoor")
+					then(Modifier.size(16.dp)))
 		}
 
 		/**
@@ -383,11 +385,10 @@ fun SsSearchTopDrawer(drawerState : SsDrawerState,
 			description = "Project or Send?",
 			dropdownWidth = textWidth)
 		{
-			Icon(Icons.Default.Construction,
+			SsProjectIcon(
 				modifier = Modifier
 					.padding(horizontal = iconPadding)
-					then(Modifier.size(18.dp)),
-				contentDescription = "Project")
+					then(Modifier.size(18.dp)))
 		}
 
 		/**
@@ -398,11 +399,10 @@ fun SsSearchTopDrawer(drawerState : SsDrawerState,
 			description = "Flash or not?",
 			dropdownWidth = textWidth)
 		{
-			Icon(Icons.Default.Bolt,
+			SsFlashIcon(
 				modifier = Modifier
 					.padding(horizontal = iconPadding)
-					then(Modifier.size(20.dp)),
-				contentDescription = "Flash")
+					then(Modifier.size(20.dp)))
 		}
 
 		/**

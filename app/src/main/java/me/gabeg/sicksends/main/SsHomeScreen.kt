@@ -18,17 +18,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.*
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
+import kotlinx.coroutines.launch
 import me.gabeg.sicksends.boulder.SsBoulderGradingSystem
+import me.gabeg.sicksends.problem.ui.*
 import me.gabeg.sicksends.shared.SsSharedDataStore
 import me.gabeg.sicksends.shared.getAllBoulderGradesForGradingSystem
 import me.gabeg.sicksends.shared.getAllBoulderGradingSystems
@@ -48,6 +52,7 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 
 	val scrollState = rememberScrollState()
 
+	// TODO: Switch to LazyColumn so that I can scroll to item
 	//Column(modifier = Modifier.padding(innerPadding))
 	Column(modifier = Modifier
 		.verticalScroll(scrollState))
@@ -58,6 +63,7 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 				.fillMaxWidth()
 				.padding(vertical = 24.dp, horizontal = 16.dp))
 		{
+
 			val (gradeIcon, gradeBody, gradeLine) = createRefs()
 			val (nameIcon, nameBody, nameLine) = createRefs()
 			val (numAttemptIcon, numAttemptBody, numAttemptLine) = createRefs()
@@ -67,210 +73,186 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 			val (noteIcon, noteBody, noteLine) = createRefs()
 			val nextIcon = createRef()
 
-			var showGradeBody by remember { mutableStateOf(true) }
-			var showNameBody by remember { mutableStateOf(false) }
-			var showNumAttemptBody by remember { mutableStateOf(false) }
-			var showIsFlashBody by remember { mutableStateOf(false) }
-			var showIsOutdoorBody by remember { mutableStateOf(false) }
-			var showIsProjectBody by remember { mutableStateOf(false) }
-			var showNoteBody by remember { mutableStateOf(false) }
+			var showGradeBody = remember { mutableStateOf(true) }
+			var showNameBody = remember { mutableStateOf(false) }
+			var showNumAttemptBody = remember { mutableStateOf(false) }
+			var showIsFlashBody = remember { mutableStateOf(false) }
+			var showIsOutdoorBody = remember { mutableStateOf(false) }
+			var showIsProjectBody = remember { mutableStateOf(false) }
+			var showNoteBody = remember { mutableStateOf(false) }
 
-			var hasShownGradeBody by remember { mutableStateOf(true) }
-			var hasShownNameBody by remember { mutableStateOf(false) }
-			var hasShownNumAttemptBody by remember { mutableStateOf(false) }
-			var hasShownIsFlashBody by remember { mutableStateOf(false) }
-			var hasShownIsOutdoorBody by remember { mutableStateOf(false) }
-			var hasShownIsProjectBody by remember { mutableStateOf(false) }
-			var hasShownNoteBody by remember { mutableStateOf(false) }
+			var questionState = rememberSsQuestionState(
+				listOf(showGradeBody, showNameBody, showNumAttemptBody,
+					showIsFlashBody, showIsOutdoorBody, showIsProjectBody,
+					showNoteBody))
+
+			val scrollTo : Int by remember {
+				derivedStateOf {
+					if (showGradeBody.value)
+					{
+						0
+					}
+					else if (showNameBody.value)
+					{
+						200
+					}
+					else if (showNumAttemptBody.value)
+					{
+						400
+					}
+					else if (showIsFlashBody.value)
+					{
+						600
+					}
+					else if (showIsOutdoorBody.value)
+					{
+						800
+					}
+					else if (showIsProjectBody.value)
+					{
+						1000
+					}
+					else if (showNoteBody.value)
+					{
+						1200
+					}
+					else
+					{
+						50
+					}
+				}
+			}
+
+			println("Scroll : $scrollTo")
+
+			LaunchedEffect(scrollTo) {
+				scrollState.animateScrollTo(scrollTo)
+			}
 
 			// TODO: Should highlight if on it and already done. Line should
 			// only get highlighted after it is complete.
 			/**
 			 * Grade
 			 */
-			SsIcon(
-				ref = gradeIcon,
-				focus = showGradeBody)
-			{
-				Icon(Icons.Default.CloudDone,
-					modifier = Modifier
-						.align(Alignment.Center)
-						.size(24.dp),
-					contentDescription = "Yo")
-			}
-
-			SsGradeBody(gradeBody, gradeIcon, showGradeBody)
-			{
-				showGradeBody = false
-				showNameBody = true
-			}
-
-			SsVerticalLine(
-				ref = gradeLine,
-				topRef = gradeIcon,
-				bottomRef = gradeBody,
-				focus = showGradeBody)
+			// TODO: This might change the color in an unwanted way
+			SsQuestion(
+				iconRef = gradeIcon,
+				bodyRef = gradeBody,
+				lineRef = gradeLine,
+				anchor = null,
+				icon = { modifier ->
+					SsGradeIcon(modifier = modifier)
+				},
+				body = { iconRef, bodyRef, visible, onClick, onDone ->
+					SsGradeBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				},
+				state = questionState,
+				stateIndex = 0)
 
 			/**
 			 * Name
 			 */
-			SsIcon(
-				ref = nameIcon,
+			SsQuestion(
+				iconRef = nameIcon,
+				bodyRef = nameBody,
+				lineRef = nameLine,
 				anchor = gradeLine.bottom,
-				focus = showNameBody)
-			{
-				Icon(Icons.Default.Face,
-					modifier = Modifier
-						.align(Alignment.Center)
-						.size(24.dp),
-					contentDescription = "Yo")
-			}
-
-			SsNameBody(nameBody, nameIcon, showNameBody)
-			{
-				showNameBody = false
-				showNumAttemptBody = true
-			}
-
-			SsVerticalLine(
-				ref = nameLine,
-				topRef = nameIcon,
-				bottomRef = nameBody,
-				focus = showNameBody)
+				icon = { modifier ->
+					SsNameIcon(modifier = modifier)
+				},
+				body = { iconRef, bodyRef, visible, onClick, onDone ->
+					SsNameBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				},
+				state = questionState,
+				stateIndex = 1)
 
 			/**
 			 * Number of attempts
 			 */
-			SsIcon(
-				ref = numAttemptIcon,
+			SsQuestion(
+				iconRef = numAttemptIcon,
+				bodyRef = numAttemptBody,
+				lineRef = numAttemptLine,
 				anchor = nameLine.bottom,
-				focus = showNumAttemptBody)
-			{
-				Icon(Icons.Default.Lock,
-					modifier = Modifier
-						.align(Alignment.Center)
-						.size(24.dp),
-					contentDescription = "Yo")
-			}
-
-			SsNumAttemptBody(numAttemptBody, numAttemptIcon, showNumAttemptBody)
-			{
-				showNumAttemptBody = false
-				showIsFlashBody = true
-			}
-
-			SsVerticalLine(
-				ref = numAttemptLine,
-				topRef = numAttemptIcon,
-				bottomRef = numAttemptBody,
-				focus = showNumAttemptBody)
+				icon = { modifier ->
+					SsNumberOfAttemptsIcon(modifier = modifier)
+				},
+				body = { iconRef, bodyRef, visible, onClick, onDone ->
+					SsNumAttemptBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				},
+				state = questionState,
+				stateIndex = 2)
 
 			/**
 			 * Is flash?
 			 */
-			SsIcon(
-				ref = isFlashIcon,
+			SsQuestion(
+				iconRef = isFlashIcon,
+				bodyRef = isFlashBody,
+				lineRef = isFlashLine,
 				anchor = numAttemptLine.bottom,
-				focus = showIsFlashBody)
-			{
-				Icon(Icons.Default.Bolt,
-					modifier = Modifier
-						.align(Alignment.Center)
-						.size(24.dp),
-					contentDescription = "Yo")
-			}
-
-			SsIsFlashBody(isFlashBody, isFlashIcon, showIsFlashBody)
-			{
-				showIsFlashBody = false
-				showIsOutdoorBody = true
-			}
-
-			SsVerticalLine(
-				ref = isFlashLine,
-				topRef = isFlashIcon,
-				bottomRef = isFlashBody,
-				focus = showIsFlashBody)
+				icon = { modifier ->
+					SsFlashIcon(modifier = modifier)
+				},
+				body = { iconRef, bodyRef, visible, onClick, onDone ->
+					SsIsFlashBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				},
+				state = questionState,
+				stateIndex = 3)
 
 			/**
 			 * Is outdoor?
 			 */
-			SsIcon(
-				ref = isOutdoorIcon,
+			SsQuestion(
+				iconRef = isOutdoorIcon,
+				bodyRef = isOutdoorBody,
+				lineRef = isOutdoorLine,
 				anchor = isFlashLine.bottom,
-				focus = showIsOutdoorBody)
-			{
-				Icon(Icons.Default.Park,
-					modifier = Modifier
-						.align(Alignment.Center)
-						.size(24.dp),
-					contentDescription = "Yo")
-			}
-
-			SsIsOutdoorBody(isOutdoorBody, isOutdoorIcon, showIsOutdoorBody)
-			{
-				showIsOutdoorBody = false
-				showIsProjectBody = true
-			}
-
-			SsVerticalLine(
-				ref = isOutdoorLine,
-				topRef = isOutdoorIcon,
-				bottomRef = isOutdoorBody,
-				focus = showIsOutdoorBody)
+				icon = { modifier ->
+					SsOutdoorIcon(modifier = modifier)
+				},
+				body = { iconRef, bodyRef, visible, onClick, onDone ->
+					SsIsOutdoorBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				},
+				state = questionState,
+				stateIndex = 4)
 
 			/**
 			 * Is project?
 			 */
-			SsIcon(
-				ref = isProjectIcon,
+			SsQuestion(
+				iconRef = isProjectIcon,
+				bodyRef = isProjectBody,
+				lineRef = isProjectLine,
 				anchor = isOutdoorLine.bottom,
-				focus = showIsProjectBody)
-			{
-				Icon(Icons.Default.Construction,
-					modifier = Modifier
-						.align(Alignment.Center)
-						.size(24.dp),
-					contentDescription = "Yo")
-			}
-
-			SsIsProjectBody(isProjectBody, isProjectIcon, showIsProjectBody)
-			{
-				showIsProjectBody = false
-				showNoteBody = true
-			}
-
-			SsVerticalLine(
-				ref = isProjectLine,
-				topRef = isProjectIcon,
-				bottomRef = isProjectBody,
-				focus = showIsProjectBody)
+				icon = { modifier ->
+					SsProjectIcon(modifier = modifier)
+				},
+				body = { iconRef, bodyRef, visible, onClick, onDone ->
+					SsIsProjectBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				},
+				state = questionState,
+				stateIndex = 5)
 
 			/**
 			 * Notes
 			 */
-			SsIcon(
-				ref = noteIcon,
+			SsQuestion(
+				iconRef = noteIcon,
+				bodyRef = noteBody,
+				lineRef = noteLine,
 				anchor = isProjectLine.bottom,
-				focus = showNoteBody)
+				icon = { modifier ->
+					SsNoteIcon(modifier = modifier)
+				},
+				body = { iconRef, bodyRef, visible, onClick, onDone ->
+					SsNoteBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				},
+				state = questionState,
+				stateIndex = 6)
 			{
-				Icon(Icons.Default.Note,
-					modifier = Modifier
-						.align(Alignment.Center)
-						.size(24.dp),
-					contentDescription = "Yo")
+				// TODO: Set show next here and in vertical line
 			}
-
-			SsNoteBody(noteBody, noteIcon, showNoteBody)
-			{
-				showNoteBody = true
-			}
-
-			SsVerticalLine(
-				ref = noteLine,
-				topRef = noteIcon,
-				bottomRef = noteBody,
-				focus = showNoteBody)
 
 			/**
 			 * NEXT
@@ -294,14 +276,177 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 }
 
 /**
+ * Question widget.
+ */
+@Composable
+fun ConstraintLayoutScope.SsQuestion(
+	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
+	lineRef : ConstrainedLayoutReference,
+	anchor : ConstraintLayoutBaseScope.HorizontalAnchor? = null,
+	icon : @Composable BoxScope.(
+		modifier : Modifier) -> Unit,
+	body : @Composable ConstraintLayoutScope.(
+		iconRef : ConstrainedLayoutReference,
+		bodyRef : ConstrainedLayoutReference,
+		visible : Boolean,
+		onClick : () -> Unit,
+		onDone : () -> Unit) -> Unit,
+	state : SsQuestionState = rememberSsQuestionState(),
+	stateIndex : Int = -1,
+	onClick: () -> Unit = {
+		state.showOnly(stateIndex)
+	},
+	onDone : () -> Unit = {})
+{
+
+	// Whether the current element should be visible
+	var isVisible = remember {
+		state.getVisibility(stateIndex) ?: mutableStateOf(false)
+	}
+
+	// Whether to highlight the icon and line
+	var isIconHighlighted by remember { mutableStateOf(false) }
+
+	var isLineHighlighted by remember {
+		mutableStateOf(state.getVisibility(stateIndex+1)?.value ?: false)
+	}
+
+	// Always show the icon
+	if (isVisible.value)
+	{
+		isIconHighlighted = true
+	}
+
+	// Icon
+	SsIcon(
+		ref = iconRef,
+		anchor = anchor,
+		focus = isIconHighlighted,
+		onClick = onClick)
+	{
+		icon(modifier = Modifier
+			.align(Alignment.Center)
+			.size(24.dp))
+	}
+
+	// Body
+	body(iconRef, bodyRef, isVisible.value, onClick)
+	{
+		isLineHighlighted = true
+
+		state.showOnly(stateIndex+1)
+		onDone()
+	}
+
+	// Vertical line
+	SsVerticalLine(
+		ref = lineRef,
+		topRef = iconRef,
+		bottomRef = bodyRef,
+		focus = isLineHighlighted,
+		onClick = onClick)
+
+}
+
+/**
+ * Remember the question state.
+ */
+@Composable
+fun rememberSsQuestionState(initial : List<MutableState<Boolean>> = listOf())
+	: SsQuestionState
+{
+	return remember { SsQuestionState(initial) }
+}
+
+/**
+ * Question state.
+ */
+data class SsQuestionState(
+	val initial : List<MutableState<Boolean>> = listOf()
+)
+{
+
+	val allVisibility : MutableList<MutableState<Boolean>> = mutableListOf()
+
+	init
+	{
+		allVisibility.addAll(initial)
+	}
+
+	fun getVisibility(index : Int) : MutableState<Boolean>?
+	{
+		if (!isValidIndex(index))
+		{
+			return null
+		}
+
+		return allVisibility[index]
+	}
+
+	fun hide(index : Int)
+	{
+		if (!isValidIndex(index))
+		{
+			return
+		}
+
+		allVisibility[index].value = false
+	}
+
+	fun hideAll()
+	{
+		for (i in allVisibility.indices)
+		{
+			hide(i)
+		}
+	}
+
+	fun isValidIndex(index : Int) : Boolean
+	{
+		return (index >= 0) && (index < allVisibility.size)
+	}
+
+	fun isVisible(index : Int) : Boolean
+	{
+		if (!isValidIndex(index))
+		{
+			return false
+		}
+
+		return allVisibility[index].value
+	}
+
+	fun show(index : Int)
+	{
+		if (!isValidIndex(index))
+		{
+			return
+		}
+
+		allVisibility[index].value = true
+	}
+
+	fun showOnly(index : Int)
+	{
+		hideAll()
+		show(index)
+	}
+
+}
+
+/**
  * Create the body.
+ *
+ * TODO: Change the order of the body and icon refs to match everything else.
  */
 @Composable
 fun ConstraintLayoutScope.SsBody(
 	title : String,
 	subtitle : String,
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
+	onClick: () -> Unit = {},
 	content : @Composable () -> Unit = {})
 {
 
@@ -314,7 +459,8 @@ fun ConstraintLayoutScope.SsBody(
 
 				width = Dimension.fillToConstraints
 			}
-			.padding(top = 0.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
+			.clickable { onClick() }
+			.padding(top = 0.dp, bottom = 32.dp, start = 8.dp, end = 8.dp),
 		horizontalAlignment = Alignment.Start)
 	{
 
@@ -384,9 +530,10 @@ fun SsChooseGradingSystemDialog(
  */
 @Composable
 fun ConstraintLayoutScope.SsGradeBody(
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -424,7 +571,7 @@ fun ConstraintLayoutScope.SsGradeBody(
 	val dialogState = remember { SsAlertDialogState() }
 
 	// Regular body of the grade section
-	SsBody("Grade", subtitle.value, bodyRef, iconRef)
+	SsBody("Grade", subtitle.value, iconRef, bodyRef, onClick = onClick)
 	{
 
 		AnimatedVisibility(visible = visible)
@@ -473,6 +620,7 @@ fun ConstraintLayoutScope.SsIcon(
 	ref : ConstrainedLayoutReference,
 	anchor : ConstraintLayoutBaseScope.HorizontalAnchor? = null,
 	focus : Boolean = true,
+	onClick: () -> Unit = {},
 	content : @Composable BoxScope.() -> Unit = {})
 {
 
@@ -484,6 +632,7 @@ fun ConstraintLayoutScope.SsIcon(
 				top.linkTo(anchor ?: parent.top)
 				start.linkTo(parent.start)
 			}
+			.clickable { onClick() }
 			.padding(horizontal = 16.dp)
 			.size(48.dp)
 			.background(color = Color.White, shape = CircleShape)
@@ -498,9 +647,10 @@ fun ConstraintLayoutScope.SsIcon(
  */
 @Composable
 fun ConstraintLayoutScope.SsIsFlashBody(
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -508,9 +658,10 @@ fun ConstraintLayoutScope.SsIsFlashBody(
 
 	SsYesNoBody(
 		title = "Is Flash?",
-		bodyRef = bodyRef,
 		iconRef = iconRef,
+		bodyRef = bodyRef,
 		visible = visible,
+		onClick = onClick,
 		onDone = onDone)
 
 }
@@ -520,9 +671,10 @@ fun ConstraintLayoutScope.SsIsFlashBody(
  */
 @Composable
 fun ConstraintLayoutScope.SsIsOutdoorBody(
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -530,9 +682,10 @@ fun ConstraintLayoutScope.SsIsOutdoorBody(
 
 	SsYesNoBody(
 		title = "Is Outdoor?",
-		bodyRef = bodyRef,
 		iconRef = iconRef,
+		bodyRef = bodyRef,
 		visible = visible,
+		onClick = onClick,
 		onDone = onDone)
 
 }
@@ -544,9 +697,10 @@ fun ConstraintLayoutScope.SsIsOutdoorBody(
  */
 @Composable
 fun ConstraintLayoutScope.SsIsProjectBody(
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -554,9 +708,10 @@ fun ConstraintLayoutScope.SsIsProjectBody(
 
 	SsYesNoBody(
 		title = "Is Project?",
-		bodyRef = bodyRef,
 		iconRef = iconRef,
+		bodyRef = bodyRef,
 		visible = visible,
+		onClick = onClick,
 		onDone = onDone)
 
 }
@@ -566,9 +721,10 @@ fun ConstraintLayoutScope.SsIsProjectBody(
  */
 @Composable
 fun ConstraintLayoutScope.SsNameBody(
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -577,8 +733,8 @@ fun ConstraintLayoutScope.SsNameBody(
 	// TODO: Capture "Enter" key press and go to next line
 	SsTextFieldBody(
 		title = "Name",
-		bodyRef = bodyRef,
 		iconRef = iconRef,
+		bodyRef = bodyRef,
 		singleLine = true,
 		visible = visible,
 		onDone = onDone)
@@ -590,9 +746,10 @@ fun ConstraintLayoutScope.SsNameBody(
  */
 @Composable
 fun ConstraintLayoutScope.SsNoteBody(
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -600,8 +757,8 @@ fun ConstraintLayoutScope.SsNoteBody(
 
 	SsTextFieldBody(
 		title = "Notes",
-		bodyRef = bodyRef,
 		iconRef = iconRef,
+		bodyRef = bodyRef,
 		singleLine = false,
 		visible = visible,
 		onDone = onDone)
@@ -613,16 +770,17 @@ fun ConstraintLayoutScope.SsNoteBody(
  */
 @Composable
 fun ConstraintLayoutScope.SsNumAttemptBody(
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
 	println("Num attempt : $visible")
 	var subtitle = remember { mutableStateOf("") }
 
-	SsBody("Attempts", subtitle.value, bodyRef, iconRef)
+	SsBody("Attempts", subtitle.value, iconRef, bodyRef, onClick = onClick)
 	{
 
 		AnimatedVisibility(visible = visible)
@@ -653,16 +811,17 @@ fun ConstraintLayoutScope.SsNumAttemptBody(
 @Composable
 fun ConstraintLayoutScope.SsTextFieldBody(
 	title : String,
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	singleLine : Boolean = false,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
 	var subtitle = remember { mutableStateOf("") }
 
-	SsBody(title, subtitle.value, bodyRef, iconRef)
+	SsBody(title, subtitle.value, iconRef, bodyRef, onClick = onClick)
 	{
 
 		AnimatedVisibility(visible = visible)
@@ -692,7 +851,8 @@ fun ConstraintLayoutScope.SsVerticalLine(
 	ref : ConstrainedLayoutReference,
 	topRef : ConstrainedLayoutReference,
 	bottomRef : ConstrainedLayoutReference,
-	focus : Boolean = false)
+	focus : Boolean = false,
+	onClick: () -> Unit = {})
 {
 
 	var color = if (focus) Color.Green else Color.Gray
@@ -707,6 +867,7 @@ fun ConstraintLayoutScope.SsVerticalLine(
 
 				height = Dimension.fillToConstraints
 			}
+			.clickable { onClick() }
 			.width(3.dp),
 		color = color)
 }
@@ -717,16 +878,17 @@ fun ConstraintLayoutScope.SsVerticalLine(
 @Composable
 fun ConstraintLayoutScope.SsYesNoBody(
 	title : String,
-	bodyRef : ConstrainedLayoutReference,
 	iconRef : ConstrainedLayoutReference,
+	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
+	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
 	var subtitle = remember { mutableStateOf("") }
-	var isYes by remember { mutableStateOf<Boolean?>(null) }
+	var isYes by remember { mutableStateOf<Boolean?>(false) }
 
-	SsBody(title, subtitle.value, bodyRef, iconRef)
+	SsBody(title, subtitle.value, iconRef, bodyRef, onClick = onClick)
 	{
 
 		AnimatedVisibility(visible = visible)

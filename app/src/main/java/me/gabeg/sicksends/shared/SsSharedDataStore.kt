@@ -13,43 +13,27 @@ import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import me.gabeg.sicksends.R
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "sick_sends")
 
-class SsSharedDataStore(context : Context)
+class SsSharedDataStore(context : Context) : SsSharedBaseDataStore(context)
 {
 
-	// Data store
-	private val dataStore = context.dataStore
-
-	// List of names of all types of climbs a user can do
-	//private var mAllClimbNames = listOf<String>()
+	/**
+	 * Data store.
+	 */
+	override val dataStore = context.dataStore
 
 	// Key names
 	val KEY_IS_APP_FIRST_RUN         = "key_is_app_first_run"
-	val KEY_WILL_CLIMB_BOULDER       = "key_will_climb_boulder"
 	val KEY_WILL_CLIMB_SPORT         = "key_will_climb_sport"
 	val KEY_WILL_CLIMB_TOP_ROPE      = "key_will_climb_top_rope"
 	val KEY_WILL_CLIMB_TRAD          = "key_will_climb_trad"
-	val KEY_WILL_GRADE_BOULDER_WITH  = "key_will_grade_boulder_with_"
 	val KEY_WILL_GRADE_SPORT_WITH    = "key_will_grade_sport_with_"
 	val KEY_WILL_GRADE_TOP_ROPE_WITH = "key_will_grade_top_rope_with_"
 	val KEY_WILL_GRADE_TRAD_WITH     = "key_will_grade_trad_with_"
-
-	//init
-	//{
-	//	setupAllClimbNames(context)
-	//}
-
-	/**
-	 * Build the key that is used to determine if a boulder grade will be used
-	 * or not.
-	 */
-	fun buildWillGradeBoulderWithKey(grade : String) : String
-	{
-		return KEY_WILL_GRADE_BOULDER_WITH+grade
-	}
 
 	/**
 	 * Build the key that is used to determine if a sport grade will be used or
@@ -96,18 +80,6 @@ class SsSharedDataStore(context : Context)
 	}
 
 	/**
-	 * Edit a boolean from the preferences data store.
-	 */
-	suspend fun editBoolean(key : String, value : Boolean)
-	{
-		val prefKey = booleanPreferencesKey(key)
-
-		dataStore.edit { preferences ->
-			preferences[prefKey] = value
-		}
-	}
-
-	/**
 	 * Edit whether this is the app's first run or not.
 	 *
 	 * @param  isFirst  Whether this is the app's first run or not.
@@ -115,17 +87,6 @@ class SsSharedDataStore(context : Context)
 	suspend fun editIsAppFirstRun(isFirst: Boolean)
 	{
 		editBoolean(KEY_IS_APP_FIRST_RUN, isFirst)
-	}
-
-	/**
-	 * Edit whether the user will boulder or not.
-	 *
-	 * @param  willClimb  Whether or not the user will climb this type of
-	 *                    climb.
-	 */
-	suspend fun editWillClimbBoulder(willClimb : Boolean)
-	{
-		editBoolean(KEY_WILL_CLIMB_BOULDER, willClimb)
 	}
 
 	/**
@@ -159,20 +120,6 @@ class SsSharedDataStore(context : Context)
 	suspend fun editWillClimbTrad(willClimb : Boolean)
 	{
 		editBoolean(KEY_WILL_CLIMB_TRAD, willClimb)
-	}
-
-	/**
-	 * Edit whether the user will use a particular bouldering grade or not.
-	 *
-	 * @param  grade      Name of a grade.
-	 * @param  willGrade  Flag indicating whether the user will use the grade or
-	 *                    not.
-	 */
-	suspend fun editWillGradeBoulderWith(grade: String, willGrade: Boolean)
-	{
-		val key = buildWillGradeBoulderWithKey(grade)
-
-		editBoolean(key, willGrade)
 	}
 
 	/**
@@ -218,33 +165,6 @@ class SsSharedDataStore(context : Context)
 	}
 
 	/**
-	 * Get all the grading systems for bouldering that the user will use.
-	 *
-	 * @return All the grading systems for bouldering that the user will use.
-	 */
-	@Composable
-	fun getAllBoulderGradingSystemsWillUse() : List<String>
-	{
-		val allGradingSystems = getAllBoulderGradingSystems()
-		var allGradingSystemsWillUse = mutableListOf<String>()
-
-		// Iterate over each grading system
-		for (system in allGradingSystems)
-		{
-			// Check if the grading system will be used
-			val willUse by getWillGradeBoulderWith(system).asLiveData().observeAsState()
-
-			// The grading system will be used. Add it to the list
-			if (willUse == true)
-			{
-				allGradingSystemsWillUse.add(system)
-			}
-		}
-
-		return allGradingSystemsWillUse
-	}
-
-	/**
 	 * Get all the icons of climbs that a user can do.
 	 *
 	 * @return List of all the icons of climbs that a user can do.
@@ -258,33 +178,33 @@ class SsSharedDataStore(context : Context)
 			R.mipmap.trad)
 	}
 
-	/**
-	 * Get all the icons of the climbs a user will do. This can be Boulder,
-	 * Sport, Top Rope, and/or Trad, depending on what the user has indicated.
-	 *
-	 * @return List of all the icons of climbs a user will do.
-	 */
-	suspend fun getAllClimbIconsWillClimb() : List<Int>
-	{
-		val possibleIcons = getAllClimbIcons()
-		val willClimbFlows = getAllWillClimb()
-		val allIcons = mutableListOf<Int>()
+	///**
+	// * Get all the icons of the climbs a user will do. This can be Boulder,
+	// * Sport, Top Rope, and/or Trad, depending on what the user has indicated.
+	// *
+	// * @return List of all the icons of climbs a user will do.
+	// */
+	//suspend fun getAllClimbIconsWillClimb() : List<Int>
+	//{
+	//	val possibleIcons = getAllClimbIcons()
+	//	val willClimbFlows = getAllWillClimb()
+	//	val allIcons = mutableListOf<Int>()
 
-		// Iterate over both lists
-		possibleIcons.zip(willClimbFlows).forEach { (icon, flow) ->
+	//	// Iterate over both lists
+	//	possibleIcons.zip(willClimbFlows).forEach { (icon, flow) ->
 
-			// Get whether the type of climb will be climbed or not
-			var willClimb = flow.first()
+	//		// Get whether the type of climb will be climbed or not
+	//		var willClimb = flow.first()
 
-			// If the type of climb will be climbed, add it to the list
-			if (willClimb)
-			{
-				allIcons.add(icon)
-			}
-		}
+	//		// If the type of climb will be climbed, add it to the list
+	//		if (willClimb)
+	//		{
+	//			allIcons.add(icon)
+	//		}
+	//	}
 
-		return allIcons
-	}
+	//	return allIcons
+	//}
 
 	/**
 	 * Get all the names of climbs that a user can do.
@@ -368,9 +288,9 @@ class SsSharedDataStore(context : Context)
 	 * @return List of whether or not the user will climb a type of climb, in
 	 *     order of: Boulder, Sport, Top Rope, Trad.
 	 */
-	fun getAllWillClimb() : List<Flow<Boolean>>
+	fun getAllWillClimb(boulderDataStore: SsSharedBoulderDataStore) : List<Flow<Boolean>>
 	{
-		return listOf(getWillClimbBoulder(), getWillClimbSport(),
+		return listOf(boulderDataStore.getWillBoulderFlow(), getWillClimbSport(),
 			getWillClimbTopRope(), getWillClimbTrad())
 	}
 
@@ -385,27 +305,16 @@ class SsSharedDataStore(context : Context)
 	}
 
 	/**
-	 * Get a boolean from the preferences data store.
+	 * Get the default grading system for bouldering.
 	 *
-	 * @return A boolean.
+	 * @return The default grading system for bouldering.
 	 */
-	fun getBoolean(key : String, defaultValue : Boolean = false) : Flow<Boolean>
+	@Composable
+	override fun getDefaultGradingSystem() : String
 	{
-		val prefKey = booleanPreferencesKey(key)
-
-		return dataStore.data.map { preferences ->
-			preferences[prefKey] ?: defaultValue
-		}
-	}
-
-	/**
-	 * Get whether or not the user will boulder.
-	 *
-	 * @return True if the user will boulder. and False otherwise.
-	 */
-	fun getWillClimbBoulder(): Flow<Boolean>
-	{
-		return getBoolean(KEY_WILL_CLIMB_BOULDER)
+		// TODO: Maybe make another base data store for climbing and use this
+		//  one in the boulder/sport/... data stores
+		return ""
 	}
 
 	/**
@@ -436,21 +345,6 @@ class SsSharedDataStore(context : Context)
 	fun getWillClimbTrad(): Flow<Boolean>
 	{
 		return getBoolean(KEY_WILL_CLIMB_TRAD)
-	}
-
-	/**
-	 * Get whether the user will use a particular bouldering grade or not.
-	 *
-	 * @param  grade  Name of a grade.
-	 *
-	 * @return True if the user will use a particular bouldering grade, and
-	 *     False otherwise.
-	 */
-	fun getWillGradeBoulderWith(grade: String) : Flow<Boolean>
-	{
-		val key = buildWillGradeBoulderWithKey(grade)
-
-		return getBoolean(key)
 	}
 
 	/**

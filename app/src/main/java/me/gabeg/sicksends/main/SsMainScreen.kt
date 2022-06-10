@@ -34,6 +34,7 @@ import me.gabeg.sicksends.db.SsProblemDatabase
 import me.gabeg.sicksends.problem.ui.SsFlashIcon
 import me.gabeg.sicksends.problem.ui.SsOutdoorIcon
 import me.gabeg.sicksends.problem.ui.SsProjectIcon
+import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
 import me.gabeg.sicksends.shared.SsSharedDataStore
 import me.gabeg.sicksends.sport.SsSportScreen
 import me.gabeg.sicksends.toprope.SsTopRopeScreen
@@ -179,7 +180,8 @@ fun buildBottomNavigationBar(dataStore : SsSharedDataStore,
 {
 
 	// Get whether the user will do a type of climb
-	val allWillClimb = dataStore.getAllWillClimb()
+	val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
+	val allWillClimb = dataStore.getAllWillClimb(boulderDataStore)
 
 	// Get the navigation names and icons
 	var navItemNames = dataStore.getAllNavigationNames()

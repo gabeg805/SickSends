@@ -33,6 +33,17 @@ fun SsGradeIcon(modifier : Modifier = Modifier)
 }
 
 /**
+ * Location icon.
+ */
+@Composable
+fun SsLocationIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.Place,
+		modifier = modifier,
+		contentDescription = "Location")
+}
+
+/**
  * Name icon.
  */
 @Composable

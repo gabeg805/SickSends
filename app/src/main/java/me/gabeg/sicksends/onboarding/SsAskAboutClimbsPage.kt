@@ -19,6 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import me.gabeg.sicksends.shared.SsSharedBaseDataStore
+import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
 import me.gabeg.sicksends.shared.SsSharedDataStore
 
 /*
@@ -56,13 +58,17 @@ fun TypeOfClimbingPage()
 			fontWeight = FontWeight.Normal,
 			textAlign = TextAlign.Center)
 
-		// All supported types of climbing
+		// Get all the data stores
 		val dataStore = SsSharedDataStore(LocalContext.current)
+		val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
+		val allDataStores = listOf(boulderDataStore, dataStore, dataStore, dataStore)
+
+		// All supported types of climbing
 		val climbingTypes = dataStore.getAllClimbNames()
 		val scope = rememberCoroutineScope()
 
 		// Create a row for each climbing type
-		for (name in climbingTypes)
+		for ((ds,name) in allDataStores.zip(climbingTypes))
 		{
 			val isChecked = remember { mutableStateOf(false) }
 
@@ -73,7 +79,7 @@ fun TypeOfClimbingPage()
 					.clickable {
 						isChecked.value = !isChecked.value
 						scope.launch {
-							saveTypeOfClimbUserWillDo(dataStore, climbingTypes, name, isChecked.value)
+							saveTypeOfClimbUserWillDo(ds, climbingTypes, name, isChecked.value)
 						}
 					},
 				horizontalArrangement = Arrangement.Start,
@@ -103,7 +109,7 @@ fun TypeOfClimbingPage()
 /**
  * Save the type of climb a user will do.
  */
-suspend fun saveTypeOfClimbUserWillDo(dataStore: SsSharedDataStore,
+suspend fun saveTypeOfClimbUserWillDo(dataStore: SsSharedBaseDataStore,
 	climbingTypes : List<String>, name : String, status : Boolean)
 {
 	//val climbingTypes = dataStore.getAllClimbNames()
@@ -112,19 +118,19 @@ suspend fun saveTypeOfClimbUserWillDo(dataStore: SsSharedDataStore,
 	{
 		climbingTypes[0] ->
 		{
-			dataStore.editWillClimbBoulder(status)
+			(dataStore as SsSharedBoulderDataStore).editWillBoulder(status)
 		}
 		climbingTypes[1] ->
 		{
-			dataStore.editWillClimbSport(status)
+			(dataStore as SsSharedDataStore).editWillClimbSport(status)
 		}
 		climbingTypes[2] ->
 		{
-			dataStore.editWillClimbTopRope(status)
+			(dataStore as SsSharedDataStore).editWillClimbTopRope(status)
 		}
 		climbingTypes[3] ->
 		{
-			dataStore.editWillClimbTrad(status)
+			(dataStore as SsSharedDataStore).editWillClimbTrad(status)
 		}
 	}
 }

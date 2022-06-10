@@ -1,38 +1,54 @@
 package me.gabeg.sicksends.main
 
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.animation.*
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.*
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
-import kotlinx.coroutines.launch
-import me.gabeg.sicksends.boulder.SsBoulderGradingSystem
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.*
+import me.gabeg.sicksends.addproblem.SsAddBoulderProblemViewModel
+import me.gabeg.sicksends.addproblem.SsAddProblemViewModel
 import me.gabeg.sicksends.problem.ui.*
+import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
 import me.gabeg.sicksends.shared.SsSharedDataStore
 import me.gabeg.sicksends.shared.getAllBoulderGradesForGradingSystem
 import me.gabeg.sicksends.shared.getAllBoulderGradingSystems
@@ -40,6 +56,7 @@ import me.gabeg.sicksends.ui.SsAlertDialog
 import me.gabeg.sicksends.ui.SsAlertDialogState
 import me.gabeg.sicksends.ui.SsDropdownMenu
 import me.gabeg.sicksends.ui.SsDropdownMenuState
+import java.lang.Exception
 
 /**
  * Home screen.
@@ -47,219 +64,185 @@ import me.gabeg.sicksends.ui.SsDropdownMenuState
  * TODO: how did it feel, perceived grade, location name, location lat/lon
  */
 @Composable
-fun SsHomeScreen(innerPadding : PaddingValues)
+fun SsHomeScreen(
+	innerPadding : PaddingValues,
+	viewModel: SsAddBoulderProblemViewModel = hiltViewModel())
 {
 
-	val scrollState = rememberScrollState()
+	val scrollState = rememberLazyListState()
 
-	// TODO: Switch to LazyColumn so that I can scroll to item
-	//Column(modifier = Modifier.padding(innerPadding))
-	Column(modifier = Modifier
-		.verticalScroll(scrollState))
+	LaunchedEffect(true)
+	{
+		viewModel.show(0)
+	}
+
+	LazyColumn(
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(vertical = 24.dp, horizontal = 16.dp),
+		state = scrollState)
 	{
 
-		ConstraintLayout(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(vertical = 24.dp, horizontal = 16.dp))
-		{
-
-			val (gradeIcon, gradeBody, gradeLine) = createRefs()
-			val (nameIcon, nameBody, nameLine) = createRefs()
-			val (numAttemptIcon, numAttemptBody, numAttemptLine) = createRefs()
-			val (isFlashIcon, isFlashBody, isFlashLine) = createRefs()
-			val (isOutdoorIcon, isOutdoorBody, isOutdoorLine) = createRefs()
-			val (isProjectIcon, isProjectBody, isProjectLine) = createRefs()
-			val (noteIcon, noteBody, noteLine) = createRefs()
-			val nextIcon = createRef()
-
-			var showGradeBody = remember { mutableStateOf(true) }
-			var showNameBody = remember { mutableStateOf(false) }
-			var showNumAttemptBody = remember { mutableStateOf(false) }
-			var showIsFlashBody = remember { mutableStateOf(false) }
-			var showIsOutdoorBody = remember { mutableStateOf(false) }
-			var showIsProjectBody = remember { mutableStateOf(false) }
-			var showNoteBody = remember { mutableStateOf(false) }
-
-			var questionState = rememberSsQuestionState(
-				listOf(showGradeBody, showNameBody, showNumAttemptBody,
-					showIsFlashBody, showIsOutdoorBody, showIsProjectBody,
-					showNoteBody))
-
-			val scrollTo : Int by remember {
-				derivedStateOf {
-					if (showGradeBody.value)
-					{
-						0
-					}
-					else if (showNameBody.value)
-					{
-						200
-					}
-					else if (showNumAttemptBody.value)
-					{
-						400
-					}
-					else if (showIsFlashBody.value)
-					{
-						600
-					}
-					else if (showIsOutdoorBody.value)
-					{
-						800
-					}
-					else if (showIsProjectBody.value)
-					{
-						1000
-					}
-					else if (showNoteBody.value)
-					{
-						1200
-					}
-					else
-					{
-						50
-					}
-				}
-			}
-
-			println("Scroll : $scrollTo")
-
-			LaunchedEffect(scrollTo) {
-				scrollState.animateScrollTo(scrollTo)
-			}
-
-			// TODO: Should highlight if on it and already done. Line should
-			// only get highlighted after it is complete.
-			/**
-			 * Grade
-			 */
-			// TODO: This might change the color in an unwanted way
+		// TODO: Should highlight if on it and already done. Line should
+		// only get highlighted after it is complete.
+		/**
+		 * Grade
+		 */
+		// TODO: This might change the color in an unwanted way
+		item {
 			SsQuestion(
-				iconRef = gradeIcon,
-				bodyRef = gradeBody,
-				lineRef = gradeLine,
-				anchor = null,
+				viewModel = viewModel,
 				icon = { modifier ->
 					SsGradeIcon(modifier = modifier)
 				},
-				body = { iconRef, bodyRef, visible, onClick, onDone ->
-					SsGradeBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				body = { visible, onDone ->
+					SsGradeBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
 				},
-				state = questionState,
-				stateIndex = 0)
+				index = 0,
+				scrollState = scrollState)
+		}
 
-			/**
-			 * Name
-			 */
+		/**
+		 * Name
+		 */
+		item {
 			SsQuestion(
-				iconRef = nameIcon,
-				bodyRef = nameBody,
-				lineRef = nameLine,
-				anchor = gradeLine.bottom,
+				viewModel = viewModel,
 				icon = { modifier ->
 					SsNameIcon(modifier = modifier)
 				},
-				body = { iconRef, bodyRef, visible, onClick, onDone ->
-					SsNameBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				body = { visible, onDone ->
+					SsNameBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
 				},
-				state = questionState,
-				stateIndex = 1)
+				index = 1,
+				scrollState = scrollState)
+		}
 
-			/**
-			 * Number of attempts
-			 */
+		/**
+		 * Number of attempts
+		 */
+		item {
 			SsQuestion(
-				iconRef = numAttemptIcon,
-				bodyRef = numAttemptBody,
-				lineRef = numAttemptLine,
-				anchor = nameLine.bottom,
+				viewModel = viewModel,
 				icon = { modifier ->
 					SsNumberOfAttemptsIcon(modifier = modifier)
 				},
-				body = { iconRef, bodyRef, visible, onClick, onDone ->
-					SsNumAttemptBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				body = { visible, onDone ->
+					SsNumAttemptBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
 				},
-				state = questionState,
-				stateIndex = 2)
+				index = 2,
+				scrollState = scrollState)
+		}
 
-			/**
-			 * Is flash?
-			 */
+		/**
+		 * Is flash?
+		 */
+		item {
 			SsQuestion(
-				iconRef = isFlashIcon,
-				bodyRef = isFlashBody,
-				lineRef = isFlashLine,
-				anchor = numAttemptLine.bottom,
+				viewModel = viewModel,
 				icon = { modifier ->
 					SsFlashIcon(modifier = modifier)
 				},
-				body = { iconRef, bodyRef, visible, onClick, onDone ->
-					SsIsFlashBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				body = { visible, onDone ->
+					SsIsFlashBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
 				},
-				state = questionState,
-				stateIndex = 3)
+				index = 3,
+				scrollState = scrollState)
+		}
 
-			/**
-			 * Is outdoor?
-			 */
+		/**
+		 * Is outdoor?
+		 */
+		item {
 			SsQuestion(
-				iconRef = isOutdoorIcon,
-				bodyRef = isOutdoorBody,
-				lineRef = isOutdoorLine,
-				anchor = isFlashLine.bottom,
+				viewModel = viewModel,
 				icon = { modifier ->
 					SsOutdoorIcon(modifier = modifier)
 				},
-				body = { iconRef, bodyRef, visible, onClick, onDone ->
-					SsIsOutdoorBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				body = { visible, onDone ->
+					SsIsOutdoorBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
 				},
-				state = questionState,
-				stateIndex = 4)
+				index = 4,
+				scrollState = scrollState)
+		}
 
-			/**
-			 * Is project?
-			 */
+		/**
+		 * Is project?
+		 */
+		item {
 			SsQuestion(
-				iconRef = isProjectIcon,
-				bodyRef = isProjectBody,
-				lineRef = isProjectLine,
-				anchor = isOutdoorLine.bottom,
+				viewModel = viewModel,
 				icon = { modifier ->
 					SsProjectIcon(modifier = modifier)
 				},
-				body = { iconRef, bodyRef, visible, onClick, onDone ->
-					SsIsProjectBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				body = { visible, onDone ->
+					SsIsProjectBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
 				},
-				state = questionState,
-				stateIndex = 5)
+				index = 5,
+				scrollState = scrollState)
+		}
 
-			/**
-			 * Notes
-			 */
+		/**
+		 * Location
+		 */
+		item {
 			SsQuestion(
-				iconRef = noteIcon,
-				bodyRef = noteBody,
-				lineRef = noteLine,
-				anchor = isProjectLine.bottom,
+				viewModel = viewModel,
+				icon = { modifier ->
+					SsLocationIcon(modifier = modifier)
+				},
+				body = { visible, onDone ->
+					SsLocationBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
+				},
+				index = 6,
+				scrollState = scrollState)
+		}
+
+		/**
+		 * Notes
+		 */
+		item {
+			SsQuestion(
+				viewModel = viewModel,
 				icon = { modifier ->
 					SsNoteIcon(modifier = modifier)
 				},
-				body = { iconRef, bodyRef, visible, onClick, onDone ->
-					SsNoteBody(iconRef, bodyRef, visible, onClick = onClick, onDone = onDone)
+				body = { visible, onDone ->
+					SsNoteBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
 				},
-				state = questionState,
-				stateIndex = 6)
-			{
-				// TODO: Set show next here and in vertical line
-			}
+				index = 7,
+				scrollState = scrollState)
+		}
 
-			/**
-			 * NEXT
-			 */
+		/**
+		 * NEXT
+		 */
+		item {
 			SsIcon(
-				ref = nextIcon,
-				anchor = noteLine.bottom,
 				focus = false)
 			{
 				Icon(Icons.Default.Home,
@@ -268,7 +251,6 @@ fun SsHomeScreen(innerPadding : PaddingValues)
 						.size(24.dp),
 					contentDescription = "Yo")
 			}
-
 		}
 
 	}
@@ -279,209 +261,149 @@ fun SsHomeScreen(innerPadding : PaddingValues)
  * Question widget.
  */
 @Composable
-fun ConstraintLayoutScope.SsQuestion(
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
-	lineRef : ConstrainedLayoutReference,
-	anchor : ConstraintLayoutBaseScope.HorizontalAnchor? = null,
+fun SsQuestion(
+	viewModel: SsAddBoulderProblemViewModel,
 	icon : @Composable BoxScope.(
 		modifier : Modifier) -> Unit,
-	body : @Composable ConstraintLayoutScope.(
-		iconRef : ConstrainedLayoutReference,
-		bodyRef : ConstrainedLayoutReference,
+	body : @Composable (
 		visible : Boolean,
-		onClick : () -> Unit,
-		onDone : () -> Unit) -> Unit,
-	state : SsQuestionState = rememberSsQuestionState(),
-	stateIndex : Int = -1,
+		onDone : () -> Unit) -> Unit = {_,_ -> },
+	index : Int,
+	scrollState : LazyListState = rememberLazyListState(),
 	onClick: () -> Unit = {
-		state.showOnly(stateIndex)
+		viewModel.showOnly(index)
 	},
-	onDone : () -> Unit = {})
+	onDone : () -> Unit = {
+
+		println("Doing onDone!")
+		viewModel.showOnly(index+1)
+		println("TEST Body : ${viewModel.getVisible(index)} || $index")
+
+		//scrollState.animateScrollToItem(index+1)
+	})
 {
+
+	var scope = rememberCoroutineScope()
+	var isDone by remember { mutableStateOf(false) }
+	val currentOnDone by rememberUpdatedState(onDone)
 
 	// Whether the current element should be visible
-	var isVisible = remember {
-		state.getVisibility(stateIndex) ?: mutableStateOf(false)
-	}
+	var isVisible by remember { viewModel.getVisible(index) }
+	var isHighlighted = isVisible || viewModel.isAnswered(index)
 
-	// Whether to highlight the icon and line
-	var isIconHighlighted by remember { mutableStateOf(false) }
+	var bodyHeight by remember { mutableStateOf(0.dp) }
+	val localDensity = LocalDensity.current
 
-	var isLineHighlighted by remember {
-		mutableStateOf(state.getVisibility(stateIndex+1)?.value ?: false)
-	}
-
-	// Always show the icon
-	if (isVisible.value)
+	Row()
 	{
-		isIconHighlighted = true
-	}
 
-	// Icon
-	SsIcon(
-		ref = iconRef,
-		anchor = anchor,
-		focus = isIconHighlighted,
-		onClick = onClick)
-	{
-		icon(modifier = Modifier
-			.align(Alignment.Center)
-			.size(24.dp))
-	}
-
-	// Body
-	body(iconRef, bodyRef, isVisible.value, onClick)
-	{
-		isLineHighlighted = true
-
-		state.showOnly(stateIndex+1)
-		onDone()
-	}
-
-	// Vertical line
-	SsVerticalLine(
-		ref = lineRef,
-		topRef = iconRef,
-		bottomRef = bodyRef,
-		focus = isLineHighlighted,
-		onClick = onClick)
-
-}
-
-/**
- * Remember the question state.
- */
-@Composable
-fun rememberSsQuestionState(initial : List<MutableState<Boolean>> = listOf())
-	: SsQuestionState
-{
-	return remember { SsQuestionState(initial) }
-}
-
-/**
- * Question state.
- */
-data class SsQuestionState(
-	val initial : List<MutableState<Boolean>> = listOf()
-)
-{
-
-	val allVisibility : MutableList<MutableState<Boolean>> = mutableListOf()
-
-	init
-	{
-		allVisibility.addAll(initial)
-	}
-
-	fun getVisibility(index : Int) : MutableState<Boolean>?
-	{
-		if (!isValidIndex(index))
+		Column(
+			modifier = Modifier
+				.height(bodyHeight),
+			horizontalAlignment = Alignment.CenterHorizontally)
 		{
-			return null
+
+			// Icon
+			SsIcon(
+				modifier = Modifier
+					.padding(horizontal = 16.dp)
+					.size(48.dp),
+				focus = isHighlighted,
+				onClick = onClick)
+			{
+				icon(modifier = Modifier
+					.align(Alignment.Center)
+					.size(24.dp))
+			}
+
+			// Vertical line
+			SsVerticalLine(
+				modifier = Modifier.fillMaxHeight(),
+				focus = isHighlighted,
+				onClick = onClick)
+
 		}
 
-		return allVisibility[index]
-	}
-
-	fun hide(index : Int)
-	{
-		if (!isValidIndex(index))
+		// Body
+		Column(
+			modifier = Modifier
+				.fillMaxWidth()
+				.clickable { onClick() }
+				.padding(top = 0.dp, bottom = 32.dp, start = 8.dp, end = 8.dp)
+				.onGloballyPositioned { coord ->
+					bodyHeight = with(localDensity) { coord.size.height.toDp() + 32.dp }
+					//println("Height : $index   $bodyHeight")
+				})
 		{
-			return
+
+			println("Body : $index || $isVisible")
+			body(isVisible)
+			{
+				if (viewModel.questions.size >= index+1)
+				{
+					viewModel.questions[index] = viewModel.current
+				}
+				else
+				{
+					viewModel.questions.add(index, viewModel.current)
+				}
+
+				println("Cancelling scope! $index")
+				viewModel.current = null
+				isDone = true
+			}
+
 		}
 
-		allVisibility[index].value = false
 	}
 
-	fun hideAll()
+	// Done with question
+	if (isDone)
 	{
-		for (i in allVisibility.indices)
+		LaunchedEffect(true)
 		{
-			hide(i)
+			println("Delay! $index")
+			delay(500)
+			println("CAAAAAALL onDone! $index")
+			currentOnDone()
+			isDone = false
 		}
-	}
-
-	fun isValidIndex(index : Int) : Boolean
-	{
-		return (index >= 0) && (index < allVisibility.size)
-	}
-
-	fun isVisible(index : Int) : Boolean
-	{
-		if (!isValidIndex(index))
-		{
-			return false
-		}
-
-		return allVisibility[index].value
-	}
-
-	fun show(index : Int)
-	{
-		if (!isValidIndex(index))
-		{
-			return
-		}
-
-		allVisibility[index].value = true
-	}
-
-	fun showOnly(index : Int)
-	{
-		hideAll()
-		show(index)
 	}
 
 }
 
 /**
  * Create the body.
- *
- * TODO: Change the order of the body and icon refs to match everything else.
  */
 @Composable
-fun ConstraintLayoutScope.SsBody(
+fun SsBody(
 	title : String,
 	subtitle : String,
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
-	onClick: () -> Unit = {},
+	modifier : Modifier = Modifier,
 	content : @Composable () -> Unit = {})
 {
 
+	// Parent
 	Column(
-		modifier = Modifier
-			.constrainAs(bodyRef) {
-				top.linkTo(iconRef.top)
-				start.linkTo(iconRef.end)
-				end.linkTo(parent.end)
-
-				width = Dimension.fillToConstraints
-			}
-			.clickable { onClick() }
-			.padding(top = 0.dp, bottom = 32.dp, start = 8.dp, end = 8.dp),
+		modifier = modifier,
 		horizontalAlignment = Alignment.Start)
 	{
 
 		// Title
 		Text(title,
-			fontSize = MaterialTheme.typography.h5.fontSize,
-			fontWeight = FontWeight.Bold)
+			fontSize = MaterialTheme.typography.body1.fontSize,
+			fontWeight = FontWeight.Normal)
 
 		// Subtitle
-		if (subtitle.isNotEmpty())
-		{
-			Text(subtitle,
-				modifier = Modifier
-					.padding(bottom = 24.dp),
-				maxLines = 1,
-				overflow = TextOverflow.Ellipsis,
-				fontSize = MaterialTheme.typography.body1.fontSize,
-				fontWeight = FontWeight.Light)
-		}
+		Text(subtitle,
+			modifier = Modifier
+				.padding(bottom = 24.dp),
+			maxLines = 1,
+			overflow = TextOverflow.Ellipsis,
+			fontSize = MaterialTheme.typography.h6.fontSize,
+			fontWeight = FontWeight.SemiBold)
 
-		// Body content
+		// Body
 		content()
 
 	}
@@ -498,13 +420,16 @@ fun SsChooseGradingSystemDialog(
 	onConfirmClicked : (String) -> Unit = {})
 {
 
+	// Get all the grading systems that are used
+	val dataStore = SsSharedBoulderDataStore(LocalContext.current)
+	val allGradingSystems = dataStore.getAllGradingSystemsWillUse()
+
+	// Find the index of the grading system to select it by default in the
+	// dropdown menu
+	val index = allGradingSystems.indexOf(selectedGradingSystem.value)
+
 	// The currently selected item in the dropdown menu
 	var selectedName by remember { mutableStateOf("") }
-
-	// Prepare the dropdown menu to contain all grading systems, as well as
-	// automatically select the currently selected grading system
-	val allGradingSystems  = getAllBoulderGradingSystems()
-	val index = allGradingSystems.indexOf(selectedGradingSystem.value)
 
 	// Show the dialog
 	SsAlertDialog(
@@ -529,22 +454,22 @@ fun SsChooseGradingSystemDialog(
  * Grade.
  */
 @Composable
-fun ConstraintLayoutScope.SsGradeBody(
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
+fun SsGradeBody(
+	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
 	println("Grade : $visible")
-	// Get all the grading systems that the user will use
-	val dataStore = SsSharedDataStore(LocalContext.current)
-	val allGradingSystemsWillUse = dataStore.getAllBoulderGradingSystemsWillUse()
+	// Get the default grading systems
+	val dataStore = SsSharedBoulderDataStore(LocalContext.current)
+
+	// Determine the initial grading system
+	val initialGradingSystem = viewModel.getInitialGradingSystem(dataStore)
 
 	// Choose a grading system
-	var selectedGradingSystem = remember { mutableStateOf("V Scale") }
-	var selectedGrade = remember { mutableStateOf("") }
+	var selectedGradingSystem = remember { mutableStateOf(initialGradingSystem) }
+	var selectedGrade = remember { mutableStateOf(viewModel.problem.grade) }
 	var subtitle = remember {
 		derivedStateOf {
 			if (selectedGrade.value.isNullOrEmpty())
@@ -571,7 +496,7 @@ fun ConstraintLayoutScope.SsGradeBody(
 	val dialogState = remember { SsAlertDialogState() }
 
 	// Regular body of the grade section
-	SsBody("Grade", subtitle.value, iconRef, bodyRef, onClick = onClick)
+	SsBody("Grade", subtitle.value)
 	{
 
 		AnimatedVisibility(visible = visible)
@@ -591,6 +516,9 @@ fun ConstraintLayoutScope.SsGradeBody(
 				else
 				{
 					selectedGrade.value = name
+					viewModel.problem.grade = name
+					viewModel.problem.gradingSystem = selectedGradingSystem.value
+					viewModel.current = name
 					onDone()
 				}
 
@@ -616,9 +544,8 @@ fun ConstraintLayoutScope.SsGradeBody(
  * Create an icon bubble that appears next to each question.
  */
 @Composable
-fun ConstraintLayoutScope.SsIcon(
-	ref : ConstrainedLayoutReference,
-	anchor : ConstraintLayoutBaseScope.HorizontalAnchor? = null,
+fun SsIcon(
+	modifier : Modifier = Modifier,
 	focus : Boolean = true,
 	onClick: () -> Unit = {},
 	content : @Composable BoxScope.() -> Unit = {})
@@ -627,14 +554,8 @@ fun ConstraintLayoutScope.SsIcon(
 	var borderColor = if (focus) Color.Green else Color.Gray
 
 	Box(
-		modifier = Modifier
-			.constrainAs(ref) {
-				top.linkTo(anchor ?: parent.top)
-				start.linkTo(parent.start)
-			}
+		modifier = modifier
 			.clickable { onClick() }
-			.padding(horizontal = 16.dp)
-			.size(48.dp)
 			.background(color = Color.White, shape = CircleShape)
 			.border(width = 3.dp, color = borderColor, shape = CircleShape))
 	{
@@ -646,11 +567,9 @@ fun ConstraintLayoutScope.SsIcon(
  * Was the problem flashed or not.
  */
 @Composable
-fun ConstraintLayoutScope.SsIsFlashBody(
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
+fun SsIsFlashBody(
+	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -658,11 +577,20 @@ fun ConstraintLayoutScope.SsIsFlashBody(
 
 	SsYesNoBody(
 		title = "Is Flash?",
-		iconRef = iconRef,
-		bodyRef = bodyRef,
 		visible = visible,
-		onClick = onClick,
-		onDone = onDone)
+		onDone = { status ->
+			if (status != null)
+			{
+				viewModel.problem.isFlash = status
+				viewModel.current = status
+			}
+			else
+			{
+				viewModel.current = null
+			}
+
+			onDone()
+		})
 
 }
 
@@ -670,11 +598,9 @@ fun ConstraintLayoutScope.SsIsFlashBody(
  * Was the problem outdoors or not.
  */
 @Composable
-fun ConstraintLayoutScope.SsIsOutdoorBody(
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
+fun SsIsOutdoorBody(
+	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -682,11 +608,20 @@ fun ConstraintLayoutScope.SsIsOutdoorBody(
 
 	SsYesNoBody(
 		title = "Is Outdoor?",
-		iconRef = iconRef,
-		bodyRef = bodyRef,
 		visible = visible,
-		onClick = onClick,
-		onDone = onDone)
+		onDone = { status ->
+			if (status != null)
+			{
+				viewModel.problem.isOutdoor = status
+				viewModel.current = status
+			}
+			else
+			{
+				viewModel.current = null
+			}
+
+			onDone()
+		})
 
 }
 
@@ -696,11 +631,9 @@ fun ConstraintLayoutScope.SsIsOutdoorBody(
  * TODO: If is flash, then can't be project.
  */
 @Composable
-fun ConstraintLayoutScope.SsIsProjectBody(
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
+fun SsIsProjectBody(
+	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
@@ -708,11 +641,69 @@ fun ConstraintLayoutScope.SsIsProjectBody(
 
 	SsYesNoBody(
 		title = "Is Project?",
-		iconRef = iconRef,
-		bodyRef = bodyRef,
 		visible = visible,
-		onClick = onClick,
-		onDone = onDone)
+		onDone = { status ->
+			if (status != null)
+			{
+				viewModel.problem.isProject = status
+				viewModel.current = status
+			}
+			else
+			{
+				viewModel.current = null
+			}
+
+			onDone()
+		})
+
+}
+
+/**
+ * Location of a climb.
+ */
+@Composable
+fun SsLocationBody(
+	viewModel: SsAddBoulderProblemViewModel,
+	visible : Boolean = true,
+	onDone : () -> Unit = {})
+{
+
+	println("Location : $visible")
+
+	var subtitle = remember { mutableStateOf("") }
+	//println("YOOOO : ${viewModel.questions}")
+
+	// Regular body of the location section
+	SsBody("Location", subtitle.value)
+	{
+
+		AnimatedVisibility(visible = visible)
+		{
+
+			Row(
+				horizontalArrangement = Arrangement.Center
+			)
+			{
+
+				OutlinedButton(
+					onClick = { /*TODO*/ })
+				{
+					Text("Enter name")
+				}
+
+				Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+
+				OutlinedButton(
+					onClick = { /*TODO*/ })
+				{
+					Text("Find on map")
+				}
+
+			}
+
+		}
+
+	}
 
 }
 
@@ -720,24 +711,26 @@ fun ConstraintLayoutScope.SsIsProjectBody(
  * Name of a climb.
  */
 @Composable
-fun ConstraintLayoutScope.SsNameBody(
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
+fun SsNameBody(
+	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
 	println("Name : $visible")
+	val initialSubtitle = viewModel.problem.name ?: ""
 
-	// TODO: Capture "Enter" key press and go to next line
 	SsTextFieldBody(
 		title = "Name",
-		iconRef = iconRef,
-		bodyRef = bodyRef,
+		initialSubtitle = initialSubtitle,
 		singleLine = true,
 		visible = visible,
-		onDone = onDone)
+		onDone = { name ->
+			viewModel.problem.name = name
+			viewModel.current = name
+
+			onDone()
+		})
 
 }
 
@@ -745,23 +738,26 @@ fun ConstraintLayoutScope.SsNameBody(
  * Notes for a climb.
  */
 @Composable
-fun ConstraintLayoutScope.SsNoteBody(
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
+fun SsNoteBody(
+	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
 	println("Note : $visible")
+	val initialSubtitle = viewModel.problem.note ?: ""
 
 	SsTextFieldBody(
 		title = "Notes",
-		iconRef = iconRef,
-		bodyRef = bodyRef,
+		initialSubtitle = initialSubtitle,
 		singleLine = false,
 		visible = visible,
-		onDone = onDone)
+		onDone = { note ->
+			viewModel.problem.note = note
+			viewModel.current = note
+
+			onDone()
+		})
 
 }
 
@@ -769,30 +765,56 @@ fun ConstraintLayoutScope.SsNoteBody(
  * Number of attempts.
  */
 @Composable
-fun ConstraintLayoutScope.SsNumAttemptBody(
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
+fun SsNumAttemptBody(
+	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
 	onDone : () -> Unit = {})
 {
 
+	val numAttempt = viewModel.problem.numAttempt
 	println("Num attempt : $visible")
-	var subtitle = remember { mutableStateOf("") }
+	val initialSubtitle = numAttempt?.toString() ?: ""
+	var subtitle by remember { mutableStateOf(initialSubtitle) }
+	val focusRequester = remember { FocusRequester() }
 
-	SsBody("Attempts", subtitle.value, iconRef, bodyRef, onClick = onClick)
+	SsBody("Attempts", subtitle)
 	{
 
 		AnimatedVisibility(visible = visible)
 		{
 
-			OutlinedTextField(
-				value = subtitle.value,
-				onValueChange = { subtitle.value = it },
+			BasicTextField(
+				modifier = Modifier
+					.focusRequester(focusRequester)
+					.onFocusChanged { subtitle = "" }
+					.height(0.dp),
+				value = subtitle,
+				onValueChange = { subtitle = it },
 				keyboardOptions = KeyboardOptions(
 					imeAction = ImeAction.Next,
 					keyboardType = KeyboardType.Number),
-				keyboardActions = KeyboardActions(onNext = { onDone() }))
+				keyboardActions = KeyboardActions(
+					onNext = {
+						if (subtitle.isNullOrEmpty())
+						{
+							viewModel.current = null
+						}
+						else
+						{
+							viewModel.problem.numAttempt = subtitle.toLong()
+							viewModel.current = subtitle
+						}
+
+						onDone()
+					}),
+				cursorBrush = SolidColor(Color.Transparent),
+				textStyle = TextStyle(
+					color = Color.Transparent))
+
+			if (visible)
+			{
+				focusRequester.requestFocus()
+			}
 
 		}
 
@@ -809,19 +831,18 @@ fun ConstraintLayoutScope.SsNumAttemptBody(
  * go to next thing?
  */
 @Composable
-fun ConstraintLayoutScope.SsTextFieldBody(
+fun SsTextFieldBody(
 	title : String,
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
+	initialSubtitle: String = "",
 	singleLine : Boolean = false,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
-	var subtitle = remember { mutableStateOf("") }
+	var subtitle by remember { mutableStateOf(initialSubtitle) }
+	val focusRequester = remember { FocusRequester() }
 
-	SsBody(title, subtitle.value, iconRef, bodyRef, onClick = onClick)
+	SsBody(title, subtitle)
 	{
 
 		AnimatedVisibility(visible = visible)
@@ -831,11 +852,21 @@ fun ConstraintLayoutScope.SsTextFieldBody(
 
 			// TODO: Capture "Enter" key press and go to next line
 			OutlinedTextField(
-				value = subtitle.value,
-				onValueChange = { subtitle.value = it },
+				modifier = Modifier
+					.focusRequester(focusRequester),
+				value = subtitle,
+				onValueChange = {
+					subtitle = if (singleLine) it.replace("\n", "") else it
+				},
 				singleLine = singleLine,
 				keyboardOptions = KeyboardOptions(imeAction = imeAction),
-				keyboardActions = KeyboardActions(onNext = { onDone() }))
+				keyboardActions = KeyboardActions(onNext = { onDone(subtitle) }))
+
+			// Focus the text field if it is visible
+			if (visible)
+			{
+				focusRequester.requestFocus()
+			}
 
 		}
 
@@ -847,10 +878,8 @@ fun ConstraintLayoutScope.SsTextFieldBody(
  * Create a vertical line that connects two icon bubbles.
  */
 @Composable
-fun ConstraintLayoutScope.SsVerticalLine(
-	ref : ConstrainedLayoutReference,
-	topRef : ConstrainedLayoutReference,
-	bottomRef : ConstrainedLayoutReference,
+fun SsVerticalLine(
+	modifier : Modifier = Modifier,
 	focus : Boolean = false,
 	onClick: () -> Unit = {})
 {
@@ -858,15 +887,7 @@ fun ConstraintLayoutScope.SsVerticalLine(
 	var color = if (focus) Color.Green else Color.Gray
 
 	Divider(
-		modifier = Modifier
-			.constrainAs(ref) {
-				centerHorizontallyTo(topRef)
-
-				top.linkTo(topRef.bottom)
-				bottom.linkTo(bottomRef.bottom)
-
-				height = Dimension.fillToConstraints
-			}
+		modifier = modifier
 			.clickable { onClick() }
 			.width(3.dp),
 		color = color)
@@ -876,31 +897,37 @@ fun ConstraintLayoutScope.SsVerticalLine(
  * A body asking a yes/no question.
  */
 @Composable
-fun ConstraintLayoutScope.SsYesNoBody(
+fun SsYesNoBody(
 	title : String,
-	iconRef : ConstrainedLayoutReference,
-	bodyRef : ConstrainedLayoutReference,
 	visible : Boolean = true,
-	onClick: () -> Unit = {},
-	onDone : () -> Unit = {})
+	onDone : (Boolean?) -> Unit = {})
 {
 
 	var subtitle = remember { mutableStateOf("") }
 	var isYes by remember { mutableStateOf<Boolean?>(false) }
 
-	SsBody(title, subtitle.value, iconRef, bodyRef, onClick = onClick)
+	// Body
+	SsBody(title, subtitle.value)
 	{
 
-		AnimatedVisibility(visible = visible)
+		// Animate the visibility
+		AnimatedVisibility(
+			visible = visible,
+			enter = expandVertically(
+				expandFrom = Alignment.Top
+			),
+			exit = shrinkVertically(
+				shrinkTowards = Alignment.Top
+			))
 		{
 			var iconPadding = 8.dp
 			var buttonSpacing = 16.dp
 
 			var borderWidth = 2.dp
-			var yesBorderColor = if (isYes == true) Color.Magenta else Color.Gray
-			var yesContentColor = if (isYes == true) Color.Magenta else Color.Gray
-			var noBorderColor = if (isYes == false) Color.Magenta else Color.Gray
-			var noContentColor = if (isYes == false) Color.Magenta else Color.Gray
+			var yesBorderColor = if (isYes == true) Color.Magenta else Color.LightGray
+			var yesContentColor = if (isYes == true) Color.Magenta else Color.Black
+			var noBorderColor = if (isYes == false) Color.Magenta else Color.LightGray
+			var noContentColor = if (isYes == false) Color.Magenta else Color.Black
 
 			// TODO: If the buttons took up 50% of the width, that might look
 			// better?
@@ -909,48 +936,61 @@ fun ConstraintLayoutScope.SsYesNoBody(
 			Row()
 			{
 
-				OutlinedButton(
-					onClick = {
-						isYes = true
-						subtitle.value = "Yes"
-
-						onDone()
-					},
-					border = BorderStroke(
-						width = borderWidth,
-						color = yesBorderColor),
-					colors = ButtonDefaults.buttonColors(
-						contentColor = yesContentColor,
-						backgroundColor = Color.Transparent))
+				Column(
+					horizontalAlignment = Alignment.CenterHorizontally)
 				{
-					Icon(Icons.Default.Check,
-						modifier = Modifier
-							.padding(end = iconPadding),
-						contentDescription = "Yes")
-					Text("YES")
+					OutlinedButton(
+						onClick = {
+							isYes = true
+							subtitle.value = "Yes"
+
+							onDone(true)
+						},
+						border = BorderStroke(
+							width = borderWidth,
+							color = yesBorderColor),
+						colors = ButtonDefaults.buttonColors(
+							contentColor = yesContentColor,
+							backgroundColor = Color.Transparent))
+					{
+						Icon(Icons.Default.Check,
+							//modifier = Modifier
+						//		.padding(end = iconPadding),
+							contentDescription = "Yes")
+					}
+
+					Text("Yes",
+						fontSize = MaterialTheme.typography.subtitle2.fontSize)
 				}
 
 				Spacer(modifier = Modifier.padding(horizontal = buttonSpacing))
 
-				OutlinedButton(
-					onClick = {
-						isYes = false
-						subtitle.value = "No"
-
-						onDone()
-					},
-					border = BorderStroke(
-						width = borderWidth,
-						color = noBorderColor),
-					colors = ButtonDefaults.buttonColors(
-						contentColor = noContentColor,
-						backgroundColor = Color.Transparent))
+				Column(
+					horizontalAlignment = Alignment.CenterHorizontally)
 				{
-					Icon(Icons.Default.Close,
-						modifier = Modifier
-							.padding(end = iconPadding),
-					contentDescription = "No")
-					Text("NO")
+
+					OutlinedButton(
+						onClick = {
+							isYes = false
+							subtitle.value = "No"
+
+							onDone(false)
+						},
+						border = BorderStroke(
+							width = borderWidth,
+							color = noBorderColor),
+						colors = ButtonDefaults.buttonColors(
+							contentColor = noContentColor,
+							backgroundColor = Color.Transparent))
+					{
+						Icon(Icons.Default.Close,
+							//modifier = Modifier
+						//		.padding(end = iconPadding),
+							contentDescription = "No")
+					}
+
+					Text("No",
+						fontSize = MaterialTheme.typography.subtitle2.fontSize)
 				}
 
 			}

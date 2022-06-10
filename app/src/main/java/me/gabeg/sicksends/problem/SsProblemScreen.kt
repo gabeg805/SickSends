@@ -121,7 +121,7 @@ fun ConstraintLayoutScope.buildFlashIcon(problem : SsGenericProblem,
 {
 
 	// Problem is not a flash. Do not do anything
-	if (!problem.isFlash)
+	if (problem.isFlash != true)
 	{
 		return
 	}
@@ -145,8 +145,8 @@ fun ConstraintLayoutScope.buildGradeText(problem: SsGenericProblem,
 	leftRef: ConstrainedLayoutReference, gradeRef: ConstrainedLayoutReference,
 	rightRef: ConstrainedLayoutReference)
 {
-	val hasLeftIcon = problem.isProject || problem.isFlash
-	val hasRightIcon = problem.isOutdoor
+	val hasLeftIcon = (problem.isProject == true) || (problem.isFlash == true)
+	val hasRightIcon = (problem.isOutdoor == true)
 	val leftMargin = if (hasLeftIcon) 0.dp else 20.dp
 	val rightMargin = if (hasRightIcon) 0.dp else 20.dp
 
@@ -171,8 +171,8 @@ fun ConstraintLayoutScope.buildGradeText(problem: SsGenericProblem,
 @Composable
 fun buildGradeSubtitleText(problem: SsGenericProblem)
 {
-	val feelScale = problem.howDidItFeelScale
 	val altGrade = problem.perceivedGrade
+	val feelScale = problem.howDidItFeelScale
 	var text = ""
 
 	// Perceived grade
@@ -181,7 +181,7 @@ fun buildGradeSubtitleText(problem: SsGenericProblem)
 		text = altGrade
 	}
 	// How did it feel scale
-	else if ((feelScale > 0) && (feelScale != 3))
+	else if ((feelScale != null) && (feelScale > 0) && (feelScale != 3))
 	{
 		text = howDidItFeelScaleToString(feelScale)
 	}
@@ -205,10 +205,15 @@ fun buildGradeSubtitleText(problem: SsGenericProblem)
 @Composable
 fun buildGradeSubtitleToNameSpacer(problem: SsGenericProblem)
 {
-	var hasAltGrade = !problem.perceivedGrade.isNullOrEmpty()
-	var hasFeelScale = (problem.howDidItFeelScale > 0) && (problem.howDidItFeelScale != 3)
+	val altGrade = problem.perceivedGrade
+	val feelScale = problem.howDidItFeelScale
+	val locationName = problem.locationName
+	val name = problem.name
+
+	var hasAltGrade = !altGrade.isNullOrEmpty()
+	var hasFeelScale = (feelScale != null) && (feelScale > 0) && (feelScale != 3)
 	var hasSubtitle = hasAltGrade || hasFeelScale
-	var hasName = !problem.locationName.isNullOrEmpty() || !problem.name.isNullOrEmpty()
+	var hasName = !locationName.isNullOrEmpty() || !name.isNullOrEmpty()
 
 	// Build the spacer if there is a subtitle present and a name present
 	if (hasSubtitle && hasName)
@@ -267,7 +272,7 @@ fun ConstraintLayoutScope.buildOutdoorIcon(problem : SsGenericProblem,
 	ref : ConstrainedLayoutReference)
 {
 	// Outdoor (Icon=Forest not found)
-	if (!problem.isOutdoor)
+	if (problem.isOutdoor != true)
 	{
 		return
 	}
@@ -398,7 +403,7 @@ fun ConstraintLayoutScope.buildProjectIcon(problem : SsGenericProblem,
 {
 
 	// Problem is not a project. Do not do anything
-	if (!problem.isProject)
+	if (problem.isProject != true)
 	{
 		return
 	}

@@ -4,8 +4,6 @@ import android.util.Log
 
 /**
  * Generic problem attributes.
- *
- * TODO: Make sure nullable fields are nullable, and likewise for not nullable.
  */
 abstract class SsGenericProblem
 {
@@ -27,27 +25,27 @@ abstract class SsGenericProblem
 	/**
 	 * Row ID of the table.
 	 */
-	abstract var id: Long
+	abstract var id : Long
 
 	/**
 	 * Timestamp at which the problem was climbed.
 	 */
-	abstract var timestamp: Long
+	abstract var timestamp : Long
 
 	/**
-	 * Name of the problem.
+	 * Grading system of the problem.
 	 */
-	abstract var name: String?
+	abstract var gradingSystem : String
 
 	/**
 	 * Climbing grade of the problem.
 	 */
-	abstract var grade: String?
+	abstract var grade : String
 
 	/**
 	 * Climbing grade that the user thinks the problem should be.
 	 */
-	abstract var perceivedGrade: String?
+	abstract var perceivedGrade : String?
 
 	/**
 	 * How how did it feel on a scale from easy to hard?
@@ -59,72 +57,72 @@ abstract class SsGenericProblem
 	 * 4 = Hard
 	 * 5 = Very Hard
 	 */
-	abstract var howDidItFeelScale : Int
+	abstract var howDidItFeelScale : Int?
+
+	/**
+	 * Name of the problem.
+	 */
+	abstract var name : String?
 
 	/**
 	 * Number of attempts done on the problem.
 	 */
-	abstract var numAttempt : Long
+	abstract var numAttempt : Long?
 
 	/**
 	 * Name of where the problem is located.
 	 */
-	abstract var locationName: String?
+	abstract var locationName : String?
 
 	/**
 	 * Latitude coordinates of where the problem is located.
 	 */
-	abstract var locationLat: String?
+	abstract var locationLat : String?
 
 	/**
 	 * Longitude coordinates of where the problem is located.
 	 */
-	abstract var locationLon: String?
-
-	/**
-	 * Whether the problem is sent or not.
-	 */
-	abstract var isSend : Boolean
+	abstract var locationLon : String?
 
 	/**
 	 * Whether the problem is a project or not.
 	 */
-	abstract var isProject : Boolean
+	abstract var isProject : Boolean?
 
 	/**
 	 * Whether the problem is a flash or not.
 	 */
-	abstract var isFlash : Boolean
+	abstract var isFlash : Boolean?
 
 	/**
 	 * Whether the problem is located outdoors or not.
 	 */
-	abstract var isOutdoor : Boolean
+	abstract var isOutdoor : Boolean?
 
 	/**
 	 * Types of route features on the problem.
 	 */
-	abstract var routeFeatureType: Long
+	abstract var routeFeatureType : Long?
 
 	/**
 	 * Types of holds on the problem.
 	 */
-	abstract var holdType: Long
+	abstract var holdType : Long?
 
 	/**
 	 * Types of climbing techniques used on the problem.
 	 */
-	abstract var climbingTechniqueType: Long
+	abstract var climbingTechniqueType : Long?
 
 	/**
 	 * File path to the image.
 	 */
-	abstract var imagePath: String?
+	abstract var imagePath : String?
 
 	/**
 	 * Notes on the problem.
 	 */
-	abstract var note: String?
+	abstract var note : String?
 
 	fun debug()
 	{
@@ -138,7 +136,6 @@ abstract class SsGenericProblem
 		Log.i("ProblemDebug", "locationName          : $locationName")
 		Log.i("ProblemDebug", "locationLat           : $locationLat")
 		Log.i("ProblemDebug", "locationLon           : $locationLon")
-		Log.i("ProblemDebug", "isSend                : $isSend")
 		Log.i("ProblemDebug", "isProject             : $isProject")
 		Log.i("ProblemDebug", "isFlash               : $isFlash")
 		Log.i("ProblemDebug", "isOutdoor             : $isOutdoor")

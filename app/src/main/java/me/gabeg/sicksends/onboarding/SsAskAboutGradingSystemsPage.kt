@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import me.gabeg.sicksends.SsLongClickButton
 import me.gabeg.sicksends.SsLongClickOutlinedButton
+import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
 import me.gabeg.sicksends.shared.SsSharedConstants
 import me.gabeg.sicksends.shared.SsSharedDataStore
 
@@ -50,6 +51,7 @@ fun TypeOfGradingSystemPage()
 
 	// Data store preferences
 	val dataStore = SsSharedDataStore(LocalContext.current)
+	val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
 	val cons = SsSharedConstants(LocalContext.current)
 
 	// All climb names
@@ -94,11 +96,11 @@ fun TypeOfGradingSystemPage()
 			// Boulder grading systems
 			item {
 				buildGradingSystems(climbNames[0], cons.allBoulderGrades,
-					dataStore.getWillClimbBoulder()) { gradingSystem, isEnabled ->
+					boulderDataStore.getWillBoulderFlow()) { gradingSystem, isEnabled ->
 
 					// Edit the grading system(s) being used for bouldering
 					scope.launch {
-						dataStore.editWillGradeBoulderWith(gradingSystem, isEnabled)
+						boulderDataStore.editWillGradeWith(gradingSystem, isEnabled)
 					}
 				}
 			}
@@ -110,7 +112,7 @@ fun TypeOfGradingSystemPage()
 
 					// Edit the grading system(s) being used for bouldering
 					scope.launch {
-						dataStore.editWillGradeBoulderWith(gradingSystem, isEnabled)
+						dataStore.editWillGradeSportWith(gradingSystem, isEnabled)
 					}
 				}
 			}
@@ -122,7 +124,7 @@ fun TypeOfGradingSystemPage()
 
 					// Edit the grading system(s) being used for bouldering
 					scope.launch {
-						dataStore.editWillGradeBoulderWith(gradingSystem, isEnabled)
+						dataStore.editWillGradeTopRopeWith(gradingSystem, isEnabled)
 					}
 				}
 			}
@@ -134,7 +136,7 @@ fun TypeOfGradingSystemPage()
 
 					// Edit the grading system(s) being used for bouldering
 					scope.launch {
-						dataStore.editWillGradeBoulderWith(gradingSystem, isEnabled)
+						dataStore.editWillGradeTradWith(gradingSystem, isEnabled)
 					}
 				}
 			}

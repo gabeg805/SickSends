@@ -6,10 +6,10 @@ package me.gabeg.sicksends.problem.type
 enum class SsHowDidItFeelType(val value: Int)
 {
 
-	VERY_EASY(1),
-	EASY(2),
-	NORMAL(3),
-	HARD(4),
-	VERY_HARD(5)
+	VERY_EASY(0),
+	EASY(1),
+	NORMAL(2),
+	HARD(3),
+	VERY_HARD(4)
 
 }

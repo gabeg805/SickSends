@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.problem
+package me.gabeg.sicksends.db.generic
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

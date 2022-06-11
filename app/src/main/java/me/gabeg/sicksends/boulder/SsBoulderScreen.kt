@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import me.gabeg.sicksends.db.boulder.SsBoulderProblem
+import me.gabeg.sicksends.db.boulder.SsBoulderViewModel
 import me.gabeg.sicksends.problem.SsProblemScreen
 import me.gabeg.sicksends.ui.SsSearchFilterQueryState
 

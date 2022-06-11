@@ -2,7 +2,7 @@ package me.gabeg.sicksends.addproblem
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import me.gabeg.sicksends.trad.SsTradProblem
+import me.gabeg.sicksends.db.trad.SsTradProblem
 import javax.inject.Inject
 
 /**

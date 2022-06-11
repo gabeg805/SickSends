@@ -1,10 +1,10 @@
-package me.gabeg.sicksends.sport
+package me.gabeg.sicksends.db.sport
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import me.gabeg.sicksends.problem.SsGenericProblemDao
+import me.gabeg.sicksends.db.generic.SsGenericProblemDao
 import androidx.room.Query
-import me.gabeg.sicksends.problem.SsGenericProblem
+import me.gabeg.sicksends.db.generic.SsGenericProblem
 
 /**
  * Data access object for sport climbing.

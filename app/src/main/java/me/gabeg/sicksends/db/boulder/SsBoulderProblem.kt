@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.toprope
+package me.gabeg.sicksends.db.boulder
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,13 +7,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.gabeg.sicksends.problem.SsGenericRopeProblem
+import me.gabeg.sicksends.db.generic.SsGenericProblem
 
 /**
- * Aspects of a top rope problem that are saved.
+ * Aspects of a boulder problem that are saved.
  */
-@Entity(tableName = "top_rope")
-data class SsTopRopeProblem(
+@Entity(tableName = "boulder")
+data class SsBoulderProblem (
 
 	/**
 	 * Row ID of the table.
@@ -135,43 +135,25 @@ data class SsTopRopeProblem(
 	 * Notes on the problem.
 	 */
 	@ColumnInfo(name = "note")
-	override var note : String? = null,
+	override var note : String? = null
 
-	/**
-	 * Number of takes done on the problem.
-	 */
-	@ColumnInfo(name = "num_take")
-	override var numTake : Int? = null,
-
-	/**
-	 * Whether the problem was onsighted or not.
-	 */
-	@ColumnInfo(name = "is_onsight")
-	override var isOnsight : Boolean? = null,
-
-	/**
-	 * Whether the problem was a redpoint or not.
-	 */
-	@ColumnInfo(name = "is_redpoint")
-	override var isRedpoint : Boolean? = null,
-
-) : SsGenericRopeProblem()
+) : SsGenericProblem()
 
 /**
- * Hilt module to provide an instance of a top rope problem.
+ * Hilt module to provide an instance of a boulder problem.
  */
 @InstallIn(SingletonComponent::class)
 @Module
-class SsTopRopeProblemModule
+class SsBoulderProblemModule
 {
 
 	/**
-	 * Provide an instance of top rope problem.
+	 * Provide an instance of boulder problem.
 	 */
 	@Provides
-	fun provideTopRopeProblem() : SsTopRopeProblem
+	fun provideBoulderProblem() : SsBoulderProblem
 	{
-		return SsTopRopeProblem()
+		return SsBoulderProblem()
 	}
 
 }

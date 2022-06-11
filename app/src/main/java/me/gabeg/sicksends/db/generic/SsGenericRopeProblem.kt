@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.problem
+package me.gabeg.sicksends.db.generic
 
 /**
  * Aspects of a Climbing problem, specifically for ropes, that are saved.

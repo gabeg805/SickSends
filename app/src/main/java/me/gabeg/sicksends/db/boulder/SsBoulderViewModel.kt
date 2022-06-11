@@ -1,8 +1,8 @@
-package me.gabeg.sicksends.boulder
+package me.gabeg.sicksends.db.boulder
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import me.gabeg.sicksends.problem.SsGenericProblemViewModel
+import me.gabeg.sicksends.db.generic.SsGenericProblemViewModel
 import javax.inject.Inject
 
 /**

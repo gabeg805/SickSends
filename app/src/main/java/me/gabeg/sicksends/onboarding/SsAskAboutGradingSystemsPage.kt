@@ -32,9 +32,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import me.gabeg.sicksends.SsLongClickButton
 import me.gabeg.sicksends.SsLongClickOutlinedButton
-import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
-import me.gabeg.sicksends.shared.SsSharedConstants
-import me.gabeg.sicksends.shared.SsSharedDataStore
+import me.gabeg.sicksends.shared.*
 
 /**
  * Page asking the user what type of grades they will use.
@@ -52,7 +50,6 @@ fun TypeOfGradingSystemPage()
 	// Data store preferences
 	val dataStore = SsSharedDataStore(LocalContext.current)
 	val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
-	val cons = SsSharedConstants(LocalContext.current)
 
 	// All climb names
 	val climbNames = dataStore.getAllClimbNames()
@@ -95,7 +92,7 @@ fun TypeOfGradingSystemPage()
 
 			// Boulder grading systems
 			item {
-				buildGradingSystems(climbNames[0], cons.allBoulderGrades,
+				buildGradingSystems(climbNames[0], getAllBoulderGradingSystems(),
 					boulderDataStore.getWillBoulderFlow()) { gradingSystem, isEnabled ->
 
 					// Edit the grading system(s) being used for bouldering
@@ -107,7 +104,7 @@ fun TypeOfGradingSystemPage()
 
 			// Sport grading systems
 			item {
-				buildGradingSystems(climbNames[1], cons.allRopeGrades,
+				buildGradingSystems(climbNames[1], getAllSportGradingSystems(),
 					dataStore.getWillClimbSport()) { gradingSystem, isEnabled ->
 
 					// Edit the grading system(s) being used for bouldering
@@ -119,7 +116,7 @@ fun TypeOfGradingSystemPage()
 
 			// Top rope grading systems
 			item {
-				buildGradingSystems(climbNames[2], cons.allRopeGrades,
+				buildGradingSystems(climbNames[2], getAllTopRopeGradingSystems(),
 					dataStore.getWillClimbTopRope()) { gradingSystem, isEnabled ->
 
 					// Edit the grading system(s) being used for bouldering
@@ -131,7 +128,7 @@ fun TypeOfGradingSystemPage()
 
 			// Trad grading system
 			item {
-				buildGradingSystems(climbNames[3], cons.allTradGrades,
+				buildGradingSystems(climbNames[3], getAllTradGradingSystems(),
 					dataStore.getWillClimbTrad()) { gradingSystem, isEnabled ->
 
 					// Edit the grading system(s) being used for bouldering
@@ -155,18 +152,13 @@ fun buildGradingSystems(title : String, gradingSystems : List<String>,
 		isEnabled: Boolean) -> Unit)
 {
 
-	// Coroutine scope
-	val scope = rememberCoroutineScope()
-
 	// Whether or not the grading system for a type of climbing are visible
 	var isVisible by remember { mutableStateOf(false) }
 
 	// Things needed to show an example of a grading system
-	val context = LocalContext.current
-	val cons = SsSharedConstants(context)
+	var exampleGradingSystem by remember { mutableStateOf("") }
 
 	// Change the visibility state when the data store preference changes
-	//scope.launch {
 	LaunchedEffect(true)
 	{
 		flow.collect { newState ->
@@ -190,17 +182,27 @@ fun buildGradingSystems(title : String, gradingSystems : List<String>,
 					onGradingSystemToggled(gradingSystem, isEnabled)
 				},
 				onGradingSystemLongClicked = { gradingSystem ->
-					var example = cons.getExampleGrade(gradingSystem)
-
-					scope.launch {
-						Toast.makeText(context, example, Toast.LENGTH_SHORT).show()
-					}
+					exampleGradingSystem = gradingSystem
 				}
 			)
 
 			// Example of the grading system
 			//buildGradingSystemExampleGrade(example, anim)
 		}
+	}
+
+	// Show the example grade
+	if (exampleGradingSystem.isNotEmpty())
+	{
+		val context = LocalContext.current
+		var example = getExampleGrade(exampleGradingSystem)
+
+		LaunchedEffect(true)
+		{
+			Toast.makeText(context, example, Toast.LENGTH_SHORT).show()
+		}
+
+		exampleGradingSystem = ""
 	}
 
 }

@@ -1,6 +1,6 @@
-package me.gabeg.sicksends.boulder
+package me.gabeg.sicksends.db.boulder
 
-import me.gabeg.sicksends.problem.SsGenericProblemRepository
+import me.gabeg.sicksends.db.generic.SsGenericProblemRepository
 import javax.inject.Inject
 
 /**

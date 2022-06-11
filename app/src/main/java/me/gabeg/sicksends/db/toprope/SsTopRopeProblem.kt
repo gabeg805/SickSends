@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.sport
+package me.gabeg.sicksends.db.toprope
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,13 +7,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.gabeg.sicksends.problem.SsGenericRopeProblem
+import me.gabeg.sicksends.db.generic.SsGenericRopeProblem
 
 /**
- * Aspects of a sport problem that are saved.
+ * Aspects of a top rope problem that are saved.
  */
-@Entity(tableName = "sport")
-data class SsSportProblem (
+@Entity(tableName = "top_rope")
+data class SsTopRopeProblem(
 
 	/**
 	 * Row ID of the table.
@@ -158,20 +158,20 @@ data class SsSportProblem (
 ) : SsGenericRopeProblem()
 
 /**
- * Hilt module to provide an instance of a sport problem.
+ * Hilt module to provide an instance of a top rope problem.
  */
 @InstallIn(SingletonComponent::class)
 @Module
-class SsSportProblemModule
+class SsTopRopeProblemModule
 {
 
 	/**
-	 * Provide an instance of sport problem.
+	 * Provide an instance of top rope problem.
 	 */
 	@Provides
-	fun provideSportrProblem() : SsSportProblem
+	fun provideTopRopeProblem() : SsTopRopeProblem
 	{
-		return SsSportProblem()
+		return SsTopRopeProblem()
 	}
 
 }

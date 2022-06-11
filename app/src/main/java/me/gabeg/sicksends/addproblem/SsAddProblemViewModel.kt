@@ -5,8 +5,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import me.gabeg.sicksends.problem.SsGenericProblem
+import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.shared.SsSharedBaseDataStore
+import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
 
 /**
  * Add problem view model.
@@ -49,6 +50,52 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 
 		return if (problemGradingSystem.isEmpty()) defaultGradingSystem
 			else problemGradingSystem
+	}
+
+	/**
+	 * Get the initial how did it feel value.
+	 *
+	 * @return The initial how did it feel value.
+	 */
+	@Composable
+	fun getInitialHowDidItFeelScale() : String
+	{
+		return getHowDidItFeelScaleName(problem.howDidItFeelScale)
+	}
+
+	/**
+	 * Get the initial name.
+	 *
+	 * @return The initial name.
+	 */
+	@Composable
+	fun getInitialName() : String
+	{
+		return problem.name ?: ""
+	}
+
+	/**
+	 * Get the initial note.
+	 *
+	 * @return The initial note.
+	 */
+	@Composable
+	fun getInitialNote() : String
+	{
+		return problem.note ?: ""
+	}
+
+	/**
+	 * Get the initial number of attempts.
+	 *
+	 * @return The initial number of attempts.
+	 */
+	@Composable
+	fun getInitialNumAttempt() : String
+	{
+		val numAttempt = problem.numAttempt
+
+		return numAttempt?.toString() ?: ""
 	}
 
 	/**

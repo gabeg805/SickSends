@@ -17,9 +17,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -27,9 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -38,31 +41,31 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.*
 import me.gabeg.sicksends.addproblem.SsAddBoulderProblemViewModel
 import me.gabeg.sicksends.addproblem.SsAddProblemViewModel
 import me.gabeg.sicksends.problem.ui.*
-import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
-import me.gabeg.sicksends.shared.SsSharedDataStore
-import me.gabeg.sicksends.shared.getAllBoulderGradesForGradingSystem
-import me.gabeg.sicksends.shared.getAllBoulderGradingSystems
-import me.gabeg.sicksends.ui.SsAlertDialog
-import me.gabeg.sicksends.ui.SsAlertDialogState
-import me.gabeg.sicksends.ui.SsDropdownMenu
-import me.gabeg.sicksends.ui.SsDropdownMenuState
+import me.gabeg.sicksends.shared.*
+import me.gabeg.sicksends.ui.*
 import java.lang.Exception
+import kotlin.math.round
 
 /**
  * Home screen.
  *
  * TODO: how did it feel, perceived grade, location name, location lat/lon
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SsHomeScreen(
 	innerPadding : PaddingValues,
@@ -70,6 +73,7 @@ fun SsHomeScreen(
 {
 
 	val scrollState = rememberLazyListState()
+	val pagerState = rememberPagerState()
 
 	LaunchedEffect(true)
 	{
@@ -103,6 +107,89 @@ fun SsHomeScreen(
 				},
 				index = 0,
 				scrollState = scrollState)
+		}
+
+		/**
+		 * How did it feel?
+		 */
+		item {
+			SsQuestion(
+				viewModel = viewModel,
+				icon = { modifier ->
+					Icon(Icons.Default.ContactSupport,
+						modifier = modifier,
+						contentDescription = "How did it feel")
+				},
+				body = { visible, onDone ->
+					SsHowDidItFeelBody(
+						viewModel = viewModel,
+						visible = visible,
+						onDone = onDone)
+				},
+				index = 8,
+				scrollState = scrollState)
+		}
+
+		/**
+		 * YOOOOOOOOOO
+		 */
+		item {
+			HorizontalPager(
+				state = pagerState,
+				count = 2,
+				modifier = Modifier
+					.fillMaxHeight()
+					.nestedScroll(remember {
+						object : NestedScrollConnection
+						{
+							override fun onPreScroll(
+								available: Offset,
+								source: NestedScrollSource
+							): Offset {
+								return if (available.y > 0) Offset.Zero else Offset(
+									x = 0f,
+									y = -scrollState.dispatchRawDelta(-available.y)
+								)
+							}
+						}
+					})
+			) { page: Int ->
+				when (page) {
+					0 ->
+					{
+						SsQuestion(
+							viewModel = viewModel,
+							icon = { modifier ->
+								SsFlashIcon(modifier = modifier)
+							},
+							body = { visible, onDone ->
+								SsIsFlashBody(
+									viewModel = viewModel,
+									visible = visible,
+									onDone = onDone)
+							},
+							index = 3,
+							scrollState = scrollState)
+					}
+
+					1 ->
+					{
+						SsQuestion(
+							viewModel = viewModel,
+							icon = { modifier ->
+								SsOutdoorIcon(modifier = modifier)
+							},
+							body = { visible, onDone ->
+								SsIsOutdoorBody(
+									viewModel = viewModel,
+									visible = visible,
+									onDone = onDone)
+							},
+							index = 4,
+							scrollState = scrollState)
+					}
+				}
+			}
 		}
 
 		/**
@@ -267,7 +354,7 @@ fun SsQuestion(
 		modifier : Modifier) -> Unit,
 	body : @Composable (
 		visible : Boolean,
-		onDone : () -> Unit) -> Unit = {_,_ -> },
+		onDone : (String) -> Unit) -> Unit = {_,_ -> },
 	index : Int,
 	scrollState : LazyListState = rememberLazyListState(),
 	onClick: () -> Unit = {
@@ -338,18 +425,17 @@ fun SsQuestion(
 
 			println("Body : $index || $isVisible")
 			body(isVisible)
-			{
+			{ subtitle ->
 				if (viewModel.questions.size >= index+1)
 				{
-					viewModel.questions[index] = viewModel.current
+					viewModel.questions[index] = subtitle
 				}
 				else
 				{
-					viewModel.questions.add(index, viewModel.current)
+					viewModel.questions.add(index, subtitle)
 				}
 
 				println("Cancelling scope! $index")
-				viewModel.current = null
 				isDone = true
 			}
 
@@ -457,7 +543,7 @@ fun SsChooseGradingSystemDialog(
 fun SsGradeBody(
 	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
 	println("Grade : $visible")
@@ -516,10 +602,10 @@ fun SsGradeBody(
 				else
 				{
 					selectedGrade.value = name
-					viewModel.problem.grade = name
+					viewModel.problem.grade = selectedGrade.value
 					viewModel.problem.gradingSystem = selectedGradingSystem.value
-					viewModel.current = name
-					onDone()
+
+					onDone(subtitle.value)
 				}
 
 			}
@@ -536,6 +622,94 @@ fun SsGradeBody(
 			selectedGradingSystem.value = name
 			selectedGrade.value = ""
 		}
+	}
+
+}
+
+/**
+ * How did it feel?
+ */
+@Composable
+fun SsHowDidItFeelBody(
+	viewModel: SsAddBoulderProblemViewModel,
+	visible : Boolean = true,
+	onDone : (String) -> Unit = {})
+{
+
+	println("How did it feel : $visible")
+
+	// Determine the initial grading system and slider position
+	val initialFeelScale = viewModel.getInitialHowDidItFeelScale()
+	var sliderPosition by remember { mutableStateOf(2f) }
+
+	// Subtitle
+	var subtitle by remember { mutableStateOf(initialFeelScale) }
+
+	// Regular body of the grade section
+	SsBody("How Did It Feel?", subtitle)
+	{
+
+		AnimatedVisibility(visible = visible)
+		{
+
+			Column()
+			{
+
+				Slider(
+					value = sliderPosition,
+					onValueChange = {
+						sliderPosition = round(it)
+						println("Value changed : $it $sliderPosition")
+						subtitle = getHowDidItFeelScaleName(sliderPosition.toInt())
+					},
+					valueRange = 0f..4f,
+					onValueChangeFinished = {
+						// launch some business logic update with the state you hold
+						// viewModel.updateSelectedSliderValue(sliderPosition)
+						println("VALUE CHANGED $sliderPosition")
+					},
+					steps = 3,
+					colors = SliderDefaults.colors(
+						thumbColor = MaterialTheme.colors.secondary,
+						activeTrackColor = MaterialTheme.colors.secondary
+					)
+				)
+
+
+				Row(
+					modifier = Modifier
+						.fillMaxWidth(),
+					horizontalArrangement = Arrangement.SpaceBetween,
+					verticalAlignment = Alignment.CenterVertically)
+				{
+					Text("Very\nEasy",
+						textAlign = TextAlign.Center,
+						fontSize = MaterialTheme.typography.body2.fontSize)
+
+					Text("Easy",
+						textAlign = TextAlign.Center,
+						fontSize = MaterialTheme.typography.body2.fontSize)
+
+					Text("Normal",
+						textAlign = TextAlign.Center,
+						fontSize = MaterialTheme.typography.body2.fontSize)
+
+					Text("Hard",
+						textAlign = TextAlign.Center,
+						fontSize = MaterialTheme.typography.body2.fontSize)
+
+					Text("Very\nHard",
+						textAlign = TextAlign.Center,
+						fontSize = MaterialTheme.typography.body2.fontSize)
+
+				}
+
+			}
+
+
+		}
+
+
 	}
 
 }
@@ -570,7 +744,7 @@ fun SsIcon(
 fun SsIsFlashBody(
 	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
 	println("Is Flash : $visible")
@@ -578,18 +752,10 @@ fun SsIsFlashBody(
 	SsYesNoBody(
 		title = "Is Flash?",
 		visible = visible,
-		onDone = { status ->
-			if (status != null)
-			{
-				viewModel.problem.isFlash = status
-				viewModel.current = status
-			}
-			else
-			{
-				viewModel.current = null
-			}
+		onDone = { status, subtitle ->
+			viewModel.problem.isFlash = status
 
-			onDone()
+			onDone(subtitle)
 		})
 
 }
@@ -601,7 +767,7 @@ fun SsIsFlashBody(
 fun SsIsOutdoorBody(
 	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
 	println("Is Outdoor : $visible")
@@ -609,18 +775,11 @@ fun SsIsOutdoorBody(
 	SsYesNoBody(
 		title = "Is Outdoor?",
 		visible = visible,
-		onDone = { status ->
-			if (status != null)
-			{
-				viewModel.problem.isOutdoor = status
-				viewModel.current = status
-			}
-			else
-			{
-				viewModel.current = null
-			}
+		onDone = { status, subtitle ->
+			 viewModel.problem.isOutdoor = status
+			 viewModel.current = status
 
-			onDone()
+			onDone(subtitle)
 		})
 
 }
@@ -634,7 +793,7 @@ fun SsIsOutdoorBody(
 fun SsIsProjectBody(
 	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
 	println("Is Project : $visible")
@@ -642,18 +801,11 @@ fun SsIsProjectBody(
 	SsYesNoBody(
 		title = "Is Project?",
 		visible = visible,
-		onDone = { status ->
-			if (status != null)
-			{
-				viewModel.problem.isProject = status
-				viewModel.current = status
-			}
-			else
-			{
-				viewModel.current = null
-			}
+		onDone = { status, subtitle ->
+			viewModel.problem.isProject = status
+			viewModel.current = status
 
-			onDone()
+			onDone(subtitle)
 		})
 
 }
@@ -665,7 +817,7 @@ fun SsIsProjectBody(
 fun SsLocationBody(
 	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
 	println("Location : $visible")
@@ -714,11 +866,11 @@ fun SsLocationBody(
 fun SsNameBody(
 	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
 	println("Name : $visible")
-	val initialSubtitle = viewModel.problem.name ?: ""
+	val initialSubtitle = viewModel.getInitialName()
 
 	SsTextFieldBody(
 		title = "Name",
@@ -727,9 +879,8 @@ fun SsNameBody(
 		visible = visible,
 		onDone = { name ->
 			viewModel.problem.name = name
-			viewModel.current = name
 
-			onDone()
+			onDone(name)
 		})
 
 }
@@ -741,11 +892,11 @@ fun SsNameBody(
 fun SsNoteBody(
 	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
 	println("Note : $visible")
-	val initialSubtitle = viewModel.problem.note ?: ""
+	val initialSubtitle = viewModel.getInitialNote()
 
 	SsTextFieldBody(
 		title = "Notes",
@@ -754,9 +905,8 @@ fun SsNoteBody(
 		visible = visible,
 		onDone = { note ->
 			viewModel.problem.note = note
-			viewModel.current = note
 
-			onDone()
+			onDone(note)
 		})
 
 }
@@ -768,12 +918,11 @@ fun SsNoteBody(
 fun SsNumAttemptBody(
 	viewModel: SsAddBoulderProblemViewModel,
 	visible : Boolean = true,
-	onDone : () -> Unit = {})
+	onDone : (String) -> Unit = {})
 {
 
-	val numAttempt = viewModel.problem.numAttempt
 	println("Num attempt : $visible")
-	val initialSubtitle = numAttempt?.toString() ?: ""
+	val initialSubtitle = viewModel.getInitialNumAttempt()
 	var subtitle by remember { mutableStateOf(initialSubtitle) }
 	val focusRequester = remember { FocusRequester() }
 
@@ -795,22 +944,16 @@ fun SsNumAttemptBody(
 					keyboardType = KeyboardType.Number),
 				keyboardActions = KeyboardActions(
 					onNext = {
-						if (subtitle.isNullOrEmpty())
-						{
-							viewModel.current = null
-						}
-						else
-						{
-							viewModel.problem.numAttempt = subtitle.toLong()
-							viewModel.current = subtitle
-						}
+						viewModel.problem.numAttempt = if (subtitle.isEmpty())
+							null else subtitle.toLong()
 
-						onDone()
+						onDone(subtitle)
 					}),
 				cursorBrush = SolidColor(Color.Transparent),
 				textStyle = TextStyle(
 					color = Color.Transparent))
 
+			// Focus the text field
 			if (visible)
 			{
 				focusRequester.requestFocus()
@@ -842,9 +985,11 @@ fun SsTextFieldBody(
 	var subtitle by remember { mutableStateOf(initialSubtitle) }
 	val focusRequester = remember { FocusRequester() }
 
+	// Body
 	SsBody(title, subtitle)
 	{
 
+		// Animate visibility as needed
 		AnimatedVisibility(visible = visible)
 		{
 
@@ -900,14 +1045,14 @@ fun SsVerticalLine(
 fun SsYesNoBody(
 	title : String,
 	visible : Boolean = true,
-	onDone : (Boolean?) -> Unit = {})
+	onDone : (Boolean?, String) -> Unit = {_,_ -> })
 {
 
-	var subtitle = remember { mutableStateOf("") }
-	var isYes by remember { mutableStateOf<Boolean?>(false) }
+	var subtitle by remember { mutableStateOf("") }
+	var isYes by remember { mutableStateOf<Boolean?>(null) }
 
 	// Body
-	SsBody(title, subtitle.value)
+	SsBody(title, subtitle)
 	{
 
 		// Animate the visibility
@@ -920,6 +1065,7 @@ fun SsYesNoBody(
 				shrinkTowards = Alignment.Top
 			))
 		{
+
 			var iconPadding = 8.dp
 			var buttonSpacing = 16.dp
 
@@ -936,61 +1082,39 @@ fun SsYesNoBody(
 			Row()
 			{
 
-				Column(
-					horizontalAlignment = Alignment.CenterHorizontally)
+				// Yes button
+				SsYesIconTextButton(
+					border = BorderStroke(
+						width = borderWidth,
+						color = yesBorderColor),
+					colors = ButtonDefaults.buttonColors(
+						contentColor = yesContentColor,
+						backgroundColor = Color.Transparent))
 				{
-					OutlinedButton(
-						onClick = {
-							isYes = true
-							subtitle.value = "Yes"
+					isYes = true
+					subtitle = it
 
-							onDone(true)
-						},
-						border = BorderStroke(
-							width = borderWidth,
-							color = yesBorderColor),
-						colors = ButtonDefaults.buttonColors(
-							contentColor = yesContentColor,
-							backgroundColor = Color.Transparent))
-					{
-						Icon(Icons.Default.Check,
-							//modifier = Modifier
-						//		.padding(end = iconPadding),
-							contentDescription = "Yes")
-					}
-
-					Text("Yes",
-						fontSize = MaterialTheme.typography.subtitle2.fontSize)
+					onDone(isYes, subtitle)
 				}
 
-				Spacer(modifier = Modifier.padding(horizontal = buttonSpacing))
+				// Space
+				Spacer(
+					modifier = Modifier
+						.padding(horizontal = buttonSpacing))
 
-				Column(
-					horizontalAlignment = Alignment.CenterHorizontally)
+				// No button
+				SsNoIconTextButton(
+					border = BorderStroke(
+						width = borderWidth,
+						color = noBorderColor),
+					colors = ButtonDefaults.buttonColors(
+						contentColor = noContentColor,
+						backgroundColor = Color.Transparent))
 				{
+						isYes = false
+						subtitle = it
 
-					OutlinedButton(
-						onClick = {
-							isYes = false
-							subtitle.value = "No"
-
-							onDone(false)
-						},
-						border = BorderStroke(
-							width = borderWidth,
-							color = noBorderColor),
-						colors = ButtonDefaults.buttonColors(
-							contentColor = noContentColor,
-							backgroundColor = Color.Transparent))
-					{
-						Icon(Icons.Default.Close,
-							//modifier = Modifier
-						//		.padding(end = iconPadding),
-							contentDescription = "No")
-					}
-
-					Text("No",
-						fontSize = MaterialTheme.typography.subtitle2.fontSize)
+						onDone(isYes, subtitle)
 				}
 
 			}

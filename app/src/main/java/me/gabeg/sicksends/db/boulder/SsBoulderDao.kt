@@ -1,9 +1,9 @@
-package me.gabeg.sicksends.boulder
+package me.gabeg.sicksends.db.boulder
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import me.gabeg.sicksends.problem.SsGenericProblem
-import me.gabeg.sicksends.problem.SsGenericProblemDao
+import me.gabeg.sicksends.db.generic.SsGenericProblem
+import me.gabeg.sicksends.db.generic.SsGenericProblemDao
 
 /**
  * Data access object for bouldering.

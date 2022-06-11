@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.problem
+package me.gabeg.sicksends.db.generic
 
 import android.util.Log
 
@@ -50,12 +50,11 @@ abstract class SsGenericProblem
 	/**
 	 * How how did it feel on a scale from easy to hard?
 	 *
-	 * 0 = Undefined
-	 * 1 = Very Easy
-	 * 2 = Easy
-	 * 3 = Normal
-	 * 4 = Hard
-	 * 5 = Very Hard
+	 * 0 = Very Easy
+	 * 1 = Easy
+	 * 2 = Normal
+	 * 3 = Hard
+	 * 4 = Very Hard
 	 */
 	abstract var howDidItFeelScale : Int?
 

@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.trad
+package me.gabeg.sicksends.db.sport
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,13 +7,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.gabeg.sicksends.problem.SsGenericRopeProblem
+import me.gabeg.sicksends.db.generic.SsGenericRopeProblem
 
 /**
- * Aspects of a trad problem that are saved.
+ * Aspects of a sport problem that are saved.
  */
-@Entity(tableName = "trad")
-data class SsTradProblem(
+@Entity(tableName = "sport")
+data class SsSportProblem (
 
 	/**
 	 * Row ID of the table.
@@ -75,7 +75,7 @@ data class SsTradProblem(
 	 * Name of where the problem is located.
 	 */
 	@ColumnInfo(name = "location_name")
-	override var locationName  : String? = null,
+	override var locationName : String? = null,
 
 	/**
 	 * Latitude coordinates of where the problem is located.
@@ -158,20 +158,20 @@ data class SsTradProblem(
 ) : SsGenericRopeProblem()
 
 /**
- * Hilt module to provide an instance of a trad problem.
+ * Hilt module to provide an instance of a sport problem.
  */
 @InstallIn(SingletonComponent::class)
 @Module
-class SsTradProblemModule
+class SsSportProblemModule
 {
 
 	/**
-	 * Provide an instance of trad problem.
+	 * Provide an instance of sport problem.
 	 */
 	@Provides
-	fun provideTradProblem() : SsTradProblem
+	fun provideSportrProblem() : SsSportProblem
 	{
-		return SsTradProblem()
+		return SsSportProblem()
 	}
 
 }

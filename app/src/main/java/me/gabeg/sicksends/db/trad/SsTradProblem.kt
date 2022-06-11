@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.boulder
+package me.gabeg.sicksends.db.trad
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,13 +7,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.gabeg.sicksends.problem.SsGenericProblem
+import me.gabeg.sicksends.db.generic.SsGenericRopeProblem
 
 /**
- * Aspects of a boulder problem that are saved.
+ * Aspects of a trad problem that are saved.
  */
-@Entity(tableName = "boulder")
-data class SsBoulderProblem (
+@Entity(tableName = "trad")
+data class SsTradProblem(
 
 	/**
 	 * Row ID of the table.
@@ -75,7 +75,7 @@ data class SsBoulderProblem (
 	 * Name of where the problem is located.
 	 */
 	@ColumnInfo(name = "location_name")
-	override var locationName : String? = null,
+	override var locationName  : String? = null,
 
 	/**
 	 * Latitude coordinates of where the problem is located.
@@ -135,25 +135,43 @@ data class SsBoulderProblem (
 	 * Notes on the problem.
 	 */
 	@ColumnInfo(name = "note")
-	override var note : String? = null
+	override var note : String? = null,
 
-) : SsGenericProblem()
+	/**
+	 * Number of takes done on the problem.
+	 */
+	@ColumnInfo(name = "num_take")
+	override var numTake : Int? = null,
+
+	/**
+	 * Whether the problem was onsighted or not.
+	 */
+	@ColumnInfo(name = "is_onsight")
+	override var isOnsight : Boolean? = null,
+
+	/**
+	 * Whether the problem was a redpoint or not.
+	 */
+	@ColumnInfo(name = "is_redpoint")
+	override var isRedpoint : Boolean? = null,
+
+) : SsGenericRopeProblem()
 
 /**
- * Hilt module to provide an instance of a boulder problem.
+ * Hilt module to provide an instance of a trad problem.
  */
 @InstallIn(SingletonComponent::class)
 @Module
-class SsBoulderProblemModule
+class SsTradProblemModule
 {
 
 	/**
-	 * Provide an instance of boulder problem.
+	 * Provide an instance of trad problem.
 	 */
 	@Provides
-	fun provideBoulderProblem() : SsBoulderProblem
+	fun provideTradProblem() : SsTradProblem
 	{
-		return SsBoulderProblem()
+		return SsTradProblem()
 	}
 
 }

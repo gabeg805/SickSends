@@ -1,14 +1,10 @@
 package me.gabeg.sicksends.problem.ui
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 /**
  * Flash icon.
@@ -27,7 +23,8 @@ fun SsFlashIcon(modifier : Modifier = Modifier)
 @Composable
 fun SsGradeIcon(modifier : Modifier = Modifier)
 {
-	Icon(Icons.Default.CloudDone,
+	//Icon(Icons.Default.Grade,
+	Icon(Icons.Default.HotelClass,
 		modifier = modifier,
 		contentDescription = "Grade")
 }
@@ -49,9 +46,20 @@ fun SsLocationIcon(modifier : Modifier = Modifier)
 @Composable
 fun SsNameIcon(modifier : Modifier = Modifier)
 {
-	Icon(Icons.Default.Face,
+	Icon(Icons.Default.Edit,
 		modifier = modifier,
 		contentDescription = "Name")
+}
+
+/**
+ * No icon.
+ */
+@Composable
+fun SsNoIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.Close,
+		modifier = modifier,
+		contentDescription = "No")
 }
 
 /**
@@ -96,4 +104,15 @@ fun SsProjectIcon(modifier : Modifier = Modifier)
 	Icon(Icons.Default.Construction,
 		modifier = modifier,
 		contentDescription = "Project")
+}
+
+/**
+ * Yes icon.
+ */
+@Composable
+fun SsYesIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.Check,
+		modifier = modifier,
+		contentDescription = "Yes")
 }

@@ -27,6 +27,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import me.gabeg.sicksends.datetime.convertProblemToRelativeDate
 import me.gabeg.sicksends.datetime.isSameDate
+import me.gabeg.sicksends.db.generic.SsGenericProblem
+import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
 import me.gabeg.sicksends.shared.howDidItFeelScaleToString
 import java.util.*
 
@@ -181,7 +183,7 @@ fun buildGradeSubtitleText(problem: SsGenericProblem)
 		text = altGrade
 	}
 	// How did it feel scale
-	else if ((feelScale != null) && (feelScale > 0) && (feelScale != 3))
+	else if ((feelScale != null) && (feelScale != SsHowDidItFeelType.NORMAL.value))
 	{
 		text = howDidItFeelScaleToString(feelScale)
 	}
@@ -211,7 +213,7 @@ fun buildGradeSubtitleToNameSpacer(problem: SsGenericProblem)
 	val name = problem.name
 
 	var hasAltGrade = !altGrade.isNullOrEmpty()
-	var hasFeelScale = (feelScale != null) && (feelScale > 0) && (feelScale != 3)
+	var hasFeelScale = (feelScale != null) && (feelScale != SsHowDidItFeelType.NORMAL.value)
 	var hasSubtitle = hasAltGrade || hasFeelScale
 	var hasName = !locationName.isNullOrEmpty() || !name.isNullOrEmpty()
 

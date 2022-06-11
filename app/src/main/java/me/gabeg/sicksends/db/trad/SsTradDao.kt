@@ -1,10 +1,10 @@
-package me.gabeg.sicksends.trad
+package me.gabeg.sicksends.db.trad
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
-import me.gabeg.sicksends.problem.SsGenericProblem
-import me.gabeg.sicksends.problem.SsGenericProblemDao
+import me.gabeg.sicksends.db.generic.SsGenericProblem
+import me.gabeg.sicksends.db.generic.SsGenericProblemDao
 
 /**
  * Data access object for trad problems.

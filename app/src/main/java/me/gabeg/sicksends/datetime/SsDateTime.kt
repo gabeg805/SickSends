@@ -1,6 +1,6 @@
 package me.gabeg.sicksends.datetime
 
-import me.gabeg.sicksends.problem.SsGenericProblem
+import me.gabeg.sicksends.db.generic.SsGenericProblem
 import java.text.SimpleDateFormat
 import java.util.*
 

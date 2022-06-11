@@ -6,7 +6,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,17 +13,17 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import me.gabeg.sicksends.boulder.SsBoulderDao
-import me.gabeg.sicksends.boulder.SsBoulderProblem
+import me.gabeg.sicksends.db.boulder.SsBoulderDao
+import me.gabeg.sicksends.db.boulder.SsBoulderProblem
 import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
 import me.gabeg.sicksends.problem.type.SsHoldType
 import me.gabeg.sicksends.problem.type.SsRouteFeatureType
-import me.gabeg.sicksends.sport.SsSportDao
-import me.gabeg.sicksends.sport.SsSportProblem
-import me.gabeg.sicksends.toprope.SsTopRopeDao
-import me.gabeg.sicksends.toprope.SsTopRopeProblem
-import me.gabeg.sicksends.trad.SsTradDao
-import me.gabeg.sicksends.trad.SsTradProblem
+import me.gabeg.sicksends.db.sport.SsSportDao
+import me.gabeg.sicksends.db.sport.SsSportProblem
+import me.gabeg.sicksends.db.toprope.SsTopRopeDao
+import me.gabeg.sicksends.db.toprope.SsTopRopeProblem
+import me.gabeg.sicksends.db.trad.SsTradDao
+import me.gabeg.sicksends.db.trad.SsTradProblem
 import javax.inject.Singleton
 
 /**

@@ -68,7 +68,8 @@ fun SsNoIcon(modifier : Modifier = Modifier)
 @Composable
 fun SsNoteIcon(modifier : Modifier = Modifier)
 {
-	Icon(Icons.Default.Note,
+	//Icon(Icons.Default.Chat,
+	Icon(Icons.Default.LibraryBooks,
 		modifier = modifier,
 		contentDescription = "Note")
 }
@@ -79,7 +80,12 @@ fun SsNoteIcon(modifier : Modifier = Modifier)
 @Composable
 fun SsNumberOfAttemptsIcon(modifier : Modifier = Modifier)
 {
-	Icon(Icons.Default.Lock,
+	//Maps section in icons
+	//Icon(Icons.Default.DoNotStep,
+	//Icon(Icons.Default.RunCircle,
+	//Icon(Icons.Default.TransferWithinAStation,
+	//Icon(Icons.Default.DirectionsWalk,
+	Icon(Icons.Default.DirectionsRun,
 		modifier = modifier,
 		contentDescription = "Number of attempts")
 }
@@ -101,7 +107,8 @@ fun SsOutdoorIcon(modifier : Modifier = Modifier)
 @Composable
 fun SsProjectIcon(modifier : Modifier = Modifier)
 {
-	Icon(Icons.Default.Construction,
+	//Icon(Icons.Default.Construction,
+	Icon(Icons.Default.Hardware,
 		modifier = modifier,
 		contentDescription = "Project")
 }

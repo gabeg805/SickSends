@@ -147,9 +147,11 @@ fun TypeOfGradingSystemPage()
  * Build the grading systems for a type of climbing.
  */
 @Composable
-fun buildGradingSystems(title : String, gradingSystems : List<String>,
-	flow : Flow<Boolean>, onGradingSystemToggled: (gradingSystem: String,
-		isEnabled: Boolean) -> Unit)
+fun buildGradingSystems(
+	title : String,
+	gradingSystems : List<String>,
+	flow : Flow<Boolean>,
+	onGradingSystemToggled: (gradingSystem: String, isEnabled: Boolean) -> Unit)
 {
 
 	// Whether or not the grading system for a type of climbing are visible
@@ -212,9 +214,9 @@ fun buildGradingSystems(title : String, gradingSystems : List<String>,
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun buildGradingSystemButtons(gradingSystems : List<String>,
-	onGradingSystemToggled : (gradingSystem : String, isEnabled : Boolean)
-		-> Unit,
+fun buildGradingSystemButtons(
+	gradingSystems : List<String>,
+	onGradingSystemToggled : (gradingSystem : String, isEnabled : Boolean) -> Unit,
 	onGradingSystemLongClicked : (gradingSystem : String) -> Unit)
 {
 

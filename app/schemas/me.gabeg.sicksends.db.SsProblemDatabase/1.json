@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ce4419bf81150862f5304171be7ac473",
+    "identityHash": "9b7357f8b15d098b7ff181fa5798e538",
     "entities": [
       {
         "tableName": "boulder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `image_path` TEXT, `note` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `image_path` TEXT, `note` TEXT, `howDidItFeel` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -121,6 +121,12 @@
             "columnName": "note",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "howDidItFeel",
+            "columnName": "howDidItFeel",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -134,7 +140,7 @@
       },
       {
         "tableName": "sport",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `image_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `image_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER, `howDidItFeel` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -267,6 +273,12 @@
             "columnName": "is_redpoint",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "howDidItFeel",
+            "columnName": "howDidItFeel",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -280,7 +292,7 @@
       },
       {
         "tableName": "top_rope",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `image_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `image_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER, `howDidItFeel` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -413,6 +425,12 @@
             "columnName": "is_redpoint",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "howDidItFeel",
+            "columnName": "howDidItFeel",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -426,7 +444,7 @@
       },
       {
         "tableName": "trad",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `image_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `image_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER, `howDidItFeel` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -559,6 +577,12 @@
             "columnName": "is_redpoint",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "howDidItFeel",
+            "columnName": "howDidItFeel",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -574,7 +598,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ce4419bf81150862f5304171be7ac473')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9b7357f8b15d098b7ff181fa5798e538')"
     ]
   }
 }

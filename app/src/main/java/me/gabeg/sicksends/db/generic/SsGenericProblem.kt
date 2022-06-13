@@ -1,6 +1,7 @@
 package me.gabeg.sicksends.db.generic
 
 import android.util.Log
+import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
 
 /**
  * Generic problem attributes.
@@ -57,6 +58,17 @@ abstract class SsGenericProblem
 	 * 4 = Very Hard
 	 */
 	abstract var howDidItFeelScale : Int?
+
+	/**
+	 * How how did it feel on a scale from easy to hard?
+	 *
+	 * 0 = Very Easy
+	 * 1 = Easy
+	 * 2 = Normal
+	 * 3 = Hard
+	 * 4 = Very Hard
+	 */
+	var howDidItFeel : String = getHowDidItFeelScaleName(howDidItFeelScale)
 
 	/**
 	 * Name of the problem.

@@ -1,5 +1,7 @@
 package me.gabeg.sicksends.main
 
+import android.view.KeyEvent
+import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.BorderStroke
@@ -15,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -30,6 +33,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -37,10 +41,12 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -50,10 +56,12 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.*
 import me.gabeg.sicksends.addproblem.SsAddBoulderProblemViewModel
 import me.gabeg.sicksends.addproblem.SsAddProblemViewModel
+import me.gabeg.sicksends.onboarding.buildGradingSystemButtons
 import me.gabeg.sicksends.problem.ui.*
 import me.gabeg.sicksends.shared.*
 import me.gabeg.sicksends.ui.*
@@ -102,94 +110,12 @@ fun SsHomeScreen(
 				body = { visible, onDone ->
 					SsGradeBody(
 						viewModel = viewModel,
+						scrollState = scrollState,
 						visible = visible,
 						onDone = onDone)
 				},
 				index = 0,
 				scrollState = scrollState)
-		}
-
-		/**
-		 * How did it feel?
-		 */
-		item {
-			SsQuestion(
-				viewModel = viewModel,
-				icon = { modifier ->
-					Icon(Icons.Default.ContactSupport,
-						modifier = modifier,
-						contentDescription = "How did it feel")
-				},
-				body = { visible, onDone ->
-					SsHowDidItFeelBody(
-						viewModel = viewModel,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = 8,
-				scrollState = scrollState)
-		}
-
-		/**
-		 * YOOOOOOOOOO
-		 */
-		item {
-			HorizontalPager(
-				state = pagerState,
-				count = 2,
-				modifier = Modifier
-					.fillMaxHeight()
-					.nestedScroll(remember {
-						object : NestedScrollConnection
-						{
-							override fun onPreScroll(
-								available: Offset,
-								source: NestedScrollSource
-							): Offset {
-								return if (available.y > 0) Offset.Zero else Offset(
-									x = 0f,
-									y = -scrollState.dispatchRawDelta(-available.y)
-								)
-							}
-						}
-					})
-			) { page: Int ->
-				when (page) {
-					0 ->
-					{
-						SsQuestion(
-							viewModel = viewModel,
-							icon = { modifier ->
-								SsFlashIcon(modifier = modifier)
-							},
-							body = { visible, onDone ->
-								SsIsFlashBody(
-									viewModel = viewModel,
-									visible = visible,
-									onDone = onDone)
-							},
-							index = 3,
-							scrollState = scrollState)
-					}
-
-					1 ->
-					{
-						SsQuestion(
-							viewModel = viewModel,
-							icon = { modifier ->
-								SsOutdoorIcon(modifier = modifier)
-							},
-							body = { visible, onDone ->
-								SsIsOutdoorBody(
-									viewModel = viewModel,
-									visible = visible,
-									onDone = onDone)
-							},
-							index = 4,
-							scrollState = scrollState)
-					}
-				}
-			}
 		}
 
 		/**
@@ -426,13 +352,13 @@ fun SsQuestion(
 			println("Body : $index || $isVisible")
 			body(isVisible)
 			{ subtitle ->
-				if (viewModel.questions.size >= index+1)
+				if (viewModel.answers.size >= index+1)
 				{
-					viewModel.questions[index] = subtitle
+					viewModel.answers[index] = subtitle
 				}
 				else
 				{
-					viewModel.questions.add(index, subtitle)
+					viewModel.answers.add(index, subtitle)
 				}
 
 				println("Cancelling scope! $index")
@@ -461,11 +387,13 @@ fun SsQuestion(
 /**
  * Create the body.
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SsBody(
 	title : String,
 	subtitle : String,
 	modifier : Modifier = Modifier,
+	pagerState : PagerState? = null,
 	content : @Composable () -> Unit = {})
 {
 
@@ -475,10 +403,27 @@ fun SsBody(
 		horizontalAlignment = Alignment.Start)
 	{
 
-		// Title
-		Text(title,
-			fontSize = MaterialTheme.typography.body1.fontSize,
-			fontWeight = FontWeight.Normal)
+		Row(
+			verticalAlignment = Alignment.CenterVertically
+		)
+		{
+
+			// Title
+			Text(title,
+				fontSize = MaterialTheme.typography.body1.fontSize,
+				fontWeight = FontWeight.Normal)
+
+			// Page navigator
+			if ((pagerState != null) && (pagerState.pageCount > 1))
+			{
+				Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+
+				Text("${pagerState.currentPage + 1} of ${pagerState.pageCount}",
+					fontSize = MaterialTheme.typography.subtitle2.fontSize,
+					fontWeight = FontWeight.Light)
+			}
+
+		}
 
 		// Subtitle
 		Text(subtitle,
@@ -496,132 +441,222 @@ fun SsBody(
 
 }
 
-/**
- * Dialog to choose a different grading system.
- */
 @Composable
-fun SsChooseGradingSystemDialog(
-	selectedGradingSystem : MutableState<String>,
-	state : SsAlertDialogState,
-	onConfirmClicked : (String) -> Unit = {})
+fun SsGradeBodyGradingSystemPage(
+	viewModel: SsAddBoulderProblemViewModel,
+	onGradingSystemSelected : (gradingSystem: String) -> Unit)
 {
 
-	// Get all the grading systems that are used
+	// Get the data store
 	val dataStore = SsSharedBoulderDataStore(LocalContext.current)
+
+	// Get all the grading systems that are used
 	val allGradingSystems = dataStore.getAllGradingSystemsWillUse()
 
-	// Find the index of the grading system to select it by default in the
-	// dropdown menu
-	val index = allGradingSystems.indexOf(selectedGradingSystem.value)
+	// Determine the initial grading system
+	// TODO: Make a way so that I can highlight this initial one
+	val initialGradingSystem = viewModel.getInitialGradingSystem(dataStore)
 
-	// The currently selected item in the dropdown menu
-	var selectedName by remember { mutableStateOf("") }
+	// Things needed to show an example of a grading system
+	var exampleGradingSystem by remember { mutableStateOf("") }
 
-	// Show the dialog
-	SsAlertDialog(
-		title = "Choose a grading system...",
-		onConfirmClicked = { onConfirmClicked(selectedName) },
-		state = state)
+	// Build all the grading systems
+	buildGradingSystemButtons(allGradingSystems,
+		onGradingSystemToggled = { gradingSystem, isEnabled ->
+			viewModel.problem.gradingSystem = gradingSystem
+
+			onGradingSystemSelected(gradingSystem)
+		},
+		onGradingSystemLongClicked = { gradingSystem ->
+			exampleGradingSystem = gradingSystem
+		}
+	)
+
+	// Show the example grade
+	if (exampleGradingSystem.isNotEmpty())
 	{
+		val context = LocalContext.current
+		var example = getExampleGrade(exampleGradingSystem)
 
-		// Dropdown menu
-		SsDropdownMenu(
-			options = allGradingSystems,
-			index = index)
-		{ index, name ->
-			selectedName = name
+		LaunchedEffect(true)
+		{
+			Toast.makeText(context, example, Toast.LENGTH_SHORT).show()
 		}
 
+		exampleGradingSystem = ""
 	}
 
+}
+
+@Composable
+fun SsGradeBodyGradePage(
+	viewModel: SsAddBoulderProblemViewModel,
+	gradingSystem: String,
+	onGradeSelected : (grade : String) -> Unit)
+{
+
+	// Get all grades for that grading system
+	val allGrades = getAllBoulderGradesForGradingSystem(gradingSystem)
+
+	// Save the state of the dropdown menu
+	val menuState = remember { SsDropdownMenuState() }
+
+	// Dropdown menu with all the grades
+	SsDropdownMenu(options = allGrades, state = menuState)
+	{ index, name ->
+
+		viewModel.problem.grade = name
+
+		onGradeSelected(name)
+
+	}
 }
 
 /**
  * Grade.
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SsGradeBody(
 	viewModel: SsAddBoulderProblemViewModel,
+	scrollState : LazyListState,
 	visible : Boolean = true,
 	onDone : (String) -> Unit = {})
 {
 
 	println("Grade : $visible")
-	// Get the default grading systems
-	val dataStore = SsSharedBoulderDataStore(LocalContext.current)
 
-	// Determine the initial grading system
-	val initialGradingSystem = viewModel.getInitialGradingSystem(dataStore)
+	val scope = rememberCoroutineScope()
+	val pagerState = rememberPagerState()
+	var isDone by remember { mutableStateOf(false) }
+
+	var gradingSystem by remember { mutableStateOf(viewModel.problem.gradingSystem) }
+	var grade by remember { mutableStateOf(viewModel.problem.grade) }
+	var feel by remember { mutableStateOf(viewModel.problem.howDidItFeel) }
 
 	// Choose a grading system
-	var selectedGradingSystem = remember { mutableStateOf(initialGradingSystem) }
-	var selectedGrade = remember { mutableStateOf(viewModel.problem.grade) }
-	var subtitle = remember {
-		derivedStateOf {
-			if (selectedGrade.value.isNullOrEmpty())
-			{
-				selectedGradingSystem.value
-			}
-			else
-			{
-				selectedGradingSystem.value + ", " + selectedGrade.value
-			}
-		}
-	}
-
-	// Get all grades for that grading system
-	val allGrades = getAllBoulderGradesForGradingSystem(
-			selectedGradingSystem.value)
-		.toMutableList()
-	allGrades.add(0, "Change grading system...")
-
-	// Save the state of the dropdown menu
-	val menuState = remember { SsDropdownMenuState() }
-
-	// Whether or not to show the change grading system dialog
-	val dialogState = remember { SsAlertDialogState() }
+	val questions = listOf(
+		"What grading system was used?",
+		"What was the grade?",
+		"How did it feel?")
+	var subtitle by remember { mutableStateOf(questions[0]) }
+	var finalSubtitle by remember { mutableStateOf("") }
 
 	// Regular body of the grade section
-	SsBody("Grade", subtitle.value)
+	SsBody("Grade", subtitle, pagerState = if (visible) pagerState else null)
 	{
+
+		if (!visible)
+		{
+			subtitle = viewModel.getGradeSubtitle()
+		}
 
 		AnimatedVisibility(visible = visible)
 		{
 
-			// Dropdown menu with all the grades
-			SsDropdownMenu(options = allGrades, state = menuState)
-			{ index, name ->
+			HorizontalPager(
+				state = pagerState,
+				count = 3,
+				modifier = Modifier
+					.fillMaxHeight()
+					.fillMaxWidth()
+					.nestedScroll(remember {
+						object : NestedScrollConnection
+						{
+							override fun onPreScroll(
+								available: Offset,
+								source: NestedScrollSource
+							): Offset
+							{
+								return if (available.y > 0) Offset.Zero
+								else Offset(
+									x = 0f,
+									y = -scrollState.dispatchRawDelta(-available.y)
+								)
+							}
+						}
+					}))
+			{ page: Int ->
 
-				// Show the change the grading system dialog
-				if (index == 0)
+				when (page)
 				{
-					menuState.clearSelected()
-					dialogState.show()
+					0 ->
+					{
+
+						SsGradeBodyGradingSystemPage(
+							viewModel = viewModel)
+						{
+							gradingSystem = it
+							subtitle = it
+							finalSubtitle = gradingSystem
+							isDone = false
+
+							scope.launch {
+								pagerState.animateScrollToPage(1)
+							}
+						}
+
+					}
+
+					1 ->
+					{
+
+						SsGradeBodyGradePage(
+							viewModel = viewModel,
+							gradingSystem = gradingSystem)
+						{
+							grade = it
+							subtitle = it
+							finalSubtitle = "$gradingSystem  |  $grade"
+							isDone = false
+
+							scope.launch {
+								pagerState.animateScrollToPage(2)
+							}
+						}
+
+					}
+
+					2 ->
+					{
+
+						SsGradeBodyHowDidItFeel(viewModel = viewModel)
+						{
+							feel = it
+							finalSubtitle = "$gradingSystem  |  $grade  |  $feel"
+							subtitle = finalSubtitle
+							isDone = false
+
+							onDone(finalSubtitle)
+
+							isDone = true
+						}
+
+					}
+
 				}
-				// Done with this section
+
+				if (isDone)
+				{
+					//viewModel.problem.gradingSystem
+				//	viewModel.problem.grade
+				//	viewModel.problem.howDidItFeelScale
+				//	subtitle = "\u2027"
+				}
 				else
 				{
-					selectedGrade.value = name
-					viewModel.problem.grade = selectedGrade.value
-					viewModel.problem.gradingSystem = selectedGradingSystem.value
-
-					onDone(subtitle.value)
+					when (pagerState.currentPage)
+					{
+						0 -> subtitle = questions[0]
+						1 -> subtitle = questions[1]
+						2 -> subtitle = questions[2]
+					}
 				}
 
 			}
 
 		}
 
-	}
-
-	// Show the dialog to choose/change the grading system
-	if (dialogState.isVisible)
-	{
-		SsChooseGradingSystemDialog(selectedGradingSystem, dialogState)
-		{ name ->
-			selectedGradingSystem.value = name
-			selectedGrade.value = ""
-		}
 	}
 
 }
@@ -630,13 +665,10 @@ fun SsGradeBody(
  * How did it feel?
  */
 @Composable
-fun SsHowDidItFeelBody(
+fun SsGradeBodyHowDidItFeel(
 	viewModel: SsAddBoulderProblemViewModel,
-	visible : Boolean = true,
 	onDone : (String) -> Unit = {})
 {
-
-	println("How did it feel : $visible")
 
 	// Determine the initial grading system and slider position
 	val initialFeelScale = viewModel.getInitialHowDidItFeelScale()
@@ -645,70 +677,56 @@ fun SsHowDidItFeelBody(
 	// Subtitle
 	var subtitle by remember { mutableStateOf(initialFeelScale) }
 
-	// Regular body of the grade section
-	SsBody("How Did It Feel?", subtitle)
+	Column()
 	{
 
-		AnimatedVisibility(visible = visible)
+		Slider(
+			value = sliderPosition,
+			onValueChange = {
+				sliderPosition = round(it)
+				subtitle = getHowDidItFeelScaleName(sliderPosition.toInt())
+			},
+			valueRange = 0f..4f,
+			onValueChangeFinished = {
+				viewModel.problem.howDidItFeelScale = sliderPosition.toInt()
+
+				onDone(subtitle)
+			},
+			steps = 3,
+			colors = SliderDefaults.colors(
+				thumbColor = MaterialTheme.colors.secondary,
+				activeTrackColor = MaterialTheme.colors.secondary
+			)
+		)
+
+
+		Row(
+			modifier = Modifier
+				.fillMaxWidth(),
+			horizontalArrangement = Arrangement.SpaceBetween,
+			verticalAlignment = Alignment.CenterVertically)
 		{
+			Text("Very\nEasy",
+				textAlign = TextAlign.Center,
+				fontSize = MaterialTheme.typography.body2.fontSize)
 
-			Column()
-			{
+			Text("Easy",
+				textAlign = TextAlign.Center,
+				fontSize = MaterialTheme.typography.body2.fontSize)
 
-				Slider(
-					value = sliderPosition,
-					onValueChange = {
-						sliderPosition = round(it)
-						println("Value changed : $it $sliderPosition")
-						subtitle = getHowDidItFeelScaleName(sliderPosition.toInt())
-					},
-					valueRange = 0f..4f,
-					onValueChangeFinished = {
-						// launch some business logic update with the state you hold
-						// viewModel.updateSelectedSliderValue(sliderPosition)
-						println("VALUE CHANGED $sliderPosition")
-					},
-					steps = 3,
-					colors = SliderDefaults.colors(
-						thumbColor = MaterialTheme.colors.secondary,
-						activeTrackColor = MaterialTheme.colors.secondary
-					)
-				)
+			Text("Normal",
+				textAlign = TextAlign.Center,
+				fontSize = MaterialTheme.typography.body2.fontSize)
 
+			Text("Hard",
+				textAlign = TextAlign.Center,
+				fontSize = MaterialTheme.typography.body2.fontSize)
 
-				Row(
-					modifier = Modifier
-						.fillMaxWidth(),
-					horizontalArrangement = Arrangement.SpaceBetween,
-					verticalAlignment = Alignment.CenterVertically)
-				{
-					Text("Very\nEasy",
-						textAlign = TextAlign.Center,
-						fontSize = MaterialTheme.typography.body2.fontSize)
-
-					Text("Easy",
-						textAlign = TextAlign.Center,
-						fontSize = MaterialTheme.typography.body2.fontSize)
-
-					Text("Normal",
-						textAlign = TextAlign.Center,
-						fontSize = MaterialTheme.typography.body2.fontSize)
-
-					Text("Hard",
-						textAlign = TextAlign.Center,
-						fontSize = MaterialTheme.typography.body2.fontSize)
-
-					Text("Very\nHard",
-						textAlign = TextAlign.Center,
-						fontSize = MaterialTheme.typography.body2.fontSize)
-
-				}
-
-			}
-
+			Text("Very\nHard",
+				textAlign = TextAlign.Center,
+				fontSize = MaterialTheme.typography.body2.fontSize)
 
 		}
-
 
 	}
 
@@ -748,9 +766,12 @@ fun SsIsFlashBody(
 {
 
 	println("Is Flash : $visible")
+	val isFlash = viewModel.problem.isFlash
 
 	SsYesNoBody(
-		title = "Is Flash?",
+		title = "Flash",
+		question = "Did you flash the problem?",
+		initial = isFlash,
 		visible = visible,
 		onDone = { status, subtitle ->
 			viewModel.problem.isFlash = status
@@ -771,9 +792,12 @@ fun SsIsOutdoorBody(
 {
 
 	println("Is Outdoor : $visible")
+	val isOutdoor = viewModel.problem.isOutdoor
 
 	SsYesNoBody(
-		title = "Is Outdoor?",
+		title = "Outdoor",
+		question = "Was the problem outdoors?",
+		initial = isOutdoor,
 		visible = visible,
 		onDone = { status, subtitle ->
 			 viewModel.problem.isOutdoor = status
@@ -797,9 +821,12 @@ fun SsIsProjectBody(
 {
 
 	println("Is Project : $visible")
+	val isProject = viewModel.problem.isProject
 
 	SsYesNoBody(
-		title = "Is Project?",
+		title = "Project",
+		question = "Are you projecting this problem?",
+		initial = isProject,
 		visible = visible,
 		onDone = { status, subtitle ->
 			viewModel.problem.isProject = status
@@ -813,6 +840,7 @@ fun SsIsProjectBody(
 /**
  * Location of a climb.
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SsLocationBody(
 	viewModel: SsAddBoulderProblemViewModel,
@@ -823,7 +851,6 @@ fun SsLocationBody(
 	println("Location : $visible")
 
 	var subtitle = remember { mutableStateOf("") }
-	//println("YOOOO : ${viewModel.questions}")
 
 	// Regular body of the location section
 	SsBody("Location", subtitle.value)
@@ -870,11 +897,12 @@ fun SsNameBody(
 {
 
 	println("Name : $visible")
-	val initialSubtitle = viewModel.getInitialName()
+	val name = viewModel.getInitialName()
 
 	SsTextFieldBody(
 		title = "Name",
-		initialSubtitle = initialSubtitle,
+		question = "What is the name of the climb?",
+		initial = name,
 		singleLine = true,
 		visible = visible,
 		onDone = { name ->
@@ -896,11 +924,12 @@ fun SsNoteBody(
 {
 
 	println("Note : $visible")
-	val initialSubtitle = viewModel.getInitialNote()
+	val note = viewModel.getInitialNote()
 
 	SsTextFieldBody(
 		title = "Notes",
-		initialSubtitle = initialSubtitle,
+		question = "Do you have any notes for the climb?",
+		initial = note,
 		singleLine = false,
 		visible = visible,
 		onDone = { note ->
@@ -914,6 +943,7 @@ fun SsNoteBody(
 /**
  * Number of attempts.
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SsNumAttemptBody(
 	viewModel: SsAddBoulderProblemViewModel,
@@ -922,10 +952,21 @@ fun SsNumAttemptBody(
 {
 
 	println("Num attempt : $visible")
-	val initialSubtitle = viewModel.getInitialNumAttempt()
-	var subtitle by remember { mutableStateOf(initialSubtitle) }
+
+	// Initial text to show depending on if a number of attempts has been stored
+	// or not
+	val initial = viewModel.getInitialNumAttemptSubtitle()
+
+	// Field value
+	var fieldValue by remember { mutableStateOf(TextFieldValue(initial)) }
+
+	// Subtitle
+	var subtitle = viewModel.getNumAttemptsSubtitle(fieldValue.text, visible)
+
+	// Request focus to show the keyboard
 	val focusRequester = remember { FocusRequester() }
 
+	// Body
 	SsBody("Attempts", subtitle)
 	{
 
@@ -935,23 +976,34 @@ fun SsNumAttemptBody(
 			BasicTextField(
 				modifier = Modifier
 					.focusRequester(focusRequester)
-					.onFocusChanged { subtitle = "" }
+					.onFocusChanged {
+						if (it.isFocused)
+						{
+							val selection = TextRange(0, initial.length)
+
+							fieldValue = fieldValue.copy(selection = selection)
+						}
+					}
 					.height(0.dp),
-				value = subtitle,
-				onValueChange = { subtitle = it },
+				value = fieldValue,
+				onValueChange = {
+					fieldValue = it
+				},
 				keyboardOptions = KeyboardOptions(
 					imeAction = ImeAction.Next,
 					keyboardType = KeyboardType.Number),
 				keyboardActions = KeyboardActions(
 					onNext = {
-						viewModel.problem.numAttempt = if (subtitle.isEmpty())
-							null else subtitle.toLong()
+						val numAttempt = viewModel.numAttemptsFromTextFieldValue(fieldValue)
 
-						onDone(subtitle)
+						viewModel.problem.numAttempt = numAttempt
+						fieldValue = fieldValue.copy(text = numAttempt.toString())
+
+						onDone(fieldValue.text)
 					}),
 				cursorBrush = SolidColor(Color.Transparent),
 				textStyle = TextStyle(
-					color = Color.Transparent))
+				color = Color.Transparent))
 
 			// Focus the text field
 			if (visible)
@@ -973,41 +1025,74 @@ fun SsNumAttemptBody(
  * imeAction, might want new line if single line is not true, but then how to
  * go to next thing?
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SsTextFieldBody(
 	title : String,
-	initialSubtitle: String = "",
+	question : String = "",
+	initial : String = "",
 	singleLine : Boolean = false,
 	visible : Boolean = true,
 	onDone : (String) -> Unit = {})
 {
 
-	var subtitle by remember { mutableStateOf(initialSubtitle) }
+	// Subtitle
+	var subtitle by remember { mutableStateOf(question) }
+
+	// Text
+	var text by remember { mutableStateOf(initial) }
+
+	// Request focus to show the keyboard
 	val focusRequester = remember { FocusRequester() }
+	var imeAction = if (singleLine) ImeAction.Next else ImeAction.Default
 
 	// Body
-	SsBody(title, subtitle)
+	SsBody(title, if (visible || (subtitle != question)) subtitle else "")
 	{
 
 		// Animate visibility as needed
 		AnimatedVisibility(visible = visible)
 		{
 
-			var imeAction = if (singleLine) ImeAction.Next else ImeAction.Default
-
 			// TODO: Capture "Enter" key press and go to next line
 			OutlinedTextField(
 				modifier = Modifier
-					.focusRequester(focusRequester),
-				value = subtitle,
+					.focusRequester(focusRequester)
+					.onKeyEvent {
+
+						// Check if Enter or Tab or pressed to indicate that the
+						// user is done with this question
+						val key = it.nativeKeyEvent.keyCode
+						val isDone = (key == KeyEvent.KEYCODE_ENTER) ||
+							(key == KeyEvent.KEYCODE_TAB)
+
+						// The user is done with this question
+						if (singleLine && isDone)
+						{
+							subtitle = text
+
+							onDone(subtitle)
+							return@onKeyEvent true
+						}
+						else
+						{
+							return@onKeyEvent false
+						}
+					},
+				value = text,
 				onValueChange = {
-					subtitle = if (singleLine) it.replace("\n", "") else it
+					text = if (singleLine) it.replace("\n", "") else it
 				},
 				singleLine = singleLine,
 				keyboardOptions = KeyboardOptions(imeAction = imeAction),
-				keyboardActions = KeyboardActions(onNext = { onDone(subtitle) }))
+				keyboardActions = KeyboardActions(
+					onNext = {
+						subtitle = text
 
-			// Focus the text field if it is visible
+						onDone(subtitle)
+					}))
+
+			// Focus the text field, if it is visible
 			if (visible)
 			{
 				focusRequester.requestFocus()
@@ -1041,18 +1126,22 @@ fun SsVerticalLine(
 /**
  * A body asking a yes/no question.
  */
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SsYesNoBody(
 	title : String,
+	question: String,
+	initial: Boolean? = null,
 	visible : Boolean = true,
 	onDone : (Boolean?, String) -> Unit = {_,_ -> })
 {
 
-	var subtitle by remember { mutableStateOf("") }
-	var isYes by remember { mutableStateOf<Boolean?>(null) }
+	var subtitle by remember { mutableStateOf(question) }
+	var isYes by remember { mutableStateOf<Boolean?>(initial) }
 
 	// Body
-	SsBody(title, subtitle)
+	//SsBody(title, subtitle)
+	SsBody(title, if (visible || (subtitle != question)) subtitle else "")
 	{
 
 		// Animate the visibility
@@ -1066,9 +1155,7 @@ fun SsYesNoBody(
 			))
 		{
 
-			var iconPadding = 8.dp
 			var buttonSpacing = 16.dp
-
 			var borderWidth = 2.dp
 			var yesBorderColor = if (isYes == true) Color.Magenta else Color.LightGray
 			var yesContentColor = if (isYes == true) Color.Magenta else Color.Black

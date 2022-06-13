@@ -3,11 +3,12 @@ package me.gabeg.sicksends.addproblem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.shared.SsSharedBaseDataStore
-import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
+import kotlin.math.roundToLong
 
 /**
  * Add problem view model.
@@ -28,9 +29,14 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	val allVisibility = MutableList(length) { mutableStateOf(false) }
 
 	/**
-	 * List of attributes.
+	 * List of answers.
 	 */
-	var questions = MutableList<Any?>(length) { null }
+	var answers = MutableList<Any?>(length) { null }
+
+	/**
+	 * Questions.
+	 */
+	val numAttemptQuestion = "How many attempts did you do?"
 
 	/**
 	 * The current attribute being set for the problem.
@@ -38,10 +44,40 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	var current : Any? = null
 
 	/**
+	 * Get the subtitle for the grade section.
+	 */
+	fun getGradeSubtitle() : String
+	{
+		var gradingSystem = problem.gradingSystem
+		var grade = problem.grade
+		var feel = problem.howDidItFeel
+
+		if (gradingSystem.isEmpty())
+		{
+			return ""
+		}
+		else if (grade.isEmpty())
+		{
+			return gradingSystem
+		}
+		else if (feel.isEmpty())
+		{
+			return "$gradingSystem  |  $grade"
+		}
+		else
+		{
+			return "$gradingSystem  |  $grade  |  $feel"
+		}
+	}
+
+	/**
 	 * Get the initial grading system.
 	 *
 	 * @return The initial grading system.
 	 */
+	// TODO: The initial problem should already be populated with the data store
+	// defaults, so that this check against the data store does not need to
+	// happen
 	@Composable
 	fun getInitialGradingSystem(dataStore: SsSharedBaseDataStore) : String
 	{
@@ -57,10 +93,9 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	 *
 	 * @return The initial how did it feel value.
 	 */
-	@Composable
 	fun getInitialHowDidItFeelScale() : String
 	{
-		return getHowDidItFeelScaleName(problem.howDidItFeelScale)
+		return problem.howDidItFeel
 	}
 
 	/**
@@ -68,7 +103,6 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	 *
 	 * @return The initial name.
 	 */
-	@Composable
 	fun getInitialName() : String
 	{
 		return problem.name ?: ""
@@ -79,7 +113,6 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	 *
 	 * @return The initial note.
 	 */
-	@Composable
 	fun getInitialNote() : String
 	{
 		return problem.note ?: ""
@@ -90,12 +123,40 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	 *
 	 * @return The initial number of attempts.
 	 */
-	@Composable
-	fun getInitialNumAttempt() : String
+	fun getInitialNumAttemptSubtitle() : String
 	{
 		val numAttempt = problem.numAttempt
+		val initial = numAttempt?.toString() ?: ""
 
-		return numAttempt?.toString() ?: ""
+		return getInitialSubtitle(initial, numAttemptQuestion)
+	}
+
+	/**
+	 * Get the initial subtitle to show.
+	 *
+	 * @return The initial subtitle to show.
+	 */
+	fun getInitialSubtitle(initial : String, question : String) : String
+	{
+		return if (initial.isEmpty()) question else initial
+	}
+
+	/**
+	 * Number of attempts subtitle.
+	 */
+	fun getNumAttemptsSubtitle(text : String, visible : Boolean) : String
+	{
+		return getSubtitle(text, numAttemptQuestion, visible)
+	}
+
+	/**
+	 * Get the subtitle to show.
+	 *
+	 * @return The subtitle to show.
+	 */
+	fun getSubtitle(text : String, question : String, visible : Boolean) : String
+	{
+		return if (visible || (text != question)) text else ""
 	}
 
 	/**
@@ -206,7 +267,7 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 		}
 
 		// Check if the question is answered
-		return questions.getOrNull(index) != null
+		return answers.getOrNull(index) != null
 	}
 
 	/**
@@ -239,6 +300,24 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 
 		// Get the visibility
 		return allVisibility[index].value
+	}
+
+	/**
+	 * Set the number of attempts from a text field value.
+	 *
+	 * @param fieldValue A text field value
+	 *
+	 * @return The number of attempts from a text field value.
+	 */
+	fun numAttemptsFromTextFieldValue(fieldValue: TextFieldValue) : Long?
+	{
+		var text = fieldValue.text
+		var sanitizedText = text.replace(numAttemptQuestion, "")
+
+		return if (sanitizedText.isEmpty())
+			null
+		else
+			sanitizedText.toFloat().roundToLong()
 	}
 
 	/**

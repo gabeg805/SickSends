@@ -12,6 +12,11 @@ import me.gabeg.sicksends.db.boulder.SsBoulderViewModel
 import me.gabeg.sicksends.problem.SsProblemScreen
 import me.gabeg.sicksends.ui.SsSearchFilterQueryState
 
+const val BOULDER_SCREEN_ROUTE = "Boulder"
+
+/**
+ * Boulder screen.
+ */
 @Composable
 fun SsBoulderScreen(
 	queryState: SsSearchFilterQueryState,

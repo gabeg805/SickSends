@@ -29,6 +29,9 @@ import me.gabeg.sicksends.datetime.convertProblemToRelativeDate
 import me.gabeg.sicksends.datetime.isSameDate
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
+import me.gabeg.sicksends.problem.ui.SsFlashIcon
+import me.gabeg.sicksends.problem.ui.SsOutdoorIcon
+import me.gabeg.sicksends.problem.ui.SsProjectIcon
 import me.gabeg.sicksends.shared.howDidItFeelScaleToString
 import java.util.*
 
@@ -129,14 +132,13 @@ fun ConstraintLayoutScope.buildFlashIcon(problem : SsGenericProblem,
 	}
 
 	// Build the flash icon
-	Icon(Icons.Default.Bolt,
+	SsFlashIcon(
 		modifier = Modifier
 			.constrainAs(ref) {
 				top.linkTo(parent.top)
 				start.linkTo(parent.start)
 			}
-			.size(20.dp),
-		contentDescription = "Flash")
+			.size(20.dp))
 }
 
 /**
@@ -280,14 +282,13 @@ fun ConstraintLayoutScope.buildOutdoorIcon(problem : SsGenericProblem,
 	}
 
 	// Build the outdoor icon. (Icon=Forest not found)
-	Icon(Icons.Default.Park,
+	SsOutdoorIcon(
 		modifier = Modifier
 			.constrainAs(ref) {
 				top.linkTo(parent.top)
 				end.linkTo(parent.end)
 			}
-			.size(16.dp),
-		contentDescription = "Outdoor")
+			.size(18.dp))
 }
 
 /**
@@ -411,14 +412,13 @@ fun ConstraintLayoutScope.buildProjectIcon(problem : SsGenericProblem,
 	}
 
 	// Build the project icon
-	Icon(Icons.Default.Construction,
+	SsProjectIcon(
 		modifier = Modifier
 			.constrainAs(ref) {
 				top.linkTo(parent.top)
 				start.linkTo(parent.start)
 			}
-			.size(18.dp),
-		contentDescription = "Project")
+			.size(18.dp))
 }
 
 /**

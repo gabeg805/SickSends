@@ -9,6 +9,11 @@ import me.gabeg.sicksends.db.sport.SsSportViewModel
 import me.gabeg.sicksends.problem.SsProblemScreen
 import me.gabeg.sicksends.ui.SsSearchFilterQueryState
 
+const val SPORT_SCREEN_ROUTE = "Sport"
+
+/**
+ * Sport screen.
+ */
 @Composable
 fun SsSportScreen(
 	queryState: SsSearchFilterQueryState,

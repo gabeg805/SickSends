@@ -9,6 +9,11 @@ import me.gabeg.sicksends.db.trad.SsTradViewModel
 import me.gabeg.sicksends.problem.SsProblemScreen
 import me.gabeg.sicksends.ui.SsSearchFilterQueryState
 
+const val TRAD_SCREEN_ROUTE = "Trad"
+
+/**
+ * Trad screen.
+ */
 @Composable
 fun SsTradScreen(
 	queryState: SsSearchFilterQueryState,

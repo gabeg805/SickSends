@@ -7,6 +7,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 /**
+ * Add icon.
+ */
+@Composable
+fun SsAddIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.Add,
+		modifier = modifier,
+		contentDescription = "Add")
+}
+
+/**
+ * Back icon.
+ */
+@Composable
+fun SsBackIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.ArrowBack,
+		modifier = modifier,
+		contentDescription = "Back")
+}
+
+/**
  * Flash icon.
  */
 @Composable
@@ -111,6 +133,28 @@ fun SsProjectIcon(modifier : Modifier = Modifier)
 	Icon(Icons.Default.Hardware,
 		modifier = modifier,
 		contentDescription = "Project")
+}
+
+/**
+ * Search icon.
+ */
+@Composable
+fun SsSearchIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.Search,
+		modifier = modifier,
+		contentDescription = "Search")
+}
+
+/**
+ * Settings icon.
+ */
+@Composable
+fun SsSettingsIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.MoreVert,
+		modifier = modifier,
+		contentDescription = "Settings")
 }
 
 /**

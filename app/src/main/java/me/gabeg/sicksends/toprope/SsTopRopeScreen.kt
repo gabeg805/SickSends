@@ -9,6 +9,11 @@ import me.gabeg.sicksends.db.toprope.SsTopRopeViewModel
 import me.gabeg.sicksends.problem.SsProblemScreen
 import me.gabeg.sicksends.ui.SsSearchFilterQueryState
 
+const val TOP_ROPE_SCREEN_ROUTE = "Top Rope"
+
+/**
+ * Top rope screen.
+ */
 @Composable
 fun SsTopRopeScreen(
 	queryState: SsSearchFilterQueryState,

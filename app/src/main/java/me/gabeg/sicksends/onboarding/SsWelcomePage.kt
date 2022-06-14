@@ -40,7 +40,7 @@ fun WelcomePage(onClick : () -> Unit = {})
 			modifier = Modifier
 				.fillMaxWidth(0.5f)
 				.fillMaxHeight(0.5f),
-			painter = painterResource(id = R.mipmap.delete),
+			painter = painterResource(id = R.mipmap.app),
 			contentDescription = "Welcome page")
 
 		// Title of app

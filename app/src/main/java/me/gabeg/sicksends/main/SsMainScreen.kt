@@ -8,39 +8,36 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import me.gabeg.sicksends.R
+import androidx.navigation.compose.currentBackStackEntryAsState
+import me.gabeg.sicksends.addproblem.ADD_PROBLEM_SCREEN_ROUTE
+import me.gabeg.sicksends.addproblem.SsAddClimbScreen
+import me.gabeg.sicksends.boulder.BOULDER_SCREEN_ROUTE
 import me.gabeg.sicksends.boulder.SsBoulderScreen
 import me.gabeg.sicksends.db.SsProblemDatabase
-import me.gabeg.sicksends.problem.ui.SsFlashIcon
-import me.gabeg.sicksends.problem.ui.SsOutdoorIcon
-import me.gabeg.sicksends.problem.ui.SsProjectIcon
+import me.gabeg.sicksends.problem.ui.*
 import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
 import me.gabeg.sicksends.shared.SsSharedDataStore
+import me.gabeg.sicksends.sport.SPORT_SCREEN_ROUTE
 import me.gabeg.sicksends.sport.SsSportScreen
 import me.gabeg.sicksends.toprope.SsTopRopeScreen
+import me.gabeg.sicksends.toprope.TOP_ROPE_SCREEN_ROUTE
 import me.gabeg.sicksends.trad.SsTradScreen
+import me.gabeg.sicksends.trad.TRAD_SCREEN_ROUTE
 import me.gabeg.sicksends.ui.*
-import kotlin.math.abs
 
 const val MAIN_SCREEN_ROUTE = "main_screen_route"
 
@@ -48,8 +45,11 @@ const val MAIN_SCREEN_ROUTE = "main_screen_route"
 //  bar
 // TODO: Hide the floating action button when in the Home screen
 @Composable
-fun SsMainScreen(navController: NavHostController)
+fun SsMainScreen(
+	navController : NavHostController,
+	viewModel : SsMainScreenViewModel = hiltViewModel())
 {
+
 	val dataStore = SsSharedDataStore(LocalContext.current)
 	val scaffoldState = rememberScaffoldState()
 	val scope = rememberCoroutineScope()
@@ -58,16 +58,13 @@ fun SsMainScreen(navController: NavHostController)
 	//  is saved with how it is used.
 	// TODO: Move this to Application and remove scope when done testing
 	val db = SsProblemDatabase.getInstance(LocalContext.current, scope)
-	val navItemNames = dataStore.getAllNavigationNames()
 
 	// TODO: Testing out hiding FAB
 	val lazyListState = rememberLazyListState()
 
-	val topBarHeight = 56.dp
-	val topBarHeightPx = with(LocalDensity.current) { topBarHeight.roundToPx().toFloat() }
-
-	val topBarOffsetHeightPx = remember { mutableStateOf(0f) }
-	var isFabVisible by remember { mutableStateOf(false) }
+	//val topBarHeight = 56.dp
+	//val topBarHeightPx = with(LocalDensity.current) { topBarHeight.roundToPx().toFloat() }
+	//val topBarOffsetHeightPx = remember { mutableStateOf(0f) }
 
 	//LaunchedEffect(lazyListState) {
 	//	snapshotFlow { lazyListState.isScrollInProgress }
@@ -76,28 +73,9 @@ fun SsMainScreen(navController: NavHostController)
 	//		}
 	//}
 
-	val nestedScrollConnection = remember {
-		object : NestedScrollConnection
-		{
+	val nestedScrollConnection = remember { viewModel.scrollConnection }
 
-			override fun onPreScroll(available: Offset,
-				source: NestedScrollSource) : Offset
-			{
-
-				val delta = available.y
-				val newTopBarOffset = topBarOffsetHeightPx.value + delta
-
-				topBarOffsetHeightPx.value = newTopBarOffset.coerceIn(-topBarHeightPx, 0f)
-
-				FabVisibilityConsultant.scrollBy(delta)
-
-				isFabVisible = FabVisibilityConsultant.shouldBeVisible()
-
-				return Offset.Zero
-			}
-
-		}
-	}
+	navController.enableOnBackPressed(true)
 
 	var drawerState = remember { SsDrawerState() }
 	var queryState = remember { SsSearchFilterQueryState() }
@@ -107,63 +85,86 @@ fun SsMainScreen(navController: NavHostController)
 			.nestedScroll(nestedScrollConnection),
 		scaffoldState = scaffoldState,
 		topBar = {
-			buildTopBar(topBarOffsetHeightPx) { menuItem ->
+			viewModel.currentNavEntry = navController.currentBackStackEntryAsState()
 
-				if (menuItem == "Search")
-				{
-					drawerState.toggle()
-				}
-
-			}
+			//buildTopBar(navController, viewModel, topBarOffsetHeightPx) { menuItem ->
+			buildTopBar(
+				viewModel = viewModel,
+				onMenuItemClicked = { menuItem ->
+					if (menuItem == "Search")
+					{
+						drawerState.toggle()
+					}
+				},
+				onBackPressed = {
+					navController.navigateUp()
+				})
 		},
 		bottomBar = {
-			buildBottomNavigationBar(dataStore = dataStore) { index, name ->
-				//navController.popBackStack()
+			buildBottomNavigationBar(
+				viewModel = viewModel,
+				dataStore = dataStore) { index, name ->
+
+				navController.popBackStack()
 				navController.navigate(name)
+
 			}
 		},
-		floatingActionButton = { SsAnimateFloatingActionButton(isFabVisible) },
+		floatingActionButton = {
+			SsAnimateFloatingActionButton(viewModel)
+			{
+				navController.navigate(ADD_PROBLEM_SCREEN_ROUTE)
+			}
+		},
 		floatingActionButtonPosition = FabPosition.End,
 		content = { innerPadding ->
 
 			SsSearchTopDrawer(drawerState, queryState, innerPadding)
 
 			// Navigation host which allows navigation to occur
-			NavHost(navController, startDestination = navItemNames[0])
+			NavHost(navController, startDestination = HOME_SCREEN_ROUTE)
 			{
 
 				// Home
-				composable(route = navItemNames[0])
+				composable(route = HOME_SCREEN_ROUTE)
 				{
-					isFabVisible = false
+					viewModel.shouldFabBeVisible.value = false
 					SsHomeScreen(innerPadding)
 				}
 
-				// Boulder
-				composable(route = navItemNames[1])
+				// Add climb
+				composable(route = ADD_PROBLEM_SCREEN_ROUTE)
 				{
-					isFabVisible = true
+					viewModel.shouldFabBeVisible.value = false
+					SsAddClimbScreen(innerPadding)
+
+				}
+
+				// Boulder
+				composable(route = BOULDER_SCREEN_ROUTE)
+				{
+					viewModel.shouldFabBeVisible.value = true
 					SsBoulderScreen(queryState, lazyListState, innerPadding)
 				}
 
 				// Sport
-				composable(route = navItemNames[2])
+				composable(route = SPORT_SCREEN_ROUTE)
 				{
-					isFabVisible = true
+					viewModel.shouldFabBeVisible.value = true
 					SsSportScreen(queryState, lazyListState, innerPadding)
 				}
 
 				// Top rope
-				composable(route = navItemNames[3])
+				composable(route = TOP_ROPE_SCREEN_ROUTE)
 				{
-					isFabVisible = true
+					viewModel.shouldFabBeVisible.value = true
 					SsTopRopeScreen(queryState, lazyListState, innerPadding)
 				}
 
 				// Trad
-				composable(route = navItemNames[4])
+				composable(route = TRAD_SCREEN_ROUTE)
 				{
-					isFabVisible = true
+					viewModel.shouldFabBeVisible.value = true
 					SsTradScreen(queryState, lazyListState, innerPadding)
 				}
 
@@ -175,7 +176,9 @@ fun SsMainScreen(navController: NavHostController)
  * Build the bottom navigation bar.
  */
 @Composable
-fun buildBottomNavigationBar(dataStore : SsSharedDataStore,
+fun buildBottomNavigationBar(
+	viewModel: SsMainScreenViewModel,
+	dataStore : SsSharedDataStore,
 	onNavigationItemClicked : (index : Int, name : String) -> Unit)
 {
 
@@ -184,8 +187,8 @@ fun buildBottomNavigationBar(dataStore : SsSharedDataStore,
 	val allWillClimb = dataStore.getAllWillClimb(boulderDataStore)
 
 	// Get the navigation names and icons
-	var navItemNames = dataStore.getAllNavigationNames()
-	var navItemIcons = dataStore.getAllNavigationIcons()
+	var navItemNames = viewModel.getAllNavigationNames()
+	var navItemIcons = viewModel.getAllNavigationIcons()
 	var selectedIndex by remember { mutableStateOf(0) }
 
 	// Create the bottom navigation bar
@@ -206,9 +209,6 @@ fun buildBottomNavigationBar(dataStore : SsSharedDataStore,
 				isVisible = (willClimb == true)
 			}
 
-			// Painter of the icon
-			val painter = painterResource(id = icon)
-
 			// Draw the bottom navigation item if the user will climb
 			if (isVisible)
 			{
@@ -217,7 +217,8 @@ fun buildBottomNavigationBar(dataStore : SsSharedDataStore,
 				// TODO: Maybe set default size for icon?
 				BottomNavigationItem(
 					icon = {
-						Icon(painter,
+						//Icon(painter,
+						Icon(icon,
 							modifier = Modifier
 								.padding(top = 4.dp)
 								.fillMaxHeight(0.5f)
@@ -244,23 +245,37 @@ fun buildBottomNavigationBar(dataStore : SsSharedDataStore,
  * TODO: Expand this so that user can search for words.
  */
 @Composable
-fun buildTopBar(offsetHeight : MutableState<Float>,
-	onMenuItemClicked: (menuItem: String) -> Unit)
+fun buildTopBar(
+	viewModel: SsMainScreenViewModel,
+	//offsetHeight : MutableState<Float>,
+	onMenuItemClicked : (menuItem: String) -> Unit = {},
+	onBackPressed : () -> Unit = {})
 {
+
 	TopAppBar(
 		//modifier = Modifier
 		//	.offset { IntOffset(x = 0, y = offsetHeight.value.roundToInt()) },
-		title = { Text(stringResource(R.string.app_name)) },
+		title = { Text(viewModel.getTopBarTitle()) },
+		navigationIcon = viewModel.getTopBarNavigationIcon {
+			IconButton(
+				onClick = { onBackPressed() })
+			{
+				SsBackIcon()
+			}
+		},
 		actions = {
 			IconButton(
 				onClick = { onMenuItemClicked("Search") })
 			{
-				Icon(Icons.Default.Search, contentDescription = "Search")
+				SsSearchIcon()
 			}
 
-			buildTopBarDropdownMenu() { menuItem ->
+			buildTopBarDropdownMenu(viewModel)
+			{ menuIndex, menuItem ->
+
 				Log.i("SsMainScreen", "TODO: Launch the Settings component")
 				onMenuItemClicked(menuItem)
+
 			}
 		})
 
@@ -270,16 +285,18 @@ fun buildTopBar(offsetHeight : MutableState<Float>,
  * Build the dropdown menu for the top bar.
  */
 @Composable
-fun buildTopBarDropdownMenu(onMenuItemClicked : (menuItem : String) -> Unit)
+fun buildTopBarDropdownMenu(
+	viewModel: SsMainScreenViewModel,
+	onMenuItemClicked : (menuIndex : Int, menuItem : String) -> Unit)
 {
 	val menuItems = listOf<String>("Settings")
 	var isMenuVisible by remember { mutableStateOf(false) }
 
-	// TODO: Place = Location icon
 	// TODO: Visibility = Eye icon
 	IconButton(onClick = { isMenuVisible = !isMenuVisible })
 	{
-		Icon(Icons.Default.MoreVert, contentDescription = "Top bar menu")
+
+		SsSettingsIcon()
 
 		DropdownMenu(
 			expanded = isMenuVisible,
@@ -288,7 +305,7 @@ fun buildTopBarDropdownMenu(onMenuItemClicked : (menuItem : String) -> Unit)
 			DropdownMenuItem(
 				onClick = {
 					isMenuVisible = false
-					onMenuItemClicked(menuItems[0])
+					onMenuItemClicked(0, menuItems[0])
 				})
 			{
 				Text(menuItems[0])
@@ -304,14 +321,19 @@ fun buildTopBarDropdownMenu(onMenuItemClicked : (menuItem : String) -> Unit)
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun SsAnimateFloatingActionButton(isVisible : Boolean)
+fun SsAnimateFloatingActionButton(
+	viewModel: SsMainScreenViewModel,
+	onClick: () -> Unit = {})
 {
 	AnimatedVisibility(
-		visible = isVisible,
+		visible = viewModel.shouldFabBeVisible.value,
 		enter = scaleIn(),
 		exit = scaleOut())
 	{
-		SsFloatingActionButton()
+		SsFloatingActionButton(viewModel)
+		{
+			onClick()
+		}
 	}
 }
 
@@ -319,23 +341,18 @@ fun SsAnimateFloatingActionButton(isVisible : Boolean)
  * The floating action button.
  */
 @Composable
-fun SsFloatingActionButton()
+fun SsFloatingActionButton(
+	viewModel: SsMainScreenViewModel,
+	onClick : () -> Unit = {})
 {
 	FloatingActionButton(
 		modifier = Modifier
 			.onGloballyPositioned { coordinates ->
-
-				// Measure the height of the FAB
-				if (FabVisibilityConsultant.heightPx == 0)
-				{
-					FabVisibilityConsultant.heightPx = coordinates.size.height
-				}
+				viewModel.setFabHeight(coordinates.size.height)
 			},
-		onClick = {
-			Log.i("FloatingActionButton", "TODO: Add climb type, depending on which")
-		})
+		onClick = { onClick() })
 	{
-		Icon(Icons.Default.Add, contentDescription = "Add a problem")
+		SsAddIcon()
 	}
 }
 
@@ -426,50 +443,6 @@ fun SsSearchTopDrawer(drawerState : SsDrawerState,
 
 	}
 
-}
-
-/**
- * Floating action button visibility consultant.
- *
- * When the screen is scrolled, this object is consulted to check if the FAB
- * should be visible or not.
- */
-object FabVisibilityConsultant
-{
-
-	/**
-	 * Height of the FAB, in pixels.
-	 */
-	var heightPx : Int = 0
-
-	/**
-	 * The amount the screen has scrolled by. The max value of this is the
-	 * height of the FAB.
-	 */
-	var scrollTotal : Float = 0f
-
-	/**
-	 * Indicate to the FAB how much the screen has scrolled by in order to
-	 * accurately determine if the FAB should be visible or not.
-	 *
-	 * This does not actually scroll the screen.
-	 */
-	fun scrollBy(delta : Float)
-	{
-		val newTotal = scrollTotal + delta
-
-		scrollTotal = newTotal.coerceIn((-heightPx).toFloat(), 0f)
-	}
-
-	/**
-	 * Check whether the FAB should be visible or not.
-	 *
-	 * @return True if the FAB should be visible, and False otherwise.
-	 */
-	fun shouldBeVisible() : Boolean
-	{
-		return abs(scrollTotal).toInt() != heightPx
-	}
 }
 
 //@Composable

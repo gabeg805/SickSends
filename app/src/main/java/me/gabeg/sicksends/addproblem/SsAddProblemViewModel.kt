@@ -36,12 +36,42 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	/**
 	 * Questions.
 	 */
+	val nameQuestion = "What is the name of the climb?"
+	val noteQuestion = "Do you have any notes for the climb?"
 	val numAttemptQuestion = "How many attempts did you do?"
 
 	/**
 	 * The current attribute being set for the problem.
 	 */
 	var current : Any? = null
+
+	/**
+	 * Companion.
+	 */
+	companion object
+	{
+
+		/**
+		 * Get the initial subtitle to show.
+		 *
+		 * @return The initial subtitle to show.
+		 */
+		fun getInitialSubtitle(initial: String, question: String): String
+		{
+			return if (initial.isEmpty()) question else initial
+		}
+
+		/**
+		 * Get the subtitle to show.
+		 *
+		 * @return The subtitle to show.
+		 */
+		fun getSubtitle(text : String, question : String, visible : Boolean) : String
+		{
+			return if (visible || (text != question)) text else ""
+		}
+
+	}
 
 	/**
 	 * Get the subtitle for the grade section.
@@ -106,6 +136,10 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	fun getInitialName() : String
 	{
 		return problem.name ?: ""
+
+		//val initial = problem.name ?: ""
+
+		//return getInitialSubtitle(initial, nameQuestion)
 	}
 
 	/**
@@ -116,6 +150,10 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	fun getInitialNote() : String
 	{
 		return problem.note ?: ""
+
+		//val initial = problem.note ?: ""
+
+		//return getInitialSubtitle(initial, noteQuestion)
 	}
 
 	/**
@@ -125,20 +163,9 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	 */
 	fun getInitialNumAttemptSubtitle() : String
 	{
-		val numAttempt = problem.numAttempt
-		val initial = numAttempt?.toString() ?: ""
+		val initial = problem.numAttempt?.toString() ?: ""
 
 		return getInitialSubtitle(initial, numAttemptQuestion)
-	}
-
-	/**
-	 * Get the initial subtitle to show.
-	 *
-	 * @return The initial subtitle to show.
-	 */
-	fun getInitialSubtitle(initial : String, question : String) : String
-	{
-		return if (initial.isEmpty()) question else initial
 	}
 
 	/**
@@ -147,16 +174,6 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	fun getNumAttemptsSubtitle(text : String, visible : Boolean) : String
 	{
 		return getSubtitle(text, numAttemptQuestion, visible)
-	}
-
-	/**
-	 * Get the subtitle to show.
-	 *
-	 * @return The subtitle to show.
-	 */
-	fun getSubtitle(text : String, question : String, visible : Boolean) : String
-	{
-		return if (visible || (text != question)) text else ""
 	}
 
 	/**

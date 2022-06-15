@@ -80,6 +80,35 @@ fun getAllBoulderGradingSystems() : List<String>
 }
 
 /**
+ * Get all the icons of climbs that a user can do.
+ *
+ * @return List of all the icons of climbs that a user can do.
+ */
+fun getAllClimbIcons() : List<Int>
+{
+	return listOf<Int>(
+		R.mipmap.boulder,
+		R.mipmap.sport,
+		R.mipmap.top_rope,
+		R.mipmap.trad)
+}
+
+/**
+ * Get all the names of climbs that a user can do.
+ *
+ * @return List of all the names of climbs that a user can do.
+ */
+@Composable
+fun getAllClimbNames() : List<String>
+{
+	return listOf<String>(
+		stringResource(R.string.boulder),
+		stringResource(R.string.sport),
+		stringResource(R.string.top_rope),
+		stringResource(R.string.trad))
+}
+
+/**
  * Get the name of all grading systems for ropes.
  *
  * @return The name of all grading systems for ropes.

@@ -97,7 +97,7 @@ fun SsDropdownSearchFilter(state : SsDropdownSearchFilterState,
 			fontWeight = FontWeight.SemiBold)
 
 		// Dropdown menu options for the search filter
-		SsDropdownMenu(
+		SsExposedDropdownMenu(
 			options = allOptions,
 			state = state,
 			modifier = Modifier.width(dropdownWidth))

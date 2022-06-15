@@ -58,10 +58,7 @@ import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
 import me.gabeg.sicksends.shared.getAllBoulderGradesForGradingSystem
 import me.gabeg.sicksends.shared.getExampleGrade
 import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
-import me.gabeg.sicksends.ui.SsDropdownMenu
-import me.gabeg.sicksends.ui.SsDropdownMenuState
-import me.gabeg.sicksends.ui.SsNoIconTextButton
-import me.gabeg.sicksends.ui.SsYesIconTextButton
+import me.gabeg.sicksends.ui.*
 import kotlin.math.round
 
 const val ADD_PROBLEM_SCREEN_ROUTE = "Add problem"
@@ -484,8 +481,9 @@ fun SsGradeBodyGradingSystemPage(
 	// Get the data store
 	val dataStore = SsSharedBoulderDataStore(LocalContext.current)
 
+	// TODO: Change this usage so that this doesn't get all grading systems
 	// Get all the grading systems that are used
-	val allGradingSystems = dataStore.getAllGradingSystemsWillUse()
+	//val allGradingSystems = dataStore.getAllGradingSystemsWillUse()
 
 	// Determine the initial grading system
 	// TODO: Make a way so that I can highlight this initial one
@@ -495,7 +493,8 @@ fun SsGradeBodyGradingSystemPage(
 	var exampleGradingSystem by remember { mutableStateOf("") }
 
 	// Build all the grading systems
-	buildGradingSystemButtons(allGradingSystems,
+	buildGradingSystemButtons(
+		dataStore = dataStore,
 		onGradingSystemToggled = { gradingSystem, isEnabled ->
 			viewModel.problem.gradingSystem = gradingSystem
 
@@ -536,8 +535,9 @@ fun SsGradeBodyGradePage(
 	val menuState = remember { SsDropdownMenuState() }
 
 	// Dropdown menu with all the grades
-	SsDropdownMenu(options = allGrades, state = menuState)
-	{ index, name ->
+	SsExposedDropdownMenu(
+		options = allGrades,
+		state = menuState) { index, name ->
 
 		viewModel.problem.grade = name
 

@@ -87,11 +87,9 @@ abstract class SsProblemDatabase : RoomDatabase()
 		fun getInstance(context : Context,
 			coroutineScope : CoroutineScope? = null) : SsProblemDatabase
 		{
-			println("Getting instance of the database! " + sInstance != null)
 			// If the instance is not null, return it. Otherwise create it
 			return sInstance ?: synchronized(this)
 			{
-				println("Creating the instance!")
 				val instance = Room.databaseBuilder(
 						context.applicationContext,
 						SsProblemDatabase::class.java,
@@ -100,7 +98,6 @@ abstract class SsProblemDatabase : RoomDatabase()
 					.build()
 
 				// Set the instance
-				println("Setting the instance! " + instance != null)
 				sInstance = instance
 
 				// Return the instance. For some reason this is considered
@@ -120,8 +117,6 @@ abstract class SsProblemDatabase : RoomDatabase()
 			{
 				super.onCreate(db)
 
-				println("Test database callback onCreate()!")
-				//PopulateDbAsync(sInstance).execute();
 				sInstance?.let { database ->
 					coroutineScope?.launch {
 						populateDatabase(database.boulderDao())
@@ -133,7 +128,6 @@ abstract class SsProblemDatabase : RoomDatabase()
 			{
 				super.onOpen(db)
 
-				println("Test database callback ON OPEN()!")
 				//sInstance?.let { database ->
 			//		coroutineScope?.launch {
 			//			populateDatabase(database.boulderDao())
@@ -143,7 +137,6 @@ abstract class SsProblemDatabase : RoomDatabase()
 
 			suspend fun populateDatabase(boulderDao: SsBoulderDao)
 			{
-				println("Populating/Creating the database!")
 				var boulders : MutableList<SsBoulderProblem> = mutableListOf()
 				var timestamp : Long = System.currentTimeMillis() / 1000;
 

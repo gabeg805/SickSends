@@ -7,6 +7,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import me.gabeg.sicksends.db.generic.SsGenericProblem
+import me.gabeg.sicksends.shared.SsSharedBaseClimbingDataStore
 import me.gabeg.sicksends.shared.SsSharedBaseDataStore
 import kotlin.math.roundToLong
 
@@ -109,7 +110,7 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	// defaults, so that this check against the data store does not need to
 	// happen
 	@Composable
-	fun getInitialGradingSystem(dataStore: SsSharedBaseDataStore) : String
+	fun getInitialGradingSystem(dataStore: SsSharedBaseClimbingDataStore) : String
 	{
 		val defaultGradingSystem = dataStore.getDefaultGradingSystem()
 		val problemGradingSystem = problem.gradingSystem

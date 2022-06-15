@@ -17,19 +17,19 @@ import me.gabeg.sicksends.R
 /**
  * Save the data store to the context.
  */
-val Context.boulderDataStore : DataStore<Preferences> by preferencesDataStore(name = "boulder")
+val Context.sportDataStore : DataStore<Preferences> by preferencesDataStore(name = "sport")
 
 /**
- * Boulder climbing data store.
+ * Sport climbing data store.
  */
-class SsSharedBoulderDataStore(context : Context)
+class SsSharedSportDataStore(context : Context)
 	: SsSharedBaseClimbingDataStore(context)
 {
 
 	/**
 	 * Data store.
 	 */
-	override val dataStore = context.boulderDataStore
+	override val dataStore = context.sportDataStore
 
 	/**
 	 * Key names.
@@ -39,14 +39,14 @@ class SsSharedBoulderDataStore(context : Context)
 	override val KEY_WILL_GRADE_WITH        = "key_will_grade_with_"
 
 	/**
-	 * Get all the grading systems for bouldering.
+	 * Get all the grading systems for sport climbing.
 	 *
-	 * @return All the grading systems for bouldering.
+	 * @return All the grading systems for sport climbing.
 	 */
 	@Composable
 	override fun getAllGradingSystems() : List<String>
 	{
-		return getAllBoulderGradingSystems()
+		return getAllSportGradingSystems()
 	}
 
 	/**
@@ -57,7 +57,7 @@ class SsSharedBoulderDataStore(context : Context)
 	@Composable
 	override fun getClimbName() : String
 	{
-		return stringResource(R.string.boulder)
+		return stringResource(R.string.sport)
 	}
 
 }

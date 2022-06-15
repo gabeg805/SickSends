@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import me.gabeg.sicksends.main.MAIN_SCREEN_ROUTE
 import me.gabeg.sicksends.main.SsMainScreen
 import me.gabeg.sicksends.onboarding.ONBOARDING_SCREEN_ROUTE
@@ -77,8 +78,8 @@ fun getStartNavDestination() : String
 
 	// Check whether this is the app's first run and decide the navigation route
 	// accordingly
-	LaunchedEffect(true)
-	{
+	//LaunchedEffect(true)
+	runBlocking {
 		isAppFirstRun = dataStore.getAppFirstRun().first()
 
 		// This is not the app's first run. Set the navigation route to the main

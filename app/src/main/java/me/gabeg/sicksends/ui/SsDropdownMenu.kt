@@ -4,9 +4,47 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SsDropdownMenu(
+	options : List<String>,
+	index : Int = -1,
+	state : SsDropdownMenuBaseState = rememberSsDropdownMenuState(index),
+	modifier : Modifier = Modifier,
+	onMenuItemClickedListener : (Int, String) -> Unit = {_,_ -> })
+{
+
+	// Container for the dropdown menu
+	DropdownMenu(
+		expanded = state.isExpanded,
+		onDismissRequest = { state.toggle() })
+	{
+
+		// Iterate over each of the options that should be in the dropdown menu
+		options.forEachIndexed { index, name ->
+
+			// Dropdown menu item
+			DropdownMenuItem(
+				onClick = {
+					state.select(index)
+					state.collapse()
+					onMenuItemClickedListener(index, name)
+				})
+			{
+				Text(name)
+			}
+
+		}
+
+	}
+}
+
+/**
+ * Dropdown menu with a text field that gets populated when an item is
+ * selected.
+ */
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SsExposedDropdownMenu(
 	options : List<String>,
 	index : Int = -1,
 	state : SsDropdownMenuBaseState = rememberSsDropdownMenuState(index),
@@ -17,9 +55,7 @@ fun SsDropdownMenu(
 	// Dropdown menu for the search filter.
 	ExposedDropdownMenuBox(
 		expanded = state.isExpanded,
-		onExpandedChange = {
-			state.toggle()
-		})
+		onExpandedChange = { state.toggle() })
 	{
 
 		// Text containing the item in the dropdown menu.

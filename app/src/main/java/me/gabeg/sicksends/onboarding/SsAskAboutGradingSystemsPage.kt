@@ -1,36 +1,31 @@
 package me.gabeg.sicksends.onboarding
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.asLiveData
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import me.gabeg.sicksends.SsLongClickButton
 import me.gabeg.sicksends.SsLongClickOutlinedButton
 import me.gabeg.sicksends.shared.*
 
@@ -39,48 +34,26 @@ import me.gabeg.sicksends.shared.*
  *
  * TODO: Change OutlinedButton to Button. Copy from the android github.
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TypeOfGradingSystemPage()
+fun SsAskAboutGradingSystemPage()
 {
 
 	// Coroutine scope
 	val scope = rememberCoroutineScope()
 
-	// Data store preferences
-	val dataStore = SsSharedDataStore(LocalContext.current)
+	// Get all data stores
 	val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
+	val sportDataStore = SsSharedSportDataStore(LocalContext.current)
+	val topRopeDataStore = SsSharedTopRopeDataStore(LocalContext.current)
+	val tradDataStore = SsSharedTradDataStore(LocalContext.current)
+	val allDataStores = listOf(boulderDataStore, sportDataStore,
+		topRopeDataStore, tradDataStore)
 
-	// All climb names
-	val climbNames = dataStore.getAllClimbNames()
-
-	Column(
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(32.dp),
-		horizontalAlignment = Alignment.CenterHorizontally,
-		verticalArrangement = Arrangement.Top)
+	// Page
+	SsOnboardingPage(
+		title = "What type of grading systems do you use?",
+		subtitle = "This can always be changed later.\nLong press on a grading system to see an example.")
 	{
-
-		// Title of app
-		Text(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(vertical = 16.dp),
-			text = "What type of grading systems do you use?",
-			fontSize = MaterialTheme.typography.h4.fontSize,
-			fontWeight = FontWeight.Bold,
-			textAlign = TextAlign.Center)
-
-		// Description of app
-		Text(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(bottom = 24.dp),
-			text = "This can always be changed later.\nLong press on a grading system to see an example.",
-			fontSize = MaterialTheme.typography.subtitle1.fontSize,
-			fontWeight = FontWeight.Normal,
-			textAlign = TextAlign.Center)
 
 		// List all grading systems
 		// TODO: Maybe use a regular column instead so all items are always
@@ -90,52 +63,20 @@ fun TypeOfGradingSystemPage()
 				.fillMaxWidth())
 		{
 
-			// Boulder grading systems
-			item {
-				buildGradingSystems(climbNames[0], getAllBoulderGradingSystems(),
-					boulderDataStore.getWillBoulderFlow()) { gradingSystem, isEnabled ->
+			// Iterate over each type of data store and type of climbing
+			for (ds in allDataStores)
+			{
 
-					// Edit the grading system(s) being used for bouldering
-					scope.launch {
-						boulderDataStore.editWillGradeWith(gradingSystem, isEnabled)
+				item {
+					buildGradingSystems(ds) { gradingSystem, isEnabled ->
+
+						// Edit the grading system(s) being used for bouldering
+						scope.launch {
+							ds.editWillGradeWith(gradingSystem, isEnabled)
+						}
 					}
 				}
-			}
 
-			// Sport grading systems
-			item {
-				buildGradingSystems(climbNames[1], getAllSportGradingSystems(),
-					dataStore.getWillClimbSport()) { gradingSystem, isEnabled ->
-
-					// Edit the grading system(s) being used for bouldering
-					scope.launch {
-						dataStore.editWillGradeSportWith(gradingSystem, isEnabled)
-					}
-				}
-			}
-
-			// Top rope grading systems
-			item {
-				buildGradingSystems(climbNames[2], getAllTopRopeGradingSystems(),
-					dataStore.getWillClimbTopRope()) { gradingSystem, isEnabled ->
-
-					// Edit the grading system(s) being used for bouldering
-					scope.launch {
-						dataStore.editWillGradeTopRopeWith(gradingSystem, isEnabled)
-					}
-				}
-			}
-
-			// Trad grading system
-			item {
-				buildGradingSystems(climbNames[3], getAllTradGradingSystems(),
-					dataStore.getWillClimbTrad()) { gradingSystem, isEnabled ->
-
-					// Edit the grading system(s) being used for bouldering
-					scope.launch {
-						dataStore.editWillGradeTradWith(gradingSystem, isEnabled)
-					}
-				}
 			}
 
 		}
@@ -148,25 +89,18 @@ fun TypeOfGradingSystemPage()
  */
 @Composable
 fun buildGradingSystems(
-	title : String,
-	gradingSystems : List<String>,
-	flow : Flow<Boolean>,
+	dataStore: SsSharedBaseClimbingDataStore,
 	onGradingSystemToggled: (gradingSystem: String, isEnabled: Boolean) -> Unit)
 {
 
+	// Title
+	val title = dataStore.getClimbName()
+
 	// Whether or not the grading system for a type of climbing are visible
-	var isVisible by remember { mutableStateOf(false) }
+	val isVisible by dataStore.getWillClimbFlow().asLiveData().observeAsState(false)
 
 	// Things needed to show an example of a grading system
 	var exampleGradingSystem by remember { mutableStateOf("") }
-
-	// Change the visibility state when the data store preference changes
-	LaunchedEffect(true)
-	{
-		flow.collect { newState ->
-			isVisible = newState
-		}
-	}
 
 	// Animate the visibility of the grading systems
 	AnimatedVisibility(visible = isVisible)
@@ -179,7 +113,8 @@ fun buildGradingSystems(
 			buildGradingSystemTitle(title)
 
 			// Buttons for each grading system
-			buildGradingSystemButtons(gradingSystems,
+			buildGradingSystemButtons(
+				dataStore = dataStore,
 				onGradingSystemToggled = { gradingSystem : String, isEnabled : Boolean ->
 					onGradingSystemToggled(gradingSystem, isEnabled)
 				},
@@ -215,13 +150,16 @@ fun buildGradingSystems(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun buildGradingSystemButtons(
-	gradingSystems : List<String>,
+	dataStore: SsSharedBaseClimbingDataStore,
 	onGradingSystemToggled : (gradingSystem : String, isEnabled : Boolean) -> Unit,
 	onGradingSystemLongClicked : (gradingSystem : String) -> Unit)
 {
 
 	// Width of the buttons
 	val buttonWidth: Dp = LocalConfiguration.current.screenWidthDp.dp / 3
+
+	// All grading systems
+	val allGradingSystems = dataStore.getAllGradingSystems()
 
 	// Organize each grading system  in a row that goes to the next line if
 	// there is not enough space
@@ -233,10 +171,11 @@ fun buildGradingSystemButtons(
 	{
 
 		// Iterate over each grading system
-		gradingSystems.forEach { name ->
+		allGradingSystems.forEach { name ->
 
 			// Whether or not the grading system button is selected
-			var isChecked by remember { mutableStateOf(false) }
+			//var isChecked by remember { mutableStateOf(false) }
+			val isChecked by dataStore.getWillGradeWith(name).asLiveData().observeAsState(false)
 
 			// Colors for the button
 			val backgroundColor = if (isChecked) Color.Magenta else Color.White
@@ -250,9 +189,9 @@ fun buildGradingSystemButtons(
 					backgroundColor = backgroundColor,
 					contentColor = textColor),
 				onClick = {
-					isChecked = !isChecked
+					//isChecked = !isChecked
 
-					onGradingSystemToggled(name, isChecked)
+					onGradingSystemToggled(name, !isChecked)
 				},
 				onLongClick = {
 					onGradingSystemLongClicked(name)
@@ -286,6 +225,6 @@ fun buildGradingSystemTitle(title : String)
 @Preview(showBackground = true)
 fun TypeOfGradingSystemPagePreview() {
 	Column(modifier = Modifier.fillMaxSize()) {
-		TypeOfGradingSystemPage()
+		SsAskAboutGradingSystemPage()
 	}
 }

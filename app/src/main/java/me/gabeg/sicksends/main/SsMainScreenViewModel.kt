@@ -3,15 +3,18 @@ package me.gabeg.sicksends.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -25,6 +28,7 @@ import dagger.hilt.components.SingletonComponent
 import me.gabeg.sicksends.R
 import me.gabeg.sicksends.addproblem.ADD_PROBLEM_SCREEN_ROUTE
 import me.gabeg.sicksends.boulder.BOULDER_SCREEN_ROUTE
+import me.gabeg.sicksends.shared.*
 import me.gabeg.sicksends.sport.SPORT_SCREEN_ROUTE
 import me.gabeg.sicksends.toprope.TOP_ROPE_SCREEN_ROUTE
 import me.gabeg.sicksends.trad.TRAD_SCREEN_ROUTE
@@ -101,12 +105,10 @@ class SsMainScreenViewModel @Inject constructor(
 	@Composable
 	fun getAllNavigationIcons() : List<Painter>
 	{
-		return listOf(
-			painterResource(R.mipmap.home),
-			painterResource(R.mipmap.boulder),
-			painterResource(R.mipmap.sport),
-			painterResource(R.mipmap.top_rope),
-			painterResource(R.mipmap.trad))
+		val home = listOf(R.mipmap.home)
+		val allClimbs = getAllClimbIcons()
+
+		return (home + allClimbs).map { painterResource(it) }
 	}
 
 	/**
@@ -117,12 +119,66 @@ class SsMainScreenViewModel @Inject constructor(
 	@Composable
 	fun getAllNavigationNames() : List<String>
 	{
-		return listOf(
-			stringResource(R.string.home),
-			stringResource(R.string.boulder),
-			stringResource(R.string.sport),
-			stringResource(R.string.top_rope),
-			stringResource(R.string.trad))
+		val home = listOf(stringResource(R.string.home))
+		val allClimbs = getAllClimbNames()
+
+		return home + allClimbs
+	}
+
+	/**
+	 * Get a list of all the navigation items that will be used.
+	 */
+	@Composable
+	fun getAllNavigationItemsWillUse() : List<Triple<Int, String, Painter>>
+	{
+
+		// Get all the climbing data stores
+		val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
+		val sportDataStore = SsSharedSportDataStore(LocalContext.current)
+		val topRopeDataStore = SsSharedTopRopeDataStore(LocalContext.current)
+		val tradDataStore = SsSharedTradDataStore(LocalContext.current)
+
+		// Determine which navigation items to use
+		val allWillClimb = listOf(
+			boulderDataStore.getWillClimbFlow(),
+			sportDataStore.getWillClimbFlow(),
+			topRopeDataStore.getWillClimbFlow(),
+			tradDataStore.getWillClimbFlow())
+
+		// Get the navigation names and icons
+		var navItemNames = getAllNavigationNames()
+		var navItemIcons = getAllNavigationIcons()
+
+		// Return value
+		var navItemsWillUse = mutableListOf<Triple<Int, String, Painter>>()
+
+		// iterate over each navigation name and icon
+		navItemNames.zip(navItemIcons).forEachIndexed { index, (name, icon) ->
+
+			// Create the item that possibly may be added to the return value
+			val item = Triple(index, name, icon)
+
+			// Home navigation
+			if (isHomeNavigationName(name))
+			{
+				navItemsWillUse.add(item)
+			}
+			// Observe changes as to whether the user will climb a certain
+			// type of climb, and if so, change the visibility
+			else
+			{
+				val willClimb by allWillClimb[index - 1].asLiveData().observeAsState()
+
+				// This navigation item will be used
+				if (willClimb == true)
+				{
+					navItemsWillUse.add(item)
+				}
+			}
+
+		}
+
+		return navItemsWillUse
 	}
 
 	/**
@@ -166,6 +222,18 @@ class SsMainScreenViewModel @Inject constructor(
 		{
 			return appName
 		}
+	}
+
+	/**
+	 * Check if the navigation name corresponds to Home or not.
+	 *
+	 * @return True if the navigation name corresponds to Home, and False
+	 *     otherwise.
+	 */
+	@Composable
+	fun isHomeNavigationName(name : String) : Boolean
+	{
+		return stringResource(R.string.home) == name
 	}
 
 	/**

@@ -51,35 +51,42 @@ fun SsOnboardingScreen(navController: NavHostController)
 	{
 
 		HorizontalPager(
-				modifier = Modifier.weight(10f),
-				count = 3,
-				state = pagerState,
-				verticalAlignment = Alignment.Top)
-		{ position ->
+			modifier = Modifier.weight(10f),
+			count = 4,
+			state = pagerState,
+			verticalAlignment = Alignment.Top) { position ->
 
-			 // Welcome screen. Call the callback when the "Get started"
-			 // button is clicked
-			 if (position == 0)
-			 {
-				  WelcomePage()
-				  {
-					  scope.launch {
-						   pagerState.animateScrollToPage(1)
-					  }
-				  }
-			 }
+			println("Position : $position")
 
-			 // Type of climbing the user will do
-			 else if (position == 1)
-			 {
-				  TypeOfClimbingPage()
-			 }
+			// Welcome screen. Call the callback when the "Get started"
+			// button is clicked
+			if (position == 0)
+			{
+				WelcomePage()
+				{
+					scope.launch {
+						pagerState.animateScrollToPage(1)
+					}
+				}
+			}
 
-			 // Type of grades the user will use
-			 else if (position == 2)
-			 {
-				  TypeOfGradingSystemPage()
-			 }
+			// Type of climbing the user will do
+			else if (position == 1)
+			{
+				SsAskAboutTypeOfClimbsPage()
+			}
+
+			// Type of grades the user will use
+			else if (position == 2)
+			{
+				SsAskAboutGradingSystemPage()
+			}
+
+			// Type of problem questions the user wants to be asked
+			else if (position == 3)
+			{
+				SsAskAboutProblemQuestionsPage()
+			}
 		}
 
 		HorizontalPagerIndicator(
@@ -95,9 +102,9 @@ fun SsOnboardingScreen(navController: NavHostController)
 
 			// Indicate in the data store that this is no longer the app's first
 			// run. The user has gone through the onboarding screen
-			scope.launch {
-				dataStore.editIsAppFirstRun(false)
-			}
+			//scope.launch {
+			//	dataStore.editIsAppFirstRun(false)
+			//}
 
 			// Go to the main screen
 			navController.popBackStack()
@@ -131,7 +138,7 @@ fun DoneButton(
 		// Show the button when "visible" is true
 		AnimatedVisibility(
 			modifier = Modifier.fillMaxWidth(),
-			visible = pagerState.currentPage == 2)
+			visible = pagerState.currentPage == 3)
 		{
 
 			// Done button

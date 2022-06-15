@@ -124,6 +124,17 @@ fun SsOutdoorIcon(modifier : Modifier = Modifier)
 }
 
 /**
+ * Overflow icon.
+ */
+@Composable
+fun SsOverflowIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.MoreVert,
+		modifier = modifier,
+		contentDescription = "Overflow options")
+}
+
+/**
  * Project icon.
  */
 @Composable
@@ -144,17 +155,6 @@ fun SsSearchIcon(modifier : Modifier = Modifier)
 	Icon(Icons.Default.Search,
 		modifier = modifier,
 		contentDescription = "Search")
-}
-
-/**
- * Settings icon.
- */
-@Composable
-fun SsSettingsIcon(modifier : Modifier = Modifier)
-{
-	Icon(Icons.Default.MoreVert,
-		modifier = modifier,
-		contentDescription = "Settings")
 }
 
 /**

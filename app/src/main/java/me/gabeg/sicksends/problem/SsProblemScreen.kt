@@ -1,18 +1,12 @@
 package me.gabeg.sicksends.problem
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.Construction
-import androidx.compose.material.icons.filled.Park
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -445,7 +439,6 @@ fun findEachGroupOfProblemsWithSameDay(allProblems: List<SsGenericProblem>)
 		// Something wrong with the indices. Continue to next element
 		if ((prevIndex < 0) || (index < 0))
 		{
-			Log.i("POOPOPOPOPOP", "CONTINUE")
 			continue
 		}
 
@@ -454,7 +447,6 @@ fun findEachGroupOfProblemsWithSameDay(allProblems: List<SsGenericProblem>)
 
 		// Add the group to the list
 		sameDayList.add(sameDayGroup)
-		Log.i("POOPOPOPOPOP", "Getting sublist : $prevIndex to " + index)
 
 		// Increment the previous index
 		prevIndex = index+1
@@ -488,8 +480,6 @@ fun findIndexForNewDays(allProblems: List<SsGenericProblem>) : List<Int>
 
 		// Get the date of the problem
 		var curDate = Date(p.timestamp * 1000)
-		//var curDate = Date(1000)
-		//Log.i("YOOOOOO", "Timestamp : " + p.timestamp + " || Date : " + curDate)
 
 		// This is the first problem. There is no previous date to compare with
 		if (i == 0)
@@ -501,7 +491,6 @@ fun findIndexForNewDays(allProblems: List<SsGenericProblem>) : List<Int>
 		{
 			newDayIndices.add(i-1)
 			prevDate = curDate
-			//Log.i("AHHHHHHHHH", "Adding index : " + (i-1))
 		}
 	}
 

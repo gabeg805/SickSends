@@ -1,7 +1,6 @@
 package me.gabeg.sicksends.shared
 
 import android.content.Context
-import androidx.compose.runtime.Composable
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -10,6 +9,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * Base data store class.
+ */
 abstract class SsSharedBaseDataStore(context : Context)
 {
 
@@ -55,9 +57,6 @@ abstract class SsSharedBaseDataStore(context : Context)
 			preferences[prefKey] ?: defaultValue
 		}
 	}
-
-	@Composable
-	abstract fun getDefaultGradingSystem() : String
 
 	/**
 	 * Get a string from the preferences data store.

@@ -87,8 +87,8 @@ fun SsMainScreen(
 		topBar = {
 			viewModel.currentNavEntry = navController.currentBackStackEntryAsState()
 
-			//buildTopBar(navController, viewModel, topBarOffsetHeightPx) { menuItem ->
-			buildTopBar(
+			//SsTopAppBar(navController, viewModel, topBarOffsetHeightPx) { menuItem ->
+			SsTopAppBar(
 				viewModel = viewModel,
 				onMenuItemClicked = { menuItem ->
 					if (menuItem == "Search")
@@ -101,9 +101,8 @@ fun SsMainScreen(
 				})
 		},
 		bottomBar = {
-			buildBottomNavigationBar(
-				viewModel = viewModel,
-				dataStore = dataStore) { index, name ->
+			SsBottomNavigationBar(
+				viewModel = viewModel) { index, name ->
 
 				navController.popBackStack()
 				navController.navigate(name)
@@ -111,7 +110,7 @@ fun SsMainScreen(
 			}
 		},
 		floatingActionButton = {
-			SsAnimateFloatingActionButton(viewModel)
+			SsFloatingActionButton(viewModel)
 			{
 				navController.navigate(ADD_PROBLEM_SCREEN_ROUTE)
 			}
@@ -173,143 +172,43 @@ fun SsMainScreen(
 }
 
 /**
- * Build the bottom navigation bar.
+ * Create the bottom navigation bar.
  */
 @Composable
-fun buildBottomNavigationBar(
+fun SsBottomNavigationBar(
 	viewModel: SsMainScreenViewModel,
-	dataStore : SsSharedDataStore,
 	onNavigationItemClicked : (index : Int, name : String) -> Unit)
 {
 
-	// Get whether the user will do a type of climb
-	val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
-	val allWillClimb = dataStore.getAllWillClimb(boulderDataStore)
-
-	// Get the navigation names and icons
-	var navItemNames = viewModel.getAllNavigationNames()
-	var navItemIcons = viewModel.getAllNavigationIcons()
+	// The currently selected item
 	var selectedIndex by remember { mutableStateOf(0) }
 
 	// Create the bottom navigation bar
 	// TODO: Maybe pass IntrisicSize?
 	BottomNavigation {
 
-		// Iterate over Home + each type of climb the user will do
-		navItemNames.zip(navItemIcons).forEachIndexed { index, (name, icon) ->
-
-			// Should navigation item be visible
-			var isVisible = true
-
-			// Observe changes as to whether the user will climb a certain
-			// type of climb, and if so, change the visibility
-			if (index > 0)
-			{
-				val willClimb by allWillClimb[index - 1].asLiveData().observeAsState()
-				isVisible = (willClimb == true)
-			}
-
-			// Draw the bottom navigation item if the user will climb
-			if (isVisible)
-			{
-
-				// Create a navigation item
-				// TODO: Maybe set default size for icon?
-				BottomNavigationItem(
-					icon = {
-						//Icon(painter,
-						Icon(icon,
-							modifier = Modifier
-								.padding(top = 4.dp)
-								.fillMaxHeight(0.5f)
-								.aspectRatio(1f),
-							contentDescription = name)
-					},
-					label = { Text(name) },
-					selected = selectedIndex == index,
-					onClick = {
-						selectedIndex = index
-						onNavigationItemClicked(index, name)
-					},
-					unselectedContentColor = Color.White.copy(alpha = 0.3f))
-			}
-
-		}
-
-	}
-}
-
-/**
- * Build the top bar.
- *
- * TODO: Expand this so that user can search for words.
- */
-@Composable
-fun buildTopBar(
-	viewModel: SsMainScreenViewModel,
-	//offsetHeight : MutableState<Float>,
-	onMenuItemClicked : (menuItem: String) -> Unit = {},
-	onBackPressed : () -> Unit = {})
-{
-
-	TopAppBar(
-		//modifier = Modifier
-		//	.offset { IntOffset(x = 0, y = offsetHeight.value.roundToInt()) },
-		title = { Text(viewModel.getTopBarTitle()) },
-		navigationIcon = viewModel.getTopBarNavigationIcon {
-			IconButton(
-				onClick = { onBackPressed() })
-			{
-				SsBackIcon()
-			}
-		},
-		actions = {
-			IconButton(
-				onClick = { onMenuItemClicked("Search") })
-			{
-				SsSearchIcon()
-			}
-
-			buildTopBarDropdownMenu(viewModel)
-			{ menuIndex, menuItem ->
-
-				Log.i("SsMainScreen", "TODO: Launch the Settings component")
-				onMenuItemClicked(menuItem)
-
-			}
-		})
-
-}
-
-/**
- * Build the dropdown menu for the top bar.
- */
-@Composable
-fun buildTopBarDropdownMenu(
-	viewModel: SsMainScreenViewModel,
-	onMenuItemClicked : (menuIndex : Int, menuItem : String) -> Unit)
-{
-	val menuItems = listOf<String>("Settings")
-	var isMenuVisible by remember { mutableStateOf(false) }
-
-	// TODO: Visibility = Eye icon
-	IconButton(onClick = { isMenuVisible = !isMenuVisible })
-	{
-
-		SsSettingsIcon()
-
-		DropdownMenu(
-			expanded = isMenuVisible,
-			onDismissRequest = { isMenuVisible = false })
+		// Iterate over each navigation item the user will use
+		for ((index, name, icon) in viewModel.getAllNavigationItemsWillUse())
 		{
-			DropdownMenuItem(
+
+			// Create a navigation item
+			// TODO: Maybe set default size for icon?
+			BottomNavigationItem(
+				icon = {
+					Icon(icon,
+						modifier = Modifier
+							.padding(top = 4.dp)
+							.fillMaxHeight(0.5f)
+							.aspectRatio(1f),
+						contentDescription = name)
+				},
+				label = { Text(name) },
+				selected = selectedIndex == index,
 				onClick = {
-					isMenuVisible = false
-					onMenuItemClicked(0, menuItems[0])
-				})
-			{
-				Text(menuItems[0])
-			}
+					selectedIndex = index
+					onNavigationItemClicked(index, name)
+				},
+				unselectedContentColor = Color.White.copy(alpha = 0.3f))
 
 		}
 
@@ -317,42 +216,33 @@ fun buildTopBarDropdownMenu(
 }
 
 /**
- * Animate the floating action button when scrolling.
+ * Create the floating action button.
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun SsAnimateFloatingActionButton(
+fun SsFloatingActionButton(
 	viewModel: SsMainScreenViewModel,
 	onClick: () -> Unit = {})
 {
+
+	// Animate the visibility of the FAB
 	AnimatedVisibility(
 		visible = viewModel.shouldFabBeVisible.value,
 		enter = scaleIn(),
 		exit = scaleOut())
 	{
-		SsFloatingActionButton(viewModel)
-		{
-			onClick()
-		}
-	}
-}
 
-/**
- * The floating action button.
- */
-@Composable
-fun SsFloatingActionButton(
-	viewModel: SsMainScreenViewModel,
-	onClick : () -> Unit = {})
-{
-	FloatingActionButton(
-		modifier = Modifier
-			.onGloballyPositioned { coordinates ->
-				viewModel.setFabHeight(coordinates.size.height)
-			},
-		onClick = { onClick() })
-	{
-		SsAddIcon()
+		// Create the FAB
+		FloatingActionButton(
+			modifier = Modifier
+				.onGloballyPositioned { coordinates ->
+					viewModel.setFabHeight(coordinates.size.height)
+				},
+			onClick = { onClick() })
+		{
+			SsAddIcon()
+		}
+
 	}
 }
 
@@ -444,6 +334,70 @@ fun SsSearchTopDrawer(drawerState : SsDrawerState,
 	}
 
 }
+
+/**
+ * Build the top bar.
+ *
+ * TODO: Expand this so that user can search for words.
+ */
+@Composable
+fun SsTopAppBar(
+	viewModel: SsMainScreenViewModel,
+	//offsetHeight : MutableState<Float>,
+	onMenuItemClicked : (menuItem: String) -> Unit = {},
+	onBackPressed : () -> Unit = {})
+{
+
+	TopAppBar(
+		//modifier = Modifier
+		//	.offset { IntOffset(x = 0, y = offsetHeight.value.roundToInt()) },
+		title = { Text(viewModel.getTopBarTitle()) },
+		navigationIcon = viewModel.getTopBarNavigationIcon {
+			IconButton(
+				onClick = { onBackPressed() })
+			{
+				SsBackIcon()
+			}
+		},
+		actions = {
+
+			// Overflow menu items and state
+			val menuItems = listOf("Settings")
+			val state = rememberSsDropdownMenuState(0)
+
+			// Search Icon
+			IconButton(
+				onClick = { onMenuItemClicked("Search") })
+			{
+				SsSearchIcon()
+			}
+
+			// Overflow icon
+			IconButton(
+				onClick = { state.toggle() })
+			{
+
+				SsOverflowIcon()
+
+				SsDropdownMenu(
+					options = menuItems,
+					state = state,
+					onMenuItemClickedListener = { menuIndex, menuItem ->
+						Log.i("SsMainScreen", "TODO: Launch the Settings component")
+						onMenuItemClicked(menuItem)
+					})
+
+			}
+
+		})
+
+}
+
+
+
+
+
+
 
 //@Composable
 //fun buildProblemCardV1(it : SsGenericProblem, width : Dp)

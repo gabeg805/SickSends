@@ -128,8 +128,8 @@ data class SsTradProblem(
 	/**
 	 * File path to the image.
 	 */
-	@ColumnInfo(name = "image_path")
-	override var imagePath : String? = null,
+	@ColumnInfo(name = "media_path")
+	override var mediaPath : String? = null,
 
 	/**
 	 * Notes on the problem.
@@ -166,7 +166,7 @@ class SsTradProblemModule
 {
 
 	/**
-	 * Provide an instance of trad problem.
+	 * Provide an instance of a trad problem.
 	 */
 	@Provides
 	fun provideTradProblem() : SsTradProblem

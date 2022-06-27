@@ -98,6 +98,11 @@ class SsMainScreenViewModel @Inject constructor(
 	var shouldFabBeVisible = mutableStateOf(false)
 
 	/**
+	 * Whether the FAB should be visible.
+	 */
+	var shouldBottomNavigationBarBeVisible = mutableStateOf(false)
+
+	/**
 	 * Get a list of all the navigation icons.
 	 *
 	 * @return A list of all the navigation icons.

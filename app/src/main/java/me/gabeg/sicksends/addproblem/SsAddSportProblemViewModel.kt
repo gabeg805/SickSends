@@ -3,6 +3,7 @@ package me.gabeg.sicksends.addproblem
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import me.gabeg.sicksends.db.sport.SsSportProblem
+import me.gabeg.sicksends.shared.SsSharedSportDataStore
 import javax.inject.Inject
 
 /**
@@ -11,5 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SsAddSportProblemViewModel @Inject constructor(
 	savedStateHandle: SavedStateHandle,
-	problem : SsSportProblem)
-	: SsAddProblemViewModel<SsSportProblem>(savedStateHandle, problem)
+	problem : SsSportProblem,
+	dataStore : SsSharedSportDataStore)
+	: SsAddProblemViewModel<SsSportProblem>(savedStateHandle, problem, dataStore)

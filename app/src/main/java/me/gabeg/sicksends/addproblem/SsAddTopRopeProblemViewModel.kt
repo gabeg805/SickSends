@@ -3,6 +3,7 @@ package me.gabeg.sicksends.addproblem
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import me.gabeg.sicksends.db.toprope.SsTopRopeProblem
+import me.gabeg.sicksends.shared.SsSharedTopRopeDataStore
 import javax.inject.Inject
 
 /**
@@ -11,5 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SsAddTopRopeProblemViewModel @Inject constructor(
 	savedStateHandle: SavedStateHandle,
-	problem : SsTopRopeProblem)
-	: SsAddProblemViewModel<SsTopRopeProblem>(savedStateHandle, problem)
+	problem : SsTopRopeProblem,
+	dataStore : SsSharedTopRopeDataStore)
+	: SsAddProblemViewModel<SsTopRopeProblem>(savedStateHandle, problem, dataStore)

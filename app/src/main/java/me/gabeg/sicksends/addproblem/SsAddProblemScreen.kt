@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,6 +34,9 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -44,6 +48,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -54,10 +60,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.gabeg.sicksends.onboarding.buildGradingSystemButtons
 import me.gabeg.sicksends.problem.ui.*
-import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
-import me.gabeg.sicksends.shared.getAllBoulderGradesForGradingSystem
-import me.gabeg.sicksends.shared.getExampleGrade
-import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
+import me.gabeg.sicksends.shared.*
 import me.gabeg.sicksends.ui.*
 import kotlin.math.round
 
@@ -78,28 +81,52 @@ fun SsAddClimbScreen(
 
 	val scrollState = rememberLazyListState()
 	val pagerState = rememberPagerState()
+	val dataStore = SsSharedBoulderDataStore(LocalContext.current)
+
+	var gradeIndex = viewModel.gradeIndex
+	var nameIndex = viewModel.nameIndex
+	var attemptIndex = viewModel.attemptIndex
+	var projectIndex = viewModel.projectIndex
+	var outdoorIndex = viewModel.outdoorIndex
+	var locationIndex = viewModel.locationIndex
+	var noteIndex = viewModel.noteIndex
+
+	val askName = dataStore.observeQuestionName()
+	val askFlash = dataStore.observeQuestionIsFlash()
+	val askNumAttempt = dataStore.observeQuestionNumAttempt()
+	val askProject = dataStore.observeQuestionIsProject()
+	val askOutdoor = dataStore.observeQuestionIsOutdoor()
+	val askLocation = dataStore.observeQuestionLocation() || dataStore.observeQuestionLocationName()
+	val askNote = dataStore.observeQuestionNote()
+
+	println("Ask name ? $askName")
+	println("Ask flash ? $askFlash")
+	println("Ask attempt ? $askNumAttempt")
+	println("Ask project ? $askProject")
+	println("Ask outdoor ? $askOutdoor")
+	println("Ask location ? $askLocation")
+	println("Ask note ? $askNote")
 
 	LaunchedEffect(true)
 	{
+		println("Showing 0 index!")
 		viewModel.show(0)
 	}
 
 	LazyColumn(
 		modifier = Modifier
-			.fillMaxWidth()
+			.fillMaxSize()
 			.padding(vertical = 24.dp, horizontal = 16.dp),
+			//.padding(innerPadding),
 		state = scrollState)
 	{
 
-		// TODO: Should highlight if on it and already done. Line should
-		// only get highlighted after it is complete.
-		/**
-		 * Grade
-		 */
 		/**
 		 * Grade
 		 */
 		// TODO: This might change the color in an unwanted way
+		// TODO: Should highlight if on it and already done. Line should
+		// only get highlighted after it is complete.
 		item {
 			SsQuestion(
 				viewModel = viewModel,
@@ -113,189 +140,166 @@ fun SsAddClimbScreen(
 						visible = visible,
 						onDone = onDone)
 				},
-				index = 0,
+				index = gradeIndex,
 				scrollState = scrollState)
 		}
 
 		/**
 		 * Name
 		 */
-
-		/**
-		 * Name
-		 */
 		item {
-			SsQuestion(
-				viewModel = viewModel,
-				icon = { modifier ->
-					SsNameIcon(modifier = modifier)
-				},
-				body = { visible, onDone ->
-					SsNameBody(
-						viewModel = viewModel,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = 1,
-				scrollState = scrollState)
-		}
-
-		/**
-		 * Number of attempts
-		 */
-
-		/**
-		 * Number of attempts
-		 */
-		item {
-			SsQuestion(
-				viewModel = viewModel,
-				icon = { modifier ->
-					SsNumberOfAttemptsIcon(modifier = modifier)
-				},
-				body = { visible, onDone ->
-					SsNumAttemptBody(
-						viewModel = viewModel,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = 2,
-				scrollState = scrollState)
-		}
-
-		/**
-		 * Is flash?
-		 */
-
-		/**
-		 * Is flash?
-		 */
-		item {
-			SsQuestion(
-				viewModel = viewModel,
-				icon = { modifier ->
-					SsFlashIcon(modifier = modifier)
-				},
-				body = { visible, onDone ->
-					SsIsFlashBody(
-						viewModel = viewModel,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = 3,
-				scrollState = scrollState)
-		}
-
-		/**
-		 * Is outdoor?
-		 */
-
-		/**
-		 * Is outdoor?
-		 */
-		item {
-			SsQuestion(
-				viewModel = viewModel,
-				icon = { modifier ->
-					SsOutdoorIcon(modifier = modifier)
-				},
-				body = { visible, onDone ->
-					SsIsOutdoorBody(
-						viewModel = viewModel,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = 4,
-				scrollState = scrollState)
-		}
-
-		/**
-		 * Is project?
-		 */
-
-		/**
-		 * Is project?
-		 */
-		item {
-			SsQuestion(
-				viewModel = viewModel,
-				icon = { modifier ->
-					SsProjectIcon(modifier = modifier)
-				},
-				body = { visible, onDone ->
-					SsIsProjectBody(
-						viewModel = viewModel,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = 5,
-				scrollState = scrollState)
-		}
-
-		/**
-		 * Location
-		 */
-
-		/**
-		 * Location
-		 */
-		item {
-			SsQuestion(
-				viewModel = viewModel,
-				icon = { modifier ->
-					SsLocationIcon(modifier = modifier)
-				},
-				body = { visible, onDone ->
-					SsLocationBody(
-						viewModel = viewModel,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = 6,
-				scrollState = scrollState)
-		}
-
-		/**
-		 * Notes
-		 */
-
-		/**
-		 * Notes
-		 */
-		item {
-			SsQuestion(
-				viewModel = viewModel,
-				icon = { modifier ->
-					SsNoteIcon(modifier = modifier)
-				},
-				body = { visible, onDone ->
-					SsNoteBody(
-						viewModel = viewModel,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = 7,
-				scrollState = scrollState)
-		}
-
-		/**
-		 * NEXT
-		 */
-
-		/**
-		 * NEXT
-		 */
-		item {
-			SsIcon(
-				focus = false)
+			if (askName)
 			{
-				Icon(Icons.Default.Home,
-					modifier = Modifier
-						.align(Alignment.Center)
-						.size(24.dp),
-					contentDescription = "Yo")
+				SsQuestion(
+					viewModel = viewModel,
+					icon = { modifier ->
+						SsNameIcon(modifier = modifier)
+					},
+					body = { visible, onDone ->
+						SsNameBody(
+							viewModel = viewModel,
+							visible = visible,
+							onDone = onDone)
+					},
+					index = nameIndex,
+					scrollState = scrollState)
 			}
 		}
+
+		/**
+		 *  Is Flash / Number of attempts
+		 */
+		item {
+
+			// Is flash
+			if (askFlash)
+			{
+				SsQuestion(
+					viewModel = viewModel,
+					icon = { modifier ->
+						SsFlashIcon(modifier = modifier)
+					},
+					body = { visible, onDone ->
+						SsIsFlashBody(
+							viewModel = viewModel,
+							visible = visible,
+							onDone = onDone)
+					},
+					index = attemptIndex,
+					scrollState = scrollState)
+			}
+
+			// Number of attempts
+			else if (askNumAttempt)
+			{
+				SsQuestion(
+					viewModel = viewModel,
+					icon = { modifier ->
+						SsNumberOfAttemptsIcon(modifier = modifier)
+					},
+					body = { visible, onDone ->
+						SsNumAttemptBody(
+							viewModel = viewModel,
+							visible = visible,
+							onDone = onDone)
+					},
+					index = attemptIndex,
+					scrollState = scrollState)
+			}
+
+		}
+
+		/**
+		 * Is project?
+		 *
+		 * TODO: Which question should come first, is project or is flash?
+		 */
+		item {
+			if (askProject)
+			{
+				SsQuestion(
+					viewModel = viewModel,
+					icon = { modifier ->
+						SsProjectIcon(modifier = modifier)
+					},
+					body = { visible, onDone ->
+						SsIsProjectBody(
+							viewModel = viewModel,
+							visible = visible,
+							onDone = onDone)
+					},
+					index = projectIndex,
+					scrollState = scrollState)
+			}
+		}
+
+		/**
+		 * Is outdoor?
+		 */
+		item {
+			if (askOutdoor)
+			{
+				SsQuestion(
+					viewModel = viewModel,
+					icon = { modifier ->
+						SsOutdoorIcon(modifier = modifier)
+					},
+					body = { visible, onDone ->
+						SsIsOutdoorBody(
+							viewModel = viewModel,
+							visible = visible,
+							onDone = onDone)
+					},
+					index = outdoorIndex,
+					scrollState = scrollState)
+			}
+		}
+
+		/**
+		 * Location
+		 */
+		item {
+			if (askLocation)
+			{
+				SsQuestion(
+					viewModel = viewModel,
+					icon = { modifier ->
+						SsLocationIcon(modifier = modifier)
+					},
+					body = { visible, onDone ->
+						SsLocationBody(
+							viewModel = viewModel,
+							visible = visible,
+							onDone = onDone)
+					},
+					index = locationIndex,
+					scrollState = scrollState)
+			}
+		}
+
+		/**
+		 * Notes
+		 */
+		item {
+			if (askNote)
+			{
+				SsQuestion(
+					viewModel = viewModel,
+					icon = { modifier ->
+						SsNoteIcon(modifier = modifier)
+					},
+					body = { visible, onDone ->
+						SsNoteBody(
+							viewModel = viewModel,
+							visible = visible,
+							onDone = onDone)
+					},
+					index = noteIndex,
+					scrollState = scrollState)
+			}
+		}
+
+		// TODO: Media/images/videos
 
 	}
 
@@ -306,7 +310,7 @@ fun SsAddClimbScreen(
  */
 @Composable
 fun SsQuestion(
-	viewModel: SsAddBoulderProblemViewModel,
+	viewModel : SsAddBoulderProblemViewModel,
 	icon : @Composable BoxScope.(
 		modifier : Modifier) -> Unit,
 	body : @Composable (
@@ -314,7 +318,7 @@ fun SsQuestion(
 		onDone : (String) -> Unit) -> Unit = {_,_ -> },
 	index : Int,
 	scrollState : LazyListState = rememberLazyListState(),
-	onClick: () -> Unit = {
+	onClick : () -> Unit = {
 		viewModel.showOnly(index)
 	},
 	onDone : () -> Unit = {
@@ -335,68 +339,82 @@ fun SsQuestion(
 	var isVisible by remember { viewModel.getVisible(index) }
 	var isHighlighted = isVisible || viewModel.isAnswered(index)
 
-	var bodyHeight by remember { mutableStateOf(0.dp) }
-	val localDensity = LocalDensity.current
+	// Whethr to show the line or not
+	val showLine = ((index+1) != viewModel.size)
 
+	// Container
 	Row()
 	{
+		SsQuestionSubcompose(
+			dependentContent = {
 
-		Column(
-			modifier = Modifier
-				.height(bodyHeight),
-			horizontalAlignment = Alignment.CenterHorizontally)
-		{
+				val localDensity = LocalDensity.current
+				val navHeight = with(localDensity) { it.height.toDp() }
 
-			// Icon
-			SsIcon(
-				modifier = Modifier
-					.padding(horizontal = 16.dp)
-					.size(48.dp),
-				focus = isHighlighted,
-				onClick = onClick)
-			{
-				icon(modifier = Modifier
-					.align(Alignment.Center)
-					.size(24.dp))
-			}
-
-			// Vertical line
-			SsVerticalLine(
-				modifier = Modifier.fillMaxHeight(),
-				focus = isHighlighted,
-				onClick = onClick)
-
-		}
-
-		// Body
-		Column(
-			modifier = Modifier
-				.fillMaxWidth()
-				.clickable { onClick() }
-				.padding(top = 0.dp, bottom = 32.dp, start = 8.dp, end = 8.dp)
-				.onGloballyPositioned { coord ->
-					bodyHeight = with(localDensity) { coord.size.height.toDp() + 32.dp }
-					//println("Height : $index   $bodyHeight")
-				})
-		{
-
-			println("Body : $index || $isVisible")
-			body(isVisible)
-			{ subtitle ->
-				if (viewModel.answers.size >= index+1)
+				Column(
+					modifier = Modifier
+						.height(navHeight),
+					horizontalAlignment = Alignment.CenterHorizontally)
 				{
-					viewModel.answers[index] = subtitle
+
+					// Icon
+					SsIcon(
+						modifier = Modifier
+							.padding(horizontal = 16.dp)
+							.size(48.dp),
+						focus = isHighlighted,
+						onClick = onClick)
+					{
+						icon(modifier = Modifier
+							.align(Alignment.Center)
+							.size(24.dp))
+					}
+
+					// Vertical line
+					if (showLine)
+					{
+						SsVerticalLine(
+							modifier = Modifier.fillMaxHeight(),
+							focus = isHighlighted,
+							onClick = onClick)
+					}
+
 				}
-				else
+			},
+			mainContent = {
+
+				// Body
+				Column(
+					modifier = Modifier
+						.fillMaxWidth()
+						.clickable { onClick() }
+						.padding(top = 0.dp, bottom = 32.dp, start = 8.dp, end = 8.dp))
+				//.onGloballyPositioned { coord ->
+				//		bodyHeight = with(localDensity) { coord.size.height.toDp() + 32.dp }
+				//		println("Height : $index   $bodyHeight")
+				//	})
 				{
-					viewModel.answers.add(index, subtitle)
+
+					body(isVisible)
+					{ subtitle ->
+						if (viewModel.answers.size >= index + 1)
+						{
+							println("Answer in proper index! $index")
+							viewModel.answers[index] = subtitle
+						}
+						else
+						{
+							println("Answer added index! $index")
+							viewModel.answers.add(index, subtitle)
+						}
+
+						println("Cancelling scope! $index")
+						isDone = true
+					}
+
 				}
 
-				println("Cancelling scope! $index")
-				isDone = true
-			}
-
-		}
+			})
 
 	}
 
@@ -414,6 +432,54 @@ fun SsQuestion(
 	}
 
 }
+
+/**
+ */
+@Composable
+fun SsQuestionSubcompose(
+	modifier: Modifier = Modifier,
+	mainContent: @Composable () -> Unit,
+	dependentContent: @Composable (IntSize) -> Unit)
+{
+
+	// Subcompose layout
+	SubcomposeLayout(modifier = modifier) { constraints ->
+
+		// Main
+		val mainMeasureables = subcompose(SlotsEnum.Main, mainContent)
+		var mainPlaceables = mainMeasureables.map { it.measure(constraints) }
+
+		// Get max width and height of the main component
+		val maxSize = mainPlaceables.fold(IntSize.Zero) { currentMax, placeable ->
+			IntSize(
+				width = maxOf(currentMax.width, placeable.width),
+				height = maxOf(currentMax.height, placeable.height)
+			)
+		}
+
+		// Dependent
+		val depMeasureables = subcompose(SlotsEnum.Dependent) {
+			dependentContent(maxSize)
+		}
+		val depPlaceables = depMeasureables.map {
+			it.measure(constraints)
+		}
+		var depWidth = depPlaceables.maxOf { it.width }
+
+		// Recompute width of main
+		mainPlaceables = subcompose(SlotsEnum.New, mainContent).map {
+			it.measure(Constraints(depWidth, constraints.maxWidth - depWidth))
+		}
+
+		// Layout
+		layout(maxSize.width, maxSize.height) {
+			mainPlaceables.forEach { it.placeRelative(depWidth, 0) }
+			depPlaceables.forEach { it.placeRelative(0, 0) }
+		}
+	}
+}
+
+enum class SlotsEnum { Main, Dependent, New }
 
 /**
  * Create the body.
@@ -478,30 +544,29 @@ fun SsGradeBodyGradingSystemPage(
 	onGradingSystemSelected : (gradingSystem: String) -> Unit)
 {
 
-	// Get the data store
-	val dataStore = SsSharedBoulderDataStore(LocalContext.current)
-
-	// TODO: Change this usage so that this doesn't get all grading systems
 	// Get all the grading systems that are used
-	//val allGradingSystems = dataStore.getAllGradingSystemsWillUse()
-
-	// Determine the initial grading system
-	// TODO: Make a way so that I can highlight this initial one
-	val initialGradingSystem = viewModel.getInitialGradingSystem(dataStore)
+	val allGradingSystems = viewModel.dataStore.observeAllGradingSystemsWillUse()
 
 	// Things needed to show an example of a grading system
 	var exampleGradingSystem by remember { mutableStateOf("") }
 
-	// Build all the grading systems
-	buildGradingSystemButtons(
-		dataStore = dataStore,
-		onGradingSystemToggled = { gradingSystem, isEnabled ->
-			viewModel.problem.gradingSystem = gradingSystem
+	// Show all the grading systems
+	SsButtonToggleGroup(
+		items = allGradingSystems,
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(horizontal = 16.dp, vertical = 4.dp),
+		numPerRow = 2,
+		singleSelection = true,
+		toggleable = false,
+		initialSelect = viewModel.problem.gradingSystem,
+		onClick = { name, isChecked ->
+			viewModel.problem.gradingSystem = name
 
-			onGradingSystemSelected(gradingSystem)
+			onGradingSystemSelected(name)
 		},
-		onGradingSystemLongClicked = { gradingSystem ->
-			exampleGradingSystem = gradingSystem
+		onLongClick = { name ->
+			exampleGradingSystem = name
 		}
 	)
 
@@ -558,7 +623,7 @@ fun SsGradeBody(
 	onDone : (String) -> Unit = {})
 {
 
-	println("Grade : $visible")
+	//println("Grade : $visible")
 
 	val scope = rememberCoroutineScope()
 	val pagerState = rememberPagerState()
@@ -593,7 +658,7 @@ fun SsGradeBody(
 				count = 3,
 				modifier = Modifier
 					.fillMaxHeight()
-					.fillMaxWidth()
+					//.fillMaxWidth()
 					.nestedScroll(remember {
 						object : NestedScrollConnection
 						{
@@ -667,6 +732,8 @@ fun SsGradeBody(
 						}
 
 					}
+
+					else -> { println("Another page got scrolled to? $page") }
 
 				}
 
@@ -835,7 +902,6 @@ fun SsIsOutdoorBody(
 		visible = visible,
 		onDone = { status, subtitle ->
 			viewModel.problem.isOutdoor = status
-			viewModel.current = status
 
 			onDone(subtitle)
 		})
@@ -864,7 +930,6 @@ fun SsIsProjectBody(
 		visible = visible,
 		onDone = { status, subtitle ->
 			viewModel.problem.isProject = status
-			viewModel.current = status
 
 			onDone(subtitle)
 		})
@@ -1149,6 +1214,12 @@ fun SsVerticalLine(
 {
 
 	var color = if (focus) Color.Green else Color.Gray
+
+	//Box(
+	//	modifier = modifier
+	//		.clickable { onClick() }
+	//		.width(3.dp)
+	//		.background(color))
 
 	Divider(
 		modifier = modifier

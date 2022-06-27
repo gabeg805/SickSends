@@ -1,7 +1,6 @@
 package me.gabeg.sicksends.db
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -15,15 +14,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import me.gabeg.sicksends.db.boulder.SsBoulderDao
 import me.gabeg.sicksends.db.boulder.SsBoulderProblem
-import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
-import me.gabeg.sicksends.problem.type.SsHoldType
-import me.gabeg.sicksends.problem.type.SsRouteFeatureType
 import me.gabeg.sicksends.db.sport.SsSportDao
 import me.gabeg.sicksends.db.sport.SsSportProblem
 import me.gabeg.sicksends.db.toprope.SsTopRopeDao
 import me.gabeg.sicksends.db.toprope.SsTopRopeProblem
 import me.gabeg.sicksends.db.trad.SsTradDao
 import me.gabeg.sicksends.db.trad.SsTradProblem
+import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
+import me.gabeg.sicksends.problem.type.SsHoldType
+import me.gabeg.sicksends.problem.type.SsRouteFeatureType
 import javax.inject.Singleton
 
 /**

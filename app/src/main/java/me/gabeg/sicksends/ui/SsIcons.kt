@@ -5,6 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import me.gabeg.sicksends.R
 
 /**
  * Add icon.
@@ -29,12 +31,39 @@ fun SsBackIcon(modifier : Modifier = Modifier)
 }
 
 /**
+ * Boulder icon.
+ */
+@Composable
+fun SsBoulderIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.mipmap.boulder)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Boulder")
+}
+
+/**
+ * Expand icon.
+ */
+@Composable
+fun SsExpandIcon(modifier : Modifier = Modifier)
+{
+	//Icon(Icons.Default.KeyboardArrowDown,
+	Icon(Icons.Default.ArrowDropDown,
+		modifier = modifier,
+		contentDescription = "Expand")
+}
+
+/**
  * Flash icon.
  */
 @Composable
 fun SsFlashIcon(modifier : Modifier = Modifier)
 {
-	Icon(Icons.Default.Bolt,
+	val painter = painterResource(R.drawable.ic_baseline_bolt_24)
+
+	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Flash")
 }
@@ -45,10 +74,35 @@ fun SsFlashIcon(modifier : Modifier = Modifier)
 @Composable
 fun SsGradeIcon(modifier : Modifier = Modifier)
 {
-	//Icon(Icons.Default.Grade,
-	Icon(Icons.Default.HotelClass,
+	val painter = painterResource(R.drawable.ic_baseline_hotel_class_24)
+
+	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Grade")
+}
+
+/**
+ * Home icon.
+ */
+@Composable
+fun SsHomeIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.mipmap.home)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Home")
+}
+
+/**
+ * How did it feel icon.
+ */
+@Composable
+fun SsHowDidItFeelIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.ThumbUp,
+		modifier = modifier,
+		contentDescription = "How did it feel")
 }
 
 /**
@@ -60,6 +114,32 @@ fun SsLocationIcon(modifier : Modifier = Modifier)
 	Icon(Icons.Default.Place,
 		modifier = modifier,
 		contentDescription = "Location")
+}
+
+/**
+ * Location name icon.
+ */
+@Composable
+fun SsLocationNameIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_local_offer_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Location name")
+}
+
+/**
+ * Media icon.
+ */
+@Composable
+fun SsMediaIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_photo_camera_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Image or video")
 }
 
 /**
@@ -90,8 +170,9 @@ fun SsNoIcon(modifier : Modifier = Modifier)
 @Composable
 fun SsNoteIcon(modifier : Modifier = Modifier)
 {
-	//Icon(Icons.Default.Chat,
-	Icon(Icons.Default.LibraryBooks,
+	val painter = painterResource(R.drawable.ic_baseline_library_books_24)
+
+	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Note")
 }
@@ -107,7 +188,11 @@ fun SsNumberOfAttemptsIcon(modifier : Modifier = Modifier)
 	//Icon(Icons.Default.RunCircle,
 	//Icon(Icons.Default.TransferWithinAStation,
 	//Icon(Icons.Default.DirectionsWalk,
-	Icon(Icons.Default.DirectionsRun,
+	//Icon(Icons.Default.DirectionsRun,
+
+	val painter = painterResource(R.drawable.ic_baseline_directions_run_24)
+
+	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Number of attempts")
 }
@@ -118,7 +203,9 @@ fun SsNumberOfAttemptsIcon(modifier : Modifier = Modifier)
 @Composable
 fun SsOutdoorIcon(modifier : Modifier = Modifier)
 {
-	Icon(Icons.Default.Park,
+	val painter = painterResource(R.drawable.baseline_forest_24)
+
+	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Outdoor")
 }
@@ -135,13 +222,30 @@ fun SsOverflowIcon(modifier : Modifier = Modifier)
 }
 
 /**
+ * Perceived grade icon.
+ */
+@Composable
+fun SsPerceivedGradeIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_star_half_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Perceived grade")
+}
+
+/**
  * Project icon.
  */
 @Composable
 fun SsProjectIcon(modifier : Modifier = Modifier)
 {
 	//Icon(Icons.Default.Construction,
-	Icon(Icons.Default.Hardware,
+	//Icon(Icons.Default.Hardware,
+
+	val painter = painterResource(R.drawable.ic_baseline_hardware_24)
+
+	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Project")
 }
@@ -153,6 +257,71 @@ fun SsProjectIcon(modifier : Modifier = Modifier)
 fun SsSearchIcon(modifier : Modifier = Modifier)
 {
 	Icon(Icons.Default.Search,
+		modifier = modifier,
+		contentDescription = "Search")
+}
+
+/**
+ * Sport icon.
+ */
+@Composable
+fun SsSportIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.mipmap.sport)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Sport")
+}
+
+/**
+ * Technique icon.
+ */
+@Composable
+fun SsTechniqueIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_lightbulb_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Search")
+}
+
+/**
+ * Top rope icon.
+ */
+@Composable
+fun SsTopRopeIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.mipmap.top_rope)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Top rope")
+}
+
+/**
+ * Trad icon.
+ */
+@Composable
+fun SsTradIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.mipmap.trad)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Trad")
+}
+
+/**
+ * Wall icon.
+ */
+@Composable
+fun SsWallIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_map_24)
+
+	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Search")
 }

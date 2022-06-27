@@ -3,8 +3,12 @@ package me.gabeg.sicksends.onboarding
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,9 +21,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.asLiveData
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -27,7 +33,12 @@ import com.google.accompanist.flowlayout.SizeMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import me.gabeg.sicksends.SsLongClickOutlinedButton
+import me.gabeg.sicksends.problem.ui.SsBoulderIcon
+import me.gabeg.sicksends.problem.ui.SsSportIcon
+import me.gabeg.sicksends.problem.ui.SsTopRopeIcon
+import me.gabeg.sicksends.problem.ui.SsTradIcon
 import me.gabeg.sicksends.shared.*
+import me.gabeg.sicksends.ui.SsButtonToggleGroup
 
 /**
  * Page asking the user what type of grades they will use.
@@ -52,7 +63,7 @@ fun SsAskAboutGradingSystemPage()
 	// Page
 	SsOnboardingPage(
 		title = "What type of grading systems do you use?",
-		subtitle = "This can always be changed later.\nLong press on a grading system to see an example.")
+		subtitle = "This can always be changed later.\nLong press on a grading system to see an example.\nD = Default")
 	{
 
 		// List all grading systems
@@ -68,11 +79,30 @@ fun SsAskAboutGradingSystemPage()
 			{
 
 				item {
+
+					val willUse = ds.observeAllGradingSystemsWillUse()
+
 					buildGradingSystems(ds) { gradingSystem, isEnabled ->
 
 						// Edit the grading system(s) being used for bouldering
 						scope.launch {
 							ds.editWillGradeWith(gradingSystem, isEnabled)
+
+							if (isEnabled)
+							{
+								if (willUse.size == 0)
+								{
+									ds.editDefaultGradingSystem(gradingSystem)
+								}
+							}
+							else
+							{
+								if (willUse.size == 1)
+								{
+									ds.editDefaultGradingSystem("")
+								}
+							}
+
 						}
 					}
 				}
@@ -155,55 +185,142 @@ fun buildGradingSystemButtons(
 	onGradingSystemLongClicked : (gradingSystem : String) -> Unit)
 {
 
-	// Width of the buttons
-	val buttonWidth: Dp = LocalConfiguration.current.screenWidthDp.dp / 3
-
 	// All grading systems
 	val allGradingSystems = dataStore.getAllGradingSystems()
 
-	// Organize each grading system  in a row that goes to the next line if
-	// there is not enough space
-	FlowRow(
+	// Default grading system
+	val defaultGradingSystem = dataStore.observeDefaultGradingSystem()
+
+	SsButtonToggleGroup(
+		items = allGradingSystems,
 		modifier = Modifier
-			.padding(vertical = 4.dp),
-		mainAxisSize = SizeMode.Expand,
-		mainAxisAlignment = FlowMainAxisAlignment.Center)
-	{
+			.fillMaxWidth()
+			.padding(horizontal = 24.dp, vertical = 4.dp),
+		numPerRow = 2,
+		checkCriteria = { dataStore.observeWillGradeWith(it) },
+		startButtonContent = { name ->
 
-		// Iterate over each grading system
-		allGradingSystems.forEach { name ->
-
-			// Whether or not the grading system button is selected
-			//var isChecked by remember { mutableStateOf(false) }
-			val isChecked by dataStore.getWillGradeWith(name).asLiveData().observeAsState(false)
-
-			// Colors for the button
-			val backgroundColor = if (isChecked) Color.Magenta else Color.White
-			val textColor = if (isChecked) Color.White else Color.Black
-
-			// Create grading system button
-			SsLongClickOutlinedButton(
-				modifier = Modifier
-					.width(buttonWidth),
-				colors = ButtonDefaults.buttonColors(
-					backgroundColor = backgroundColor,
-					contentColor = textColor),
-				onClick = {
-					//isChecked = !isChecked
-
-					onGradingSystemToggled(name, !isChecked)
-				},
-				onLongClick = {
-					onGradingSystemLongClicked(name)
-				})
+			AnimatedVisibility(visible = (name == defaultGradingSystem))
 			{
-				Text(name, softWrap = false)
+				Box(
+					modifier = Modifier
+						.size(20.dp)
+						.background(color = Color.White, shape = CircleShape),
+					contentAlignment = Alignment.Center)
+				{
+					Text("D",
+						modifier = Modifier
+							.padding(start = 1.dp),
+						color = Color.Magenta,
+						fontSize = MaterialTheme.typography.caption.fontSize,
+						fontWeight = FontWeight.Bold,
+						textAlign = TextAlign.Center)
+				}
 			}
 
+		},
+		textButtonContent = { name ->
+			Text(name,
+				modifier = Modifier
+					.padding(horizontal = if (name == defaultGradingSystem) 8.dp else 0.dp),
+				overflow = TextOverflow.Ellipsis,
+				softWrap = false)
+		},
+		onClick = { name, isChecked ->
+			onGradingSystemToggled(name, isChecked)
+		},
+		onLongClick = { name ->
+			onGradingSystemLongClicked(name)
 		}
+	)
 
-	}
 }
+
+///**
+// * Build the grading system buttons.
+// */
+//@OptIn(ExperimentalFoundationApi::class)
+//@Composable
+//fun buildGradingSystemButtons(
+//	dataStore: SsSharedBaseClimbingDataStore,
+//	onGradingSystemToggled : (gradingSystem : String, isEnabled : Boolean) -> Unit,
+//	onGradingSystemLongClicked : (gradingSystem : String) -> Unit)
+//{
+//
+//	// Width of the buttons
+//	val buttonWidth : Dp = LocalConfiguration.current.screenWidthDp.dp / 2 - 48.dp
+//
+//	// All grading systems
+//	val allGradingSystems = dataStore.getAllGradingSystems()
+//
+//	// Default grading system
+//	val defaultGradingSystem = dataStore.observeDefaultGradingSystem()
+//
+//	// Organize each grading system  in a row that goes to the next line if
+//	// there is not enough space
+//	FlowRow(
+//		modifier = Modifier
+//			.padding(vertical = 4.dp),
+//		mainAxisSize = SizeMode.Expand,
+//		mainAxisAlignment = FlowMainAxisAlignment.Center)
+//	{
+//
+//		// Iterate over each grading system
+//		allGradingSystems.forEach { name ->
+//
+//			// Whether or not the grading system button is selected
+//			val isChecked = dataStore.observeWillGradeWith(name)
+//			val isDefault = (name == defaultGradingSystem)
+//
+//			// Colors for the button
+//			val backgroundColor = if (isChecked) Color.Magenta else Color.White
+//			val textColor = if (isChecked) Color.White else Color.Black
+//
+//			// Create grading system button
+//			SsLongClickOutlinedButton(
+//				modifier = Modifier
+//					.width(buttonWidth),
+//				colors = ButtonDefaults.buttonColors(
+//					backgroundColor = backgroundColor,
+//					contentColor = textColor),
+//				onClick = {
+//					onGradingSystemToggled(name, !isChecked)
+//				},
+//				onLongClick = {
+//					onGradingSystemLongClicked(name)
+//				})
+//			{
+//
+//				AnimatedVisibility(visible = isDefault)
+//				{
+//					Box(
+//						modifier = Modifier
+//							.size(20.dp)
+//							.background(color = Color.White, shape = CircleShape),
+//						contentAlignment = Alignment.Center)
+//					{
+//						Text("D",
+//							modifier = Modifier
+//								.padding(start = 1.dp),
+//							color = Color.Magenta,
+//							fontSize = MaterialTheme.typography.caption.fontSize,
+//							fontWeight = FontWeight.Bold,
+//							textAlign = TextAlign.Center)
+//					}
+//				}
+//
+//				Text(name,
+//					modifier = Modifier
+//						.padding(horizontal = if (isDefault) 8.dp else 0.dp),
+//					overflow = TextOverflow.Ellipsis,
+//					softWrap = false)
+//
+//			}
+//
+//		}
+//
+//	}
+//}
 
 /**
  * Build the title of each grading system section.
@@ -211,11 +328,39 @@ fun buildGradingSystemButtons(
 @Composable
 fun buildGradingSystemTitle(title : String)
 {
-	Text(title,
+
+	// Title row
+	Row(
 		modifier = Modifier
 			.padding(vertical = 8.dp),
-		fontSize = MaterialTheme.typography.body1.fontSize,
-		fontWeight = FontWeight.Bold)
+		verticalAlignment = Alignment.CenterVertically)
+	{
+
+		// Icon
+		val climbNames = getAllClimbNames()
+		val size = 24.dp
+
+		when (title)
+		{
+			climbNames[0] -> SsBoulderIcon(modifier = Modifier.size(size))
+			climbNames[1] -> SsSportIcon(modifier = Modifier.size(size))
+			climbNames[2] -> SsTopRopeIcon(modifier = Modifier.size(size))
+			climbNames[3] -> SsTradIcon(modifier = Modifier.size(size))
+			else -> {}
+		}
+
+		// Space
+		Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+
+		// Title
+		Text(title,
+			//modifier = Modifier
+			//	.padding(vertical = 8.dp),
+			fontSize = MaterialTheme.typography.body1.fontSize,
+			fontWeight = FontWeight.Bold,
+			overflow = TextOverflow.Ellipsis)
+
+	}
 }
 
 /**

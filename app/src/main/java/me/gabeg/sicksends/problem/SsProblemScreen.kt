@@ -22,11 +22,9 @@ import androidx.constraintlayout.compose.ConstraintLayoutScope
 import me.gabeg.sicksends.datetime.convertProblemToRelativeDate
 import me.gabeg.sicksends.datetime.isSameDate
 import me.gabeg.sicksends.db.generic.SsGenericProblem
-import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
 import me.gabeg.sicksends.problem.ui.SsFlashIcon
 import me.gabeg.sicksends.problem.ui.SsOutdoorIcon
 import me.gabeg.sicksends.problem.ui.SsProjectIcon
-import me.gabeg.sicksends.shared.howDidItFeelScaleToString
 import java.util.*
 
 
@@ -170,7 +168,6 @@ fun ConstraintLayoutScope.buildGradeText(problem: SsGenericProblem,
 fun buildGradeSubtitleText(problem: SsGenericProblem)
 {
 	val altGrade = problem.perceivedGrade
-	val feelScale = problem.howDidItFeelScale
 	var text = ""
 
 	// Perceived grade
@@ -179,9 +176,9 @@ fun buildGradeSubtitleText(problem: SsGenericProblem)
 		text = altGrade
 	}
 	// How did it feel scale
-	else if ((feelScale != null) && (feelScale != SsHowDidItFeelType.NORMAL.value))
+	else if (problem.hasHowDidItFeelScale)
 	{
-		text = howDidItFeelScaleToString(feelScale)
+		text = problem.howDidItFeel
 	}
 	// Do not show subtitle text. This was causing a crash so it is commented
 	else
@@ -204,13 +201,10 @@ fun buildGradeSubtitleText(problem: SsGenericProblem)
 fun buildGradeSubtitleToNameSpacer(problem: SsGenericProblem)
 {
 	val altGrade = problem.perceivedGrade
-	val feelScale = problem.howDidItFeelScale
 	val locationName = problem.locationName
 	val name = problem.name
 
-	var hasAltGrade = !altGrade.isNullOrEmpty()
-	var hasFeelScale = (feelScale != null) && (feelScale != SsHowDidItFeelType.NORMAL.value)
-	var hasSubtitle = hasAltGrade || hasFeelScale
+	var hasSubtitle = !altGrade.isNullOrEmpty() || problem.hasHowDidItFeelScale
 	var hasName = !locationName.isNullOrEmpty() || !name.isNullOrEmpty()
 
 	// Build the spacer if there is a subtitle present and a name present
@@ -240,6 +234,7 @@ fun buildLocationNameText(problem: SsGenericProblem)
 		softWrap = false,
 		overflow = TextOverflow.Ellipsis)
 }
+
 /**
  * Build the text of the problem's name.
  */

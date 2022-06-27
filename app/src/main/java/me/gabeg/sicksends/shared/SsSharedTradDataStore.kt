@@ -2,16 +2,15 @@ package me.gabeg.sicksends.shared
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.asLiveData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import me.gabeg.sicksends.R
 
 /**
@@ -30,13 +29,6 @@ class SsSharedTradDataStore(context : Context)
 	 * Data store.
 	 */
 	override val dataStore = context.tradDataStore
-
-	/**
-	 * Key names.
-	 */
-	override val KEY_DEFAULT_GRADING_SYSTEM = "key_default_grading_system"
-	override val KEY_WILL_CLIMB             = "key_will_climb"
-	override val KEY_WILL_GRADE_WITH        = "key_will_grade_with_"
 
 	/**
 	 * Get all the grading systems for trad climbing.
@@ -58,6 +50,25 @@ class SsSharedTradDataStore(context : Context)
 	override fun getClimbName() : String
 	{
 		return stringResource(R.string.trad)
+	}
+
+}
+
+/**
+ * Hilt module to provide an instance of a trad data store.
+ */
+@InstallIn(SingletonComponent::class)
+@Module
+class SsSharedTradDataStoreModule
+{
+
+	/**
+	 * Provide an instance of a trad data store.
+	 */
+	@Provides
+	fun provideDataStore(@ApplicationContext context : Context) : SsSharedTradDataStore
+	{
+		return SsSharedTradDataStore(context)
 	}
 
 }

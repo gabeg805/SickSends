@@ -128,8 +128,8 @@ data class SsSportProblem (
 	/**
 	 * File path to the image.
 	 */
-	@ColumnInfo(name = "image_path")
-	override var imagePath : String? = null,
+	@ColumnInfo(name = "media_path")
+	override var mediaPath : String? = null,
 
 	/**
 	 * Notes on the problem.
@@ -166,7 +166,7 @@ class SsSportProblemModule
 {
 
 	/**
-	 * Provide an instance of sport problem.
+	 * Provide an instance of a sport problem.
 	 */
 	@Provides
 	fun provideSportrProblem() : SsSportProblem

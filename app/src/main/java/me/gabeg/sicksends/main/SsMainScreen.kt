@@ -1,10 +1,10 @@
 package me.gabeg.sicksends.main
 
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
@@ -128,6 +128,7 @@ fun SsMainScreen(
 				composable(route = HOME_SCREEN_ROUTE)
 				{
 					viewModel.shouldFabBeVisible.value = false
+					viewModel.shouldBottomNavigationBarBeVisible.value = true
 					SsHomeScreen(innerPadding)
 				}
 
@@ -135,6 +136,7 @@ fun SsMainScreen(
 				composable(route = ADD_PROBLEM_SCREEN_ROUTE)
 				{
 					viewModel.shouldFabBeVisible.value = false
+					viewModel.shouldBottomNavigationBarBeVisible.value = false
 					SsAddClimbScreen(innerPadding)
 
 				}
@@ -143,6 +145,7 @@ fun SsMainScreen(
 				composable(route = BOULDER_SCREEN_ROUTE)
 				{
 					viewModel.shouldFabBeVisible.value = true
+					viewModel.shouldBottomNavigationBarBeVisible.value = true
 					SsBoulderScreen(queryState, lazyListState, innerPadding)
 				}
 
@@ -150,6 +153,7 @@ fun SsMainScreen(
 				composable(route = SPORT_SCREEN_ROUTE)
 				{
 					viewModel.shouldFabBeVisible.value = true
+					viewModel.shouldBottomNavigationBarBeVisible.value = true
 					SsSportScreen(queryState, lazyListState, innerPadding)
 				}
 
@@ -157,6 +161,7 @@ fun SsMainScreen(
 				composable(route = TOP_ROPE_SCREEN_ROUTE)
 				{
 					viewModel.shouldFabBeVisible.value = true
+					viewModel.shouldBottomNavigationBarBeVisible.value = true
 					SsTopRopeScreen(queryState, lazyListState, innerPadding)
 				}
 
@@ -164,6 +169,7 @@ fun SsMainScreen(
 				composable(route = TRAD_SCREEN_ROUTE)
 				{
 					viewModel.shouldFabBeVisible.value = true
+					viewModel.shouldBottomNavigationBarBeVisible.value = true
 					SsTradScreen(queryState, lazyListState, innerPadding)
 				}
 
@@ -174,6 +180,7 @@ fun SsMainScreen(
 /**
  * Create the bottom navigation bar.
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SsBottomNavigationBar(
 	viewModel: SsMainScreenViewModel,
@@ -183,35 +190,47 @@ fun SsBottomNavigationBar(
 	// The currently selected item
 	var selectedIndex by remember { mutableStateOf(0) }
 
-	// Create the bottom navigation bar
-	// TODO: Maybe pass IntrisicSize?
-	BottomNavigation {
+	// Animate the visibility of the FAB
+	AnimatedVisibility(
+		visible = viewModel.shouldBottomNavigationBarBeVisible.value,
+		enter = slideInVertically(
+			animationSpec = tween(durationMillis = 250),
+			initialOffsetY = { it }),
+		exit = slideOutVertically(
+			animationSpec = tween(durationMillis = 250),
+			targetOffsetY = { it }))
+	{
 
-		// Iterate over each navigation item the user will use
-		for ((index, name, icon) in viewModel.getAllNavigationItemsWillUse())
-		{
+		// Create the bottom navigation bar
+		// TODO: Maybe pass IntrisicSize?
+		BottomNavigation {
 
-			// Create a navigation item
-			// TODO: Maybe set default size for icon?
-			BottomNavigationItem(
-				icon = {
-					Icon(icon,
-						modifier = Modifier
-							.padding(top = 4.dp)
-							.fillMaxHeight(0.5f)
-							.aspectRatio(1f),
-						contentDescription = name)
-				},
-				label = { Text(name) },
-				selected = selectedIndex == index,
-				onClick = {
-					selectedIndex = index
-					onNavigationItemClicked(index, name)
-				},
-				unselectedContentColor = Color.White.copy(alpha = 0.3f))
+			// Iterate over each navigation item the user will use
+			for ((index, name, icon) in viewModel.getAllNavigationItemsWillUse())
+			{
+
+				// Create a navigation item
+				// TODO: Maybe set default size for icon?
+				BottomNavigationItem(
+					icon = {
+						Icon(icon,
+							modifier = Modifier
+								.padding(top = 4.dp)
+								.fillMaxHeight(0.5f)
+								.aspectRatio(1f),
+							contentDescription = name)
+					},
+					label = { Text(name) },
+					selected = selectedIndex == index,
+					onClick = {
+						selectedIndex = index
+						onNavigationItemClicked(index, name)
+					},
+					unselectedContentColor = Color.White.copy(alpha = 0.3f))
+
+			}
 
 		}
-
 	}
 }
 

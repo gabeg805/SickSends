@@ -128,8 +128,8 @@ data class SsTopRopeProblem(
 	/**
 	 * File path to the image.
 	 */
-	@ColumnInfo(name = "image_path")
-	override var imagePath : String? = null,
+	@ColumnInfo(name = "media_path")
+	override var mediaPath : String? = null,
 
 	/**
 	 * Notes on the problem.
@@ -166,7 +166,7 @@ class SsTopRopeProblemModule
 {
 
 	/**
-	 * Provide an instance of top rope problem.
+	 * Provide an instance of a top rope problem.
 	 */
 	@Provides
 	fun provideTopRopeProblem() : SsTopRopeProblem

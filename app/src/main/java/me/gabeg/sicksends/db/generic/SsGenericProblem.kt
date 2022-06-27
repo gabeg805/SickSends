@@ -1,6 +1,7 @@
 package me.gabeg.sicksends.db.generic
 
 import android.util.Log
+import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
 import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
 
 /**
@@ -71,6 +72,14 @@ abstract class SsGenericProblem
 	var howDidItFeel : String = getHowDidItFeelScaleName(howDidItFeelScale)
 
 	/**
+	 * Check if there is a "How did it feel" scale.
+	 *
+	 * @return True if there is a scale, and False if it is null or NORMAL.
+	 */
+	var hasHowDidItFeelScale = (howDidItFeelScale != null)
+		&& (howDidItFeelScale != SsHowDidItFeelType.NORMAL.value)
+
+	/**
 	 * Name of the problem.
 	 */
 	abstract var name : String?
@@ -127,14 +136,19 @@ abstract class SsGenericProblem
 
 	/**
 	 * File path to the image.
+	 *
+	 * TODO: Change this to media path.
 	 */
-	abstract var imagePath : String?
+	abstract var mediaPath : String?
 
 	/**
 	 * Notes on the problem.
 	 */
 	abstract var note : String?
 
+	/**
+	 * Debug.
+	 */
 	fun debug()
 	{
 		Log.i("ProblemDebug", "id                    : $id")
@@ -153,7 +167,7 @@ abstract class SsGenericProblem
 		Log.i("ProblemDebug", "routeFeatureType      : $routeFeatureType")
 		Log.i("ProblemDebug", "holdType              : $holdType")
 		Log.i("ProblemDebug", "climbingTechniqueType : $climbingTechniqueType")
-		Log.i("ProblemDebug", "imagePath             : $imagePath")
+		Log.i("ProblemDebug", "mediaPath             : $mediaPath")
 		Log.i("ProblemDebug", "note                  : $note")
 	}
 

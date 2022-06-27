@@ -6,9 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.shared.SsSharedBaseClimbingDataStore
-import me.gabeg.sicksends.shared.SsSharedBaseDataStore
+import kotlin.math.max
 import kotlin.math.roundToLong
 
 /**
@@ -16,23 +18,24 @@ import kotlin.math.roundToLong
  */
 abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	private val savedStateHandle: SavedStateHandle,
-	val problem : T) : ViewModel()
+	val problem : T,
+	val dataStore : SsSharedBaseClimbingDataStore) : ViewModel()
 {
 
 	/**
 	 * Number of questions.
 	 */
-	var length = 10
+	var size = 0
 
 	/**
 	 * Visibility of all questions.
 	 */
-	val allVisibility = MutableList(length) { mutableStateOf(false) }
+	var allVisibility = MutableList(size) { mutableStateOf(false) }
 
 	/**
 	 * List of answers.
 	 */
-	var answers = MutableList<Any?>(length) { null }
+	var answers = MutableList<Any?>(size) { null }
 
 	/**
 	 * Questions.
@@ -42,9 +45,15 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	val numAttemptQuestion = "How many attempts did you do?"
 
 	/**
-	 * The current attribute being set for the problem.
+	 * Indices.
 	 */
-	var current : Any? = null
+	var gradeIndex = 0
+	var nameIndex = 0
+	var attemptIndex = 0
+	var projectIndex = 0
+	var outdoorIndex = 0
+	var locationIndex = 0
+	var noteIndex = 0
 
 	/**
 	 * Companion.
@@ -72,6 +81,31 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 			return if (visible || (text != question)) text else ""
 		}
 
+	}
+
+	/**
+	 * Constructor.
+	 */
+	init
+	{
+		viewModelScope.launch {
+			setupIndices()
+			setupSize()
+
+			// Defaults
+			problem.gradingSystem = dataStore.getDefaultGradingSystem()
+		}
+	}
+
+	/**
+	 * Get all the indices of each question.
+	 *
+	 * @return A list of all the indices of each question.
+	 */
+	fun getAllIndices() : List<Int>
+	{
+		return listOf(gradeIndex, nameIndex, attemptIndex, projectIndex,
+			outdoorIndex, locationIndex, noteIndex)
 	}
 
 	/**
@@ -110,13 +144,15 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	// defaults, so that this check against the data store does not need to
 	// happen
 	@Composable
-	fun getInitialGradingSystem(dataStore: SsSharedBaseClimbingDataStore) : String
+	fun getInitialGradingSystem() : String
 	{
-		val defaultGradingSystem = dataStore.getDefaultGradingSystem()
-		val problemGradingSystem = problem.gradingSystem
+		return problem.gradingSystem
 
-		return if (problemGradingSystem.isEmpty()) defaultGradingSystem
-			else problemGradingSystem
+		//val defaultGradingSystem = dataStore.observeDefaultGradingSystem()
+		//val problemGradingSystem = problem.gradingSystem
+
+		//return if (problemGradingSystem.isEmpty()) defaultGradingSystem
+		//	else problemGradingSystem
 	}
 
 	/**
@@ -297,7 +333,7 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	 */
 	fun isValidIndex(index : Int) : Boolean
 	{
-		return (index >= 0) && (index < length)
+		return (index >= 0) && (index < size)
 	}
 
 	/**
@@ -336,6 +372,79 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 			null
 		else
 			sanitizedText.toFloat().roundToLong()
+	}
+
+	/**
+	 * Setup the indices that each question should be shown at.
+	 */
+	suspend fun setupIndices()
+	{
+		println("Setting up indices!")
+		val askName = dataStore.getQuestionName()
+		val askFlash = dataStore.getQuestionIsFlash()
+		val askNumAttempt = dataStore.getQuestionNumAttempt()
+		val askProject = dataStore.getQuestionIsProject()
+		val askOutdoor = dataStore.getQuestionIsOutdoor()
+		val askLocation = dataStore.getQuestionLocation() || dataStore.getQuestionLocationName()
+		val askNote = dataStore.getQuestionNote()
+
+		if (askName)
+		{
+			nameIndex++
+			attemptIndex++
+			projectIndex++
+			outdoorIndex++
+			locationIndex++
+			noteIndex++
+		}
+
+		if (askFlash || askNumAttempt)
+		{
+			attemptIndex++
+			projectIndex++
+			outdoorIndex++
+			locationIndex++
+			noteIndex++
+		}
+
+		if (askProject)
+		{
+			projectIndex++
+			outdoorIndex++
+			locationIndex++
+			noteIndex++
+		}
+
+		if (askOutdoor)
+		{
+			outdoorIndex++
+			locationIndex++
+			noteIndex++
+		}
+
+		if (askLocation)
+		{
+			locationIndex++
+			noteIndex++
+		}
+
+		if (askNote)
+		{
+			noteIndex++
+		}
+	}
+
+	/**
+	 * Find the size of the list of questions and answers.
+	 */
+	fun setupSize()
+	{
+		val indices = getAllIndices()
+
+		size = (indices.maxOrNull() ?: -1) + 1
+		allVisibility = MutableList(size) { mutableStateOf(false) }
+		answers = MutableList<Any?>(size) { null }
+		println("Setting up size! $size")
 	}
 
 	/**

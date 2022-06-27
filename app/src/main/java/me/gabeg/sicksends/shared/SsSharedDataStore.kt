@@ -1,6 +1,7 @@
 package me.gabeg.sicksends.shared
 
 import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -25,10 +26,7 @@ class SsSharedDataStore(context : Context) : SsSharedBaseDataStore(context)
 	/**
 	 * Key names.
  	 */
-	companion object
-	{
-		val KEY_IS_APP_FIRST_RUN = "key_is_app_first_run"
-	}
+	val KEY_IS_APP_FIRST_RUN = "key_is_app_first_run"
 
 	/**
 	 * Edit whether this is the app's first run or not.
@@ -102,9 +100,22 @@ class SsSharedDataStore(context : Context) : SsSharedBaseDataStore(context)
 	 *
 	 * @return True if it is the app's first run, and False otherwise.
 	 */
-	fun getAppFirstRun(): Flow<Boolean>
+	fun getAppFirstRunFlow(): Flow<Boolean>
 	{
-		return getBoolean(KEY_IS_APP_FIRST_RUN, defaultValue = true)
+		return getBooleanFlow(KEY_IS_APP_FIRST_RUN, defaultValue = true)
+	}
+
+	/**
+	 * Get whether this is the app's first run or not.
+	 *
+	 * @return True if it is the app's first run, and False otherwise.
+	 */
+	@Composable
+	fun observeAppFirstRun(): Boolean
+	{
+		val flow = getAppFirstRunFlow()
+
+		return observeBoolean(flow, defaultValue = true)
 	}
 
 }

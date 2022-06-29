@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.addproblem
+package me.gabeg.sicksends.addproblem.generic
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -10,13 +10,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.shared.SsSharedBaseClimbingDataStore
-import kotlin.math.max
 import kotlin.math.roundToLong
 
 /**
  * Add problem view model.
  */
-abstract class SsAddProblemViewModel<T : SsGenericProblem>(
+abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	private val savedStateHandle: SavedStateHandle,
 	val problem : T,
 	val dataStore : SsSharedBaseClimbingDataStore) : ViewModel()
@@ -40,6 +39,9 @@ abstract class SsAddProblemViewModel<T : SsGenericProblem>(
 	/**
 	 * Questions.
 	 */
+	val gradingSystemQuestion = "What grading system was used?"
+	val gradeQuestion = "What was the grade?"
+	val howDidItFeelQuestion = "How did it feel?"
 	val nameQuestion = "What is the name of the climb?"
 	val noteQuestion = "Do you have any notes for the climb?"
 	val numAttemptQuestion = "How many attempts did you do?"

@@ -2,6 +2,7 @@ package me.gabeg.sicksends.addproblem
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
 import me.gabeg.sicksends.db.trad.SsTradProblem
 import me.gabeg.sicksends.shared.SsSharedTradDataStore
 import javax.inject.Inject
@@ -14,4 +15,4 @@ class SsAddTradProblemViewModel @Inject constructor(
 	savedStateHandle: SavedStateHandle,
 	problem : SsTradProblem,
 	dataStore : SsSharedTradDataStore)
-	: SsAddProblemViewModel<SsTradProblem>(savedStateHandle, problem, dataStore)
+	: SsAddGenericProblemViewModel<SsTradProblem>(savedStateHandle, problem, dataStore)

@@ -18,9 +18,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +31,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.Measurable
-import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextRange
@@ -58,7 +52,9 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.gabeg.sicksends.onboarding.buildGradingSystemButtons
+import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
+import me.gabeg.sicksends.addproblem.generic.question.*
+import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.ui.*
 import me.gabeg.sicksends.shared.*
 import me.gabeg.sicksends.ui.*
@@ -81,15 +77,7 @@ fun SsAddClimbScreen(
 
 	val scrollState = rememberLazyListState()
 	val pagerState = rememberPagerState()
-	val dataStore = SsSharedBoulderDataStore(LocalContext.current)
-
-	var gradeIndex = viewModel.gradeIndex
-	var nameIndex = viewModel.nameIndex
-	var attemptIndex = viewModel.attemptIndex
-	var projectIndex = viewModel.projectIndex
-	var outdoorIndex = viewModel.outdoorIndex
-	var locationIndex = viewModel.locationIndex
-	var noteIndex = viewModel.noteIndex
+	val dataStore = viewModel.dataStore
 
 	val askName = dataStore.observeQuestionName()
 	val askFlash = dataStore.observeQuestionIsFlash()
@@ -124,23 +112,9 @@ fun SsAddClimbScreen(
 		/**
 		 * Grade
 		 */
-		// TODO: This might change the color in an unwanted way
-		// TODO: Should highlight if on it and already done. Line should
-		// only get highlighted after it is complete.
 		item {
-			SsQuestion(
+			SsGradeQuestion(
 				viewModel = viewModel,
-				icon = { modifier ->
-					SsGradeIcon(modifier = modifier)
-				},
-				body = { visible, onDone ->
-					SsGradeBody(
-						viewModel = viewModel,
-						scrollState = scrollState,
-						visible = visible,
-						onDone = onDone)
-				},
-				index = gradeIndex,
 				scrollState = scrollState)
 		}
 
@@ -150,18 +124,8 @@ fun SsAddClimbScreen(
 		item {
 			if (askName)
 			{
-				SsQuestion(
+				SsNameQuestion(
 					viewModel = viewModel,
-					icon = { modifier ->
-						SsNameIcon(modifier = modifier)
-					},
-					body = { visible, onDone ->
-						SsNameBody(
-							viewModel = viewModel,
-							visible = visible,
-							onDone = onDone)
-					},
-					index = nameIndex,
 					scrollState = scrollState)
 			}
 		}
@@ -174,36 +138,16 @@ fun SsAddClimbScreen(
 			// Is flash
 			if (askFlash)
 			{
-				SsQuestion(
+				SsFlashQuestion(
 					viewModel = viewModel,
-					icon = { modifier ->
-						SsFlashIcon(modifier = modifier)
-					},
-					body = { visible, onDone ->
-						SsIsFlashBody(
-							viewModel = viewModel,
-							visible = visible,
-							onDone = onDone)
-					},
-					index = attemptIndex,
 					scrollState = scrollState)
 			}
 
 			// Number of attempts
 			else if (askNumAttempt)
 			{
-				SsQuestion(
+				SsNumAttemptQuestion(
 					viewModel = viewModel,
-					icon = { modifier ->
-						SsNumberOfAttemptsIcon(modifier = modifier)
-					},
-					body = { visible, onDone ->
-						SsNumAttemptBody(
-							viewModel = viewModel,
-							visible = visible,
-							onDone = onDone)
-					},
-					index = attemptIndex,
 					scrollState = scrollState)
 			}
 
@@ -217,18 +161,8 @@ fun SsAddClimbScreen(
 		item {
 			if (askProject)
 			{
-				SsQuestion(
+				SsProjectQuestion(
 					viewModel = viewModel,
-					icon = { modifier ->
-						SsProjectIcon(modifier = modifier)
-					},
-					body = { visible, onDone ->
-						SsIsProjectBody(
-							viewModel = viewModel,
-							visible = visible,
-							onDone = onDone)
-					},
-					index = projectIndex,
 					scrollState = scrollState)
 			}
 		}
@@ -239,18 +173,8 @@ fun SsAddClimbScreen(
 		item {
 			if (askOutdoor)
 			{
-				SsQuestion(
+				SsOutdoorQuestion(
 					viewModel = viewModel,
-					icon = { modifier ->
-						SsOutdoorIcon(modifier = modifier)
-					},
-					body = { visible, onDone ->
-						SsIsOutdoorBody(
-							viewModel = viewModel,
-							visible = visible,
-							onDone = onDone)
-					},
-					index = outdoorIndex,
 					scrollState = scrollState)
 			}
 		}
@@ -261,18 +185,8 @@ fun SsAddClimbScreen(
 		item {
 			if (askLocation)
 			{
-				SsQuestion(
+				SsLocationQuestion(
 					viewModel = viewModel,
-					icon = { modifier ->
-						SsLocationIcon(modifier = modifier)
-					},
-					body = { visible, onDone ->
-						SsLocationBody(
-							viewModel = viewModel,
-							visible = visible,
-							onDone = onDone)
-					},
-					index = locationIndex,
 					scrollState = scrollState)
 			}
 		}
@@ -283,18 +197,8 @@ fun SsAddClimbScreen(
 		item {
 			if (askNote)
 			{
-				SsQuestion(
+				SsNoteQuestion(
 					viewModel = viewModel,
-					icon = { modifier ->
-						SsNoteIcon(modifier = modifier)
-					},
-					body = { visible, onDone ->
-						SsNoteBody(
-							viewModel = viewModel,
-							visible = visible,
-							onDone = onDone)
-					},
-					index = noteIndex,
 					scrollState = scrollState)
 			}
 		}
@@ -310,7 +214,7 @@ fun SsAddClimbScreen(
  */
 @Composable
 fun SsQuestion(
-	viewModel : SsAddBoulderProblemViewModel,
+	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	icon : @Composable BoxScope.(
 		modifier : Modifier) -> Unit,
 	body : @Composable (
@@ -339,7 +243,7 @@ fun SsQuestion(
 	var isVisible by remember { viewModel.getVisible(index) }
 	var isHighlighted = isVisible || viewModel.isAnswered(index)
 
-	// Whethr to show the line or not
+	// Whether to show the line or not
 	val showLine = ((index+1) != viewModel.size)
 
 	// Container
@@ -538,301 +442,6 @@ fun SsBody(
 
 }
 
-@Composable
-fun SsGradeBodyGradingSystemPage(
-	viewModel: SsAddBoulderProblemViewModel,
-	onGradingSystemSelected : (gradingSystem: String) -> Unit)
-{
-
-	// Get all the grading systems that are used
-	val allGradingSystems = viewModel.dataStore.observeAllGradingSystemsWillUse()
-
-	// Things needed to show an example of a grading system
-	var exampleGradingSystem by remember { mutableStateOf("") }
-
-	// Show all the grading systems
-	SsButtonToggleGroup(
-		items = allGradingSystems,
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(horizontal = 16.dp, vertical = 4.dp),
-		numPerRow = 2,
-		singleSelection = true,
-		toggleable = false,
-		initialSelect = viewModel.problem.gradingSystem,
-		onClick = { name, isChecked ->
-			viewModel.problem.gradingSystem = name
-
-			onGradingSystemSelected(name)
-		},
-		onLongClick = { name ->
-			exampleGradingSystem = name
-		}
-	)
-
-	// Show the example grade
-	if (exampleGradingSystem.isNotEmpty())
-	{
-		val context = LocalContext.current
-		var example = getExampleGrade(exampleGradingSystem)
-
-		LaunchedEffect(true)
-		{
-			Toast.makeText(context, example, Toast.LENGTH_SHORT).show()
-		}
-
-		exampleGradingSystem = ""
-	}
-
-}
-
-@Composable
-fun SsGradeBodyGradePage(
-	viewModel: SsAddBoulderProblemViewModel,
-	gradingSystem: String,
-	onGradeSelected : (grade : String) -> Unit)
-{
-
-	// Get all grades for that grading system
-	val allGrades = getAllBoulderGradesForGradingSystem(gradingSystem)
-
-	// Save the state of the dropdown menu
-	val menuState = remember { SsDropdownMenuState() }
-
-	// Dropdown menu with all the grades
-	SsExposedDropdownMenu(
-		options = allGrades,
-		state = menuState) { index, name ->
-
-		viewModel.problem.grade = name
-
-		onGradeSelected(name)
-
-	}
-}
-
-/**
- * Grade.
- */
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun SsGradeBody(
-	viewModel: SsAddBoulderProblemViewModel,
-	scrollState : LazyListState,
-	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
-{
-
-	//println("Grade : $visible")
-
-	val scope = rememberCoroutineScope()
-	val pagerState = rememberPagerState()
-	var isDone by remember { mutableStateOf(false) }
-
-	var gradingSystem by remember { mutableStateOf(viewModel.problem.gradingSystem) }
-	var grade by remember { mutableStateOf(viewModel.problem.grade) }
-	var feel by remember { mutableStateOf(viewModel.problem.howDidItFeel) }
-
-	// Choose a grading system
-	val questions = listOf(
-		"What grading system was used?",
-		"What was the grade?",
-		"How did it feel?")
-	var subtitle by remember { mutableStateOf(questions[0]) }
-	var finalSubtitle by remember { mutableStateOf("") }
-
-	// Regular body of the grade section
-	SsBody("Grade", subtitle, pagerState = if (visible) pagerState else null)
-	{
-
-		if (!visible)
-		{
-			subtitle = viewModel.getGradeSubtitle()
-		}
-
-		AnimatedVisibility(visible = visible)
-		{
-
-			HorizontalPager(
-				state = pagerState,
-				count = 3,
-				modifier = Modifier
-					.fillMaxHeight()
-					//.fillMaxWidth()
-					.nestedScroll(remember {
-						object : NestedScrollConnection
-						{
-							override fun onPreScroll(
-								available: Offset,
-								source: NestedScrollSource
-							): Offset
-							{
-								return if (available.y > 0) Offset.Zero
-								else Offset(
-									x = 0f,
-									y = -scrollState.dispatchRawDelta(-available.y)
-								)
-							}
-						}
-					}))
-			{ page: Int ->
-
-				when (page)
-				{
-					0 ->
-					{
-
-						SsGradeBodyGradingSystemPage(
-							viewModel = viewModel)
-						{
-							gradingSystem = it
-							subtitle = it
-							finalSubtitle = gradingSystem
-							isDone = false
-
-							scope.launch {
-								pagerState.animateScrollToPage(1)
-							}
-						}
-
-					}
-
-					1 ->
-					{
-
-						SsGradeBodyGradePage(
-							viewModel = viewModel,
-							gradingSystem = gradingSystem)
-						{
-							grade = it
-							subtitle = it
-							finalSubtitle = "$gradingSystem  |  $grade"
-							isDone = false
-
-							scope.launch {
-								pagerState.animateScrollToPage(2)
-							}
-						}
-
-					}
-
-					2 ->
-					{
-
-						SsGradeBodyHowDidItFeel(viewModel = viewModel)
-						{
-							feel = it
-							finalSubtitle = "$gradingSystem  |  $grade  |  $feel"
-							subtitle = finalSubtitle
-							isDone = false
-
-							onDone(finalSubtitle)
-
-							isDone = true
-						}
-
-					}
-
-					else -> { println("Another page got scrolled to? $page") }
-
-				}
-
-				if (isDone)
-				{
-					//viewModel.problem.gradingSystem
-					//	viewModel.problem.grade
-					//	viewModel.problem.howDidItFeelScale
-					//	subtitle = "\u2027"
-				}
-				else
-				{
-					when (pagerState.currentPage)
-					{
-						0 -> subtitle = questions[0]
-						1 -> subtitle = questions[1]
-						2 -> subtitle = questions[2]
-					}
-				}
-
-			}
-
-		}
-
-	}
-
-}
-
-/**
- * How did it feel?
- */
-@Composable
-fun SsGradeBodyHowDidItFeel(
-	viewModel: SsAddBoulderProblemViewModel,
-	onDone : (String) -> Unit = {})
-{
-
-	// Determine the initial grading system and slider position
-	val initialFeelScale = viewModel.getInitialHowDidItFeelScale()
-	var sliderPosition by remember { mutableStateOf(2f) }
-
-	// Subtitle
-	var subtitle by remember { mutableStateOf(initialFeelScale) }
-
-	Column()
-	{
-
-		Slider(
-			value = sliderPosition,
-			onValueChange = {
-				sliderPosition = round(it)
-				subtitle = getHowDidItFeelScaleName(sliderPosition.toInt())
-			},
-			valueRange = 0f..4f,
-			onValueChangeFinished = {
-				viewModel.problem.howDidItFeelScale = sliderPosition.toInt()
-
-				onDone(subtitle)
-			},
-			steps = 3,
-			colors = SliderDefaults.colors(
-				thumbColor = MaterialTheme.colors.secondary,
-				activeTrackColor = MaterialTheme.colors.secondary
-			)
-		)
-
-
-		Row(
-			modifier = Modifier
-				.fillMaxWidth(),
-			horizontalArrangement = Arrangement.SpaceBetween,
-			verticalAlignment = Alignment.CenterVertically)
-		{
-			Text("Very\nEasy",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
-
-			Text("Easy",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
-
-			Text("Normal",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
-
-			Text("Hard",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
-
-			Text("Very\nHard",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
-
-		}
-
-	}
-
-}
-
 /**
  * Create an icon bubble that appears next to each question.
  */
@@ -854,266 +463,6 @@ fun SsIcon(
 	{
 		content()
 	}
-}
-
-/**
- * Was the problem flashed or not.
- */
-@Composable
-fun SsIsFlashBody(
-	viewModel: SsAddBoulderProblemViewModel,
-	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
-{
-
-	println("Is Flash : $visible")
-	val isFlash = viewModel.problem.isFlash
-
-	SsYesNoBody(
-		title = "Flash",
-		question = "Did you flash the problem?",
-		initial = isFlash,
-		visible = visible,
-		onDone = { status, subtitle ->
-			viewModel.problem.isFlash = status
-
-			onDone(subtitle)
-		})
-
-}
-
-/**
- * Was the problem outdoors or not.
- */
-@Composable
-fun SsIsOutdoorBody(
-	viewModel: SsAddBoulderProblemViewModel,
-	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
-{
-
-	println("Is Outdoor : $visible")
-	val isOutdoor = viewModel.problem.isOutdoor
-
-	SsYesNoBody(
-		title = "Outdoor",
-		question = "Was the problem outdoors?",
-		initial = isOutdoor,
-		visible = visible,
-		onDone = { status, subtitle ->
-			viewModel.problem.isOutdoor = status
-
-			onDone(subtitle)
-		})
-
-}
-
-/**
- * Was the problem projected or not.
- *
- * TODO: If is flash, then can't be project.
- */
-@Composable
-fun SsIsProjectBody(
-	viewModel: SsAddBoulderProblemViewModel,
-	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
-{
-
-	println("Is Project : $visible")
-	val isProject = viewModel.problem.isProject
-
-	SsYesNoBody(
-		title = "Project",
-		question = "Are you projecting this problem?",
-		initial = isProject,
-		visible = visible,
-		onDone = { status, subtitle ->
-			viewModel.problem.isProject = status
-
-			onDone(subtitle)
-		})
-
-}
-
-/**
- * Location of a climb.
- */
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun SsLocationBody(
-	viewModel: SsAddBoulderProblemViewModel,
-	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
-{
-
-	println("Location : $visible")
-
-	var subtitle = remember { mutableStateOf("") }
-
-	// Regular body of the location section
-	SsBody("Location", subtitle.value)
-	{
-
-		AnimatedVisibility(visible = visible)
-		{
-
-			Row(
-				horizontalArrangement = Arrangement.Center
-			)
-			{
-
-				OutlinedButton(
-					onClick = { /*TODO*/ })
-				{
-					Text("Enter name")
-				}
-
-				Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-
-				OutlinedButton(
-					onClick = { /*TODO*/ })
-				{
-					Text("Find on map")
-				}
-
-			}
-
-		}
-
-	}
-
-}
-
-/**
- * Name of a climb.
- */
-@Composable
-fun SsNameBody(
-	viewModel: SsAddBoulderProblemViewModel,
-	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
-{
-
-	println("Name : $visible")
-	val name = viewModel.getInitialName()
-
-	SsTextFieldBody(
-		title = "Name",
-		question = "What is the name of the climb?",
-		initial = name,
-		singleLine = true,
-		visible = visible,
-		onDone = { name ->
-			viewModel.problem.name = name
-
-			onDone(name)
-		})
-
-}
-
-/**
- * Notes for a climb.
- */
-@Composable
-fun SsNoteBody(
-	viewModel: SsAddBoulderProblemViewModel,
-	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
-{
-
-	println("Note : $visible")
-	val note = viewModel.getInitialNote()
-
-	SsTextFieldBody(
-		title = "Notes",
-		question = "Do you have any notes for the climb?",
-		initial = note,
-		singleLine = false,
-		visible = visible,
-		onDone = { note ->
-			viewModel.problem.note = note
-
-			onDone(note)
-		})
-
-}
-
-/**
- * Number of attempts.
- */
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun SsNumAttemptBody(
-	viewModel: SsAddBoulderProblemViewModel,
-	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
-{
-
-	println("Num attempt : $visible")
-
-	// Initial text to show depending on if a number of attempts has been stored
-	// or not
-	val initial = viewModel.getInitialNumAttemptSubtitle()
-
-	// Field value
-	var fieldValue by remember { mutableStateOf(TextFieldValue(initial)) }
-
-	// Subtitle
-	var subtitle = viewModel.getNumAttemptsSubtitle(fieldValue.text, visible)
-
-	// Request focus to show the keyboard
-	val focusRequester = remember { FocusRequester() }
-
-	// Body
-	SsBody("Attempts", subtitle)
-	{
-
-		AnimatedVisibility(visible = visible)
-		{
-
-			BasicTextField(
-				modifier = Modifier
-					.focusRequester(focusRequester)
-					.onFocusChanged {
-						if (it.isFocused)
-						{
-							val selection = TextRange(0, initial.length)
-
-							fieldValue = fieldValue.copy(selection = selection)
-						}
-					}
-					.height(0.dp),
-				value = fieldValue,
-				onValueChange = {
-					fieldValue = it
-				},
-				keyboardOptions = KeyboardOptions(
-					imeAction = ImeAction.Next,
-					keyboardType = KeyboardType.Number),
-				keyboardActions = KeyboardActions(
-					onNext = {
-						val numAttempt = viewModel.numAttemptsFromTextFieldValue(fieldValue)
-
-						viewModel.problem.numAttempt = numAttempt
-						fieldValue = fieldValue.copy(text = numAttempt.toString())
-
-						onDone(fieldValue.text)
-					}),
-				cursorBrush = SolidColor(Color.Transparent),
-				textStyle = TextStyle(
-					color = Color.Transparent))
-
-			// Focus the text field
-			if (visible)
-			{
-				focusRequester.requestFocus()
-			}
-
-		}
-
-	}
-
 }
 
 /**
@@ -1214,12 +563,6 @@ fun SsVerticalLine(
 {
 
 	var color = if (focus) Color.Green else Color.Gray
-
-	//Box(
-	//	modifier = modifier
-	//		.clickable { onClick() }
-	//		.width(3.dp)
-	//		.background(color))
 
 	Divider(
 		modifier = modifier

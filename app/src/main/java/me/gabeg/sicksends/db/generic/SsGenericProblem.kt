@@ -69,15 +69,17 @@ abstract class SsGenericProblem
 	 * 3 = Hard
 	 * 4 = Very Hard
 	 */
-	var howDidItFeel : String = getHowDidItFeelScaleName(howDidItFeelScale)
+	var howDidItFeel : String = ""
+		get() = getHowDidItFeelScaleName(howDidItFeelScale)
 
 	/**
 	 * Check if there is a "How did it feel" scale.
 	 *
 	 * @return True if there is a scale, and False if it is null or NORMAL.
 	 */
-	var hasHowDidItFeelScale = (howDidItFeelScale != null)
-		&& (howDidItFeelScale != SsHowDidItFeelType.NORMAL.value)
+	var hasHowDidItFeelScale : Boolean = false
+		get() = (howDidItFeelScale != null)
+			&& (howDidItFeelScale != SsHowDidItFeelType.NORMAL.value)
 
 	/**
 	 * Name of the problem.

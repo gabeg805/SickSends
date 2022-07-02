@@ -590,9 +590,22 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	}
 
 	/**
+	 * Observe whether the how did it feel question should be asked or not.
+	 *
+	 * @return Observed state whether the question should be asked or not.
+	 */
+	@Composable
+	fun observeQuestionHowDidItFeel() : Boolean
+	{
+		val flow = getQuestionHowDidItFeelFlow()
+
+		return observeBoolean(flow)
+	}
+
+	/**
 	 * Observe whether the is flash question should be asked or not.
 	 *
-	 * @return Observed state Whether the question should be asked or not.
+	 * @return Observed state whether the question should be asked or not.
 	 */
 	@Composable
 	fun observeQuestionIsFlash() : Boolean
@@ -689,6 +702,19 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	fun observeQuestionNumAttempt() : Boolean
 	{
 		val flow = getQuestionNumAttemptFlow()
+
+		return observeBoolean(flow)
+	}
+
+	/**
+	 * Observe whether the perceived grade question should be asked or not.
+	 *
+	 * @return Observed state hether the question should be asked or not.
+	 */
+	@Composable
+	fun observeQuestionPerceivedGrade() : Boolean
+	{
+		val flow = getQuestionPerceivedGradeFlow()
 
 		return observeBoolean(flow)
 	}

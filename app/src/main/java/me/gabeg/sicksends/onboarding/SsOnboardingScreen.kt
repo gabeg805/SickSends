@@ -73,7 +73,7 @@ fun SsOnboardingScreen(navController: NavHostController)
 					WelcomePage()
 					{
 						scope.launch {
-							pagerState.animateScrollToPage(2)
+							pagerState.animateScrollToPage(3)
 						}
 					}
 				}

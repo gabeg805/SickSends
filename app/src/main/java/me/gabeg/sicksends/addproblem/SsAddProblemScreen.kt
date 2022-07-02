@@ -1,7 +1,6 @@
 package me.gabeg.sicksends.addproblem
 
 import android.view.KeyEvent
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -14,51 +13,35 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import me.gabeg.sicksends.addproblem.boulder.SsAddBoulderProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.question.*
 import me.gabeg.sicksends.db.generic.SsGenericProblem
-import me.gabeg.sicksends.problem.ui.*
-import me.gabeg.sicksends.shared.*
 import me.gabeg.sicksends.ui.*
-import kotlin.math.round
 
 const val ADD_PROBLEM_SCREEN_ROUTE = "Add problem"
 
@@ -95,6 +78,9 @@ fun SsAddClimbScreen(
 	println("Ask location ? $askLocation")
 	println("Ask note ? $askNote")
 
+	val isFlash by viewModel.problem.observableIsFlash.observeAsState()
+	val isProject by viewModel.problem.observableIsProject.observeAsState()
+
 	LaunchedEffect(true)
 	{
 		println("Showing 0 index!")
@@ -121,9 +107,9 @@ fun SsAddClimbScreen(
 		/**
 		 * Name
 		 */
-		item {
-			if (askName)
-			{
+		if (askName)
+		{
+			item {
 				SsNameQuestion(
 					viewModel = viewModel,
 					scrollState = scrollState)
@@ -133,24 +119,29 @@ fun SsAddClimbScreen(
 		/**
 		 *  Is Flash / Number of attempts
 		 */
-		item {
+		if (askFlash || askNumAttempt)
+		{
+			item {
 
-			// Is flash
-			if (askFlash)
-			{
-				SsFlashQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
+				// Is flash
+				if (askFlash)
+				{
+					AnimatedVisibility(visible =  (isProject != true))
+					{
+						SsFlashQuestion(
+							viewModel = viewModel,
+							scrollState = scrollState)
+					}
+				}
+				// Number of attempts
+				else if (askNumAttempt)
+				{
+					SsNumAttemptQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
+
 			}
-
-			// Number of attempts
-			else if (askNumAttempt)
-			{
-				SsNumAttemptQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
-			}
-
 		}
 
 		/**
@@ -158,21 +149,24 @@ fun SsAddClimbScreen(
 		 *
 		 * TODO: Which question should come first, is project or is flash?
 		 */
-		item {
-			if (askProject)
-			{
-				SsProjectQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
+		if (askProject)
+		{
+			item {
+				AnimatedVisibility(visible = (isFlash != true))
+				{
+					SsProjectQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
 			}
 		}
 
 		/**
 		 * Is outdoor?
 		 */
-		item {
-			if (askOutdoor)
-			{
+		if (askOutdoor)
+		{
+			item {
 				SsOutdoorQuestion(
 					viewModel = viewModel,
 					scrollState = scrollState)
@@ -182,9 +176,9 @@ fun SsAddClimbScreen(
 		/**
 		 * Location
 		 */
-		item {
-			if (askLocation)
-			{
+		if (askLocation)
+		{
+			item {
 				SsLocationQuestion(
 					viewModel = viewModel,
 					scrollState = scrollState)
@@ -194,9 +188,9 @@ fun SsAddClimbScreen(
 		/**
 		 * Notes
 		 */
-		item {
-			if (askNote)
-			{
+		if (askNote)
+		{
+			item {
 				SsNoteQuestion(
 					viewModel = viewModel,
 					scrollState = scrollState)
@@ -204,6 +198,9 @@ fun SsAddClimbScreen(
 		}
 
 		// TODO: Media/images/videos
+		// TODO: Climbing technique
+		// TODO: Wall features
+		// TODO: Holds
 
 	}
 

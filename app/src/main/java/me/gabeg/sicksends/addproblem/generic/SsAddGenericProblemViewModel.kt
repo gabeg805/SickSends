@@ -2,6 +2,7 @@ package me.gabeg.sicksends.addproblem.generic
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
@@ -41,6 +42,7 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	 */
 	val gradingSystemQuestion = "What grading system was used?"
 	val gradeQuestion = "What was the grade?"
+	val perceivedGradeQuestion = "What grade do you think it was?"
 	val howDidItFeelQuestion = "How did it feel?"
 	val nameQuestion = "What is the name of the climb?"
 	val noteQuestion = "Do you have any notes for the climb?"
@@ -115,9 +117,10 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	 */
 	fun getGradeSubtitle() : String
 	{
-		var gradingSystem = problem.gradingSystem
-		var grade = problem.grade
-		var feel = problem.howDidItFeel
+		val gradingSystem = problem.gradingSystem
+		val grade = problem.grade
+		val howDidItFeel = problem.howDidItFeel
+		val perceivedGrade = problem.perceivedGrade ?: ""
 
 		if (gradingSystem.isEmpty())
 		{
@@ -127,13 +130,14 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 		{
 			return gradingSystem
 		}
-		else if (feel.isEmpty())
+		else if (howDidItFeel.isEmpty() && perceivedGrade.isEmpty())
 		{
 			return "$gradingSystem  |  $grade"
 		}
 		else
 		{
-			return "$gradingSystem  |  $grade  |  $feel"
+			return "$gradingSystem  |  $grade  |  " +
+				if (howDidItFeel.isNotEmpty()) howDidItFeel else perceivedGrade
 		}
 	}
 

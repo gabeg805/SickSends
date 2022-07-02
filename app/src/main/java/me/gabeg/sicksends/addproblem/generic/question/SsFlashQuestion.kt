@@ -54,7 +54,13 @@ fun SsIsFlashBody(
 		initial = isFlash,
 		visible = visible,
 		onDone = { status, subtitle ->
-			viewModel.problem.isFlash = status
+			viewModel.problem.observableIsFlash.value = status
+
+			// Reset the is project attribute
+			if (viewModel.problem.isProject == true)
+			{
+				viewModel.problem.isProject = null
+			}
 
 			onDone(subtitle)
 		})

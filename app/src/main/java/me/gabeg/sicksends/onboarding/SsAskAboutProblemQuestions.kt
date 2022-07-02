@@ -448,7 +448,14 @@ fun SsAskQuestions(
 
 	SsQuestionItem(
 		modifier = Modifier
-			.clickable { isExpanded = !isExpanded },
+			.clickable {
+				isExpanded = !isExpanded
+
+				if (!isExpanded)
+				{
+					descriptionText = ""
+				}
+			},
 		icon = icon,
 		title = title,
 		description = descriptionText,

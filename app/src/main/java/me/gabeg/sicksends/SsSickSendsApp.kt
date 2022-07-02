@@ -78,9 +78,6 @@ fun getStartNavDestination() : String
 
 	// Check whether this is the app's first run and decide the navigation route
 	// accordingly
-	//LaunchedEffect(true)
-	//runBlocking {
-	//	isAppFirstRun = dataStore.getAppFirstRun().first()
 	isAppFirstRun = dataStore.observeAppFirstRun()
 
 	// This is not the app's first run. Set the navigation route to the main

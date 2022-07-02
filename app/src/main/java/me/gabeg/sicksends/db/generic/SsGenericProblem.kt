@@ -1,6 +1,16 @@
 package me.gabeg.sicksends.db.generic
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
+import androidx.room.Ignore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flow
 import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
 import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
 
@@ -147,6 +157,34 @@ abstract class SsGenericProblem
 	 * Notes on the problem.
 	 */
 	abstract var note : String?
+
+	/**
+	 * An observable of whether the problem is a flash or not.
+	 */
+	@Ignore
+	var observableIsFlash = object : MutableLiveData<Boolean?>(null)
+	{
+		override fun setValue(value : Boolean?)
+		{
+			super.setValue(value)
+
+			isFlash = value
+		}
+	}
+
+	/**
+	 * An observable of whether the problem is a project or not.
+	 */
+	@Ignore
+	var observableIsProject = object : MutableLiveData<Boolean?>(null)
+	{
+		override fun setValue(value : Boolean?)
+		{
+			super.setValue(value)
+
+			isProject = value
+		}
+	}
 
 	/**
 	 * Debug.

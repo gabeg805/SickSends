@@ -25,6 +25,7 @@ import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.ui.SsFlashIcon
 import me.gabeg.sicksends.problem.ui.SsOutdoorIcon
 import me.gabeg.sicksends.problem.ui.SsProjectIcon
+import me.gabeg.sicksends.shared.howDidItFeelToName
 import java.util.*
 
 
@@ -176,9 +177,10 @@ fun buildGradeSubtitleText(problem: SsGenericProblem)
 		text = altGrade
 	}
 	// How did it feel scale
-	else if (problem.hasHowDidItFeelScale)
+	else if (problem.hasHowDidItFeel)
 	{
-		text = problem.howDidItFeel
+		text = howDidItFeelToName(problem.howDidItFeel)
+		//text = problem.howDidItFeelName
 	}
 	// Do not show subtitle text. This was causing a crash so it is commented
 	else
@@ -204,7 +206,7 @@ fun buildGradeSubtitleToNameSpacer(problem: SsGenericProblem)
 	val locationName = problem.locationName
 	val name = problem.name
 
-	var hasSubtitle = !altGrade.isNullOrEmpty() || problem.hasHowDidItFeelScale
+	var hasSubtitle = !altGrade.isNullOrEmpty() || problem.hasHowDidItFeel
 	var hasName = !locationName.isNullOrEmpty() || !name.isNullOrEmpty()
 
 	// Build the spacer if there is a subtitle present and a name present

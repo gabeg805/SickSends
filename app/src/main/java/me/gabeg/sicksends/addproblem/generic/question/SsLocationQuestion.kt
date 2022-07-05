@@ -1,17 +1,23 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
+import android.view.KeyEvent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import me.gabeg.sicksends.addproblem.SsBody
@@ -58,34 +64,92 @@ fun SsLocationBody(
 	onDone : (String) -> Unit = {})
 {
 
-	println("Location : $visible")
+	val location = viewModel.problem.locationName
+	println("Location : $location || Visible : $visible")
 
-	var subtitle = remember { mutableStateOf("") }
+	// Subtitle
+	var subtitle by remember { mutableStateOf("") }
+
+	// Text
+	var text by remember { mutableStateOf("") }
+
+	// Request focus to show the keyboard
+	val focusRequester = remember { FocusRequester() }
+	var imeAction = ImeAction.Next
+
+	// Screen width
+	val screenWidth : Dp = LocalConfiguration.current.screenWidthDp.dp - 32.dp
 
 	// Regular body of the location section
-	SsBody("Location", subtitle.value)
+	SsBody("Location", subtitle)
 	{
 
+		// Animate visibility as needed
 		AnimatedVisibility(visible = visible)
 		{
 
 			Row(
-				horizontalArrangement = Arrangement.Center
-			)
+				verticalAlignment = Alignment.CenterVertically)
 			{
 
-				OutlinedButton(
-					onClick = { /*TODO*/ })
+				OutlinedTextField(
+					modifier = Modifier
+						.width(screenWidth/2)
+						.focusRequester(focusRequester)
+						.onKeyEvent {
+
+							// Check if Enter or Tab or pressed to indicate that the
+							// user is done with this question
+							val key = it.nativeKeyEvent.keyCode
+							val isDone = (key == KeyEvent.KEYCODE_ENTER) ||
+								(key == KeyEvent.KEYCODE_TAB)
+
+							// The user is done with this question
+							if (isDone)
+							{
+								subtitle = text
+
+								onDone(subtitle)
+								return@onKeyEvent true
+							}
+							else
+							{
+								return@onKeyEvent false
+							}
+						},
+					value = text,
+					onValueChange = {
+						text = it.replace("\n", "")
+					},
+					singleLine = true,
+					keyboardOptions = KeyboardOptions(imeAction = imeAction),
+					keyboardActions = KeyboardActions(
+						onNext = {
+							subtitle = text
+
+							onDone(subtitle)
+						}))
+
+				// Focus the text field, if it is visible
+				if (visible)
 				{
-					Text("Enter name")
+					focusRequester.requestFocus()
 				}
 
 				Spacer(modifier = Modifier.padding(horizontal = 8.dp))
 
-				OutlinedButton(
-					onClick = { /*TODO*/ })
+				// Show map button
+				Button(
+					modifier = Modifier
+						.height(IntrinsicSize.Max)
+						.padding(0.dp),
+					colors = ButtonDefaults.buttonColors(
+						backgroundColor = Color.Magenta,
+						contentColor = Color.White),
+					shape = RoundedCornerShape(5.dp),
+					onClick = { println("Map button clicked!") })
 				{
-					Text("Find on map")
+					Text("Map...")
 				}
 
 			}
@@ -95,3 +159,4 @@ fun SsLocationBody(
 	}
 
 }
+

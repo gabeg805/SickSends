@@ -176,6 +176,9 @@ fun buildGradingSystems(
 
 /**
  * Build the grading system buttons.
+ *
+ * TODO: Small bug when clicking on one, then clicking on another, then
+ * clicking again on the first one to deselect it. The D is still sort of there
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

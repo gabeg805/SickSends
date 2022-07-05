@@ -15,23 +15,23 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	/**
 	 * Key names.
 	 */
-	val KEY_DEFAULT_GRADING_SYSTEM           = "key_default_grading_system"
-	val KEY_WILL_CLIMB                       = "key_will_climb"
-	val KEY_WILL_GRADE_WITH                  = "key_will_grade_with_"
-	val KEY_QUESTION_PERCEIVED_GRADE         = "key_question_perceived_grade"
-	val KEY_QUESTION_HOW_DID_IT_FEEL         = "key_question_how_did_it_feel"
-	val KEY_QUESTION_NAME                    = "key_question_name"
-	val KEY_QUESTION_NUM_ATTEMPT             = "key_question_num_attempt"
-	val KEY_QUESTION_IS_FLASH                = "key_question_is_flash"
-	val KEY_QUESTION_IS_PROJECT              = "key_question_is_project"
-	val KEY_QUESTION_IS_OUTDOOR              = "key_question_is_outdoor"
-	val KEY_QUESTION_LOCATION                = "key_question_location"
-	val KEY_QUESTION_LOCATION_NAME           = "key_question_location_name"
-	val KEY_QUESTION_ROUTE_FEATURE_TYPE      = "key_question_route_feature_type"
-	val KEY_QUESTION_HOLD_TYPE               = "key_question_hold_type"
-	val KEY_QUESTION_CLIMBING_TECHNIQUE_TYPE = "key_question_climbing_technique_type"
-	val KEY_QUESTION_MEDIA_PATH              = "key_question_media_path"
-	val KEY_QUESTION_NOTE                    = "key_question_note"
+	val KEY_DEFAULT_GRADING_SYSTEM      = "key_default_grading_system"
+	val KEY_WILL_CLIMB                  = "key_will_climb"
+	val KEY_WILL_GRADE_WITH             = "key_will_grade_with_"
+	val KEY_QUESTION_PERCEIVED_GRADE    = "key_question_perceived_grade"
+	val KEY_QUESTION_HOW_DID_IT_FEEL    = "key_question_how_did_it_feel"
+	val KEY_QUESTION_NAME               = "key_question_name"
+	val KEY_QUESTION_NUM_ATTEMPT        = "key_question_num_attempt"
+	val KEY_QUESTION_IS_FLASH           = "key_question_is_flash"
+	val KEY_QUESTION_IS_PROJECT         = "key_question_is_project"
+	val KEY_QUESTION_IS_OUTDOOR         = "key_question_is_outdoor"
+	val KEY_QUESTION_LOCATION           = "key_question_location"
+	val KEY_QUESTION_LOCATION_NAME      = "key_question_location_name"
+	val KEY_QUESTION_WALL_FEATURE       = "key_question_route_feature_type"
+	val KEY_QUESTION_HOLD               = "key_question_hold_type"
+	val KEY_QUESTION_CLIMBING_TECHNIQUE = "key_question_climbing_technique_type"
+	val KEY_QUESTION_MEDIA_PATH         = "key_question_media_path"
+	val KEY_QUESTION_NOTE               = "key_question_note"
 
 	/**
 	 * Build the key that is used to determine if a grading system will be used
@@ -57,23 +57,23 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	}
 
 	/**
-	 * Edit whether the climbing technique type question should be asked or not.
+	 * Edit whether the climbing technique question should be asked or not.
 	 *
 	 * @param value Whether the question should be asked or not.
 	 */
-	suspend fun editQuestionClimbingTechniqueType(value : Boolean)
+	suspend fun editQuestionClimbingTechnique(value : Boolean)
 	{
-		editBoolean(KEY_QUESTION_CLIMBING_TECHNIQUE_TYPE, value)
+		editBoolean(KEY_QUESTION_CLIMBING_TECHNIQUE, value)
 	}
 
 	/**
-	 * Edit whether the hold type question should be asked or not.
+	 * Edit whether the hold question should be asked or not.
 	 *
 	 * @param value Whether the question should be asked or not.
 	 */
-	suspend fun editQuestionHoldType(value : Boolean)
+	suspend fun editQuestionHold(value : Boolean)
 	{
-		editBoolean(KEY_QUESTION_HOLD_TYPE, value)
+		editBoolean(KEY_QUESTION_HOLD, value)
 	}
 
 	/**
@@ -124,16 +124,6 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	suspend fun editQuestionLocation(value : Boolean)
 	{
 		editBoolean(KEY_QUESTION_LOCATION, value)
-	}
-
-	/**
-	 * Edit whether the location name question should be asked or not.
-	 *
-	 * @param value Whether the question should be asked or not.
-	 */
-	suspend fun editQuestionLocationName(value : Boolean)
-	{
-		editBoolean(KEY_QUESTION_LOCATION_NAME, value)
 	}
 
 	/**
@@ -191,9 +181,9 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	 *
 	 * @param value Whether the question should be asked or not.
 	 */
-	suspend fun editQuestionWallFeatureType(value : Boolean)
+	suspend fun editQuestionWallFeature(value : Boolean)
 	{
-		editBoolean(KEY_QUESTION_ROUTE_FEATURE_TYPE, value)
+		editBoolean(KEY_QUESTION_WALL_FEATURE, value)
 	}
 
 	/**
@@ -210,9 +200,9 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	/**
 	 * Edit whether the user will use a particular bouldering grade or not.
 	 *
-	 * @param  grade      Name of a grade.
-	 * @param  willGrade  Flag indicating whether the user will use the grade or
-	 *                    not.
+	 * @param grade     Name of a grade.
+	 * @param willGrade Flag indicating whether the user will use the grade or
+	 *                  not.
 	 */
 	suspend fun editWillGradeWith(grade: String, willGrade: Boolean)
 	{
@@ -260,23 +250,23 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	}
 
 	/**
-	 * Get whether the climbing technique type question should be asked or not.
+	 * Get whether the climbing technique question should be asked or not.
 	 *
 	 * @return Whether the question should be asked or not.
 	 */
-	fun getQuestionClimbingTechniqueTypeFlow() : Flow<Boolean>
+	fun getQuestionClimbingTechniqueFlow() : Flow<Boolean>
 	{
-		return getBooleanFlow(KEY_QUESTION_CLIMBING_TECHNIQUE_TYPE, false)
+		return getBooleanFlow(KEY_QUESTION_CLIMBING_TECHNIQUE, false)
 	}
 
 	/**
-	 * Get whether the hold type question should be asked or not.
+	 * Get whether the hold question should be asked or not.
 	 *
 	 * @return Whether the question should be asked or not.
 	 */
-	fun getQuestionHoldTypeFlow() : Flow<Boolean>
+	fun getQuestionHoldFlow() : Flow<Boolean>
 	{
-		return getBooleanFlow(KEY_QUESTION_HOLD_TYPE, false)
+		return getBooleanFlow(KEY_QUESTION_HOLD, false)
 	}
 
 	/**
@@ -378,28 +368,6 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	}
 
 	/**
-	 * Get whether the location name question should be asked or not.
-	 *
-	 * @return Whether the question should be asked or not.
-	 */
-	suspend fun getQuestionLocationName() : Boolean
-	{
-		val flow = getQuestionLocationNameFlow()
-
-		return getBoolean(flow)
-	}
-
-	/**
-	 * Get whether the location name question should be asked or not.
-	 *
-	 * @return Whether the question should be asked or not.
-	 */
-	fun getQuestionLocationNameFlow() : Flow<Boolean>
-	{
-		return getBooleanFlow(KEY_QUESTION_LOCATION_NAME, false)
-	}
-
-	/**
 	 * Get whether the media path question should be asked or not.
 	 *
 	 * @return Whether the question should be asked or not.
@@ -486,13 +454,13 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	}
 
 	/**
-	 * Get whether the wall feature type question should be asked or not.
+	 * Get whether the wall feature question should be asked or not.
 	 *
 	 * @return Whether the question should be asked or not.
 	 */
-	fun getQuestionWallFeatureTypeFlow() : Flow<Boolean>
+	fun getQuestionWallFeatureFlow() : Flow<Boolean>
 	{
-		return getBooleanFlow(KEY_QUESTION_ROUTE_FEATURE_TYPE, false)
+		return getBooleanFlow(KEY_QUESTION_WALL_FEATURE, false)
 	}
 
 	/**
@@ -520,10 +488,10 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	/**
 	 * Get whether the user will use a particular bouldering grade or not.
 	 *
-	 * @param  grade  Name of a grade.
+	 * @param grade Name of a grade.
 	 *
 	 * @return True if the user will use a particular bouldering grade, and
-	 *     False otherwise.
+	 *         False otherwise.
 	 */
 	suspend fun getWillGradeWith(grade: String) : Boolean
 	{
@@ -535,10 +503,10 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	/**
 	 * Get whether the user will use a particular bouldering grade or not.
 	 *
-	 * @param  grade  Name of a grade.
+	 * @param grade Name of a grade.
 	 *
 	 * @return True if the user will use a particular bouldering grade, and
-	 *     False otherwise.
+	 *         False otherwise.
 	 */
 	fun getWillGradeWithFlow(grade: String) : Flow<Boolean>
 	{
@@ -552,7 +520,7 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	 * use.
 	 *
 	 * @return Observe all the grading systems for a type of climbing that a
-	 *     user will use.
+	 *         user will use.
 	 */
 	@Composable
 	fun observeAllGradingSystemsWillUse() : List<String>
@@ -587,6 +555,32 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 		val flow = getDefaultGradingSystemFlow()
 
 		return observeString(flow)
+	}
+
+	/**
+	 * Observe whether the climbing technique question should be asked or not.
+	 *
+	 * @return Observed state whether the question should be asked or not.
+	 */
+	@Composable
+	fun observeQuestionClimbingTechnique() : Boolean
+	{
+		val flow = getQuestionClimbingTechniqueFlow()
+
+		return observeBoolean(flow)
+	}
+
+	/**
+	 * Observe whether the hold question should be asked or not.
+	 *
+	 * @return Observed state whether the question should be asked or not.
+	 */
+	@Composable
+	fun observeQuestionHold() : Boolean
+	{
+		val flow = getQuestionHoldFlow()
+
+		return observeBoolean(flow)
 	}
 
 	/**
@@ -655,15 +649,15 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	}
 
 	/**
-	 * Observe whether the location name question should be asked or not.
+	 * Observe whether the media path question should be asked or not.
 	 *
 	 * @return Observed state whether the question should be asked or not.
 	 */
 	@Composable
-	fun observeQuestionLocationName() : Boolean
+	fun observeQuestionMediaPath() : Boolean
 	{
-		val flow = getQuestionLocationNameFlow()
-
+		val flow = getQuestionMediaPathFlow()
+		
 		return observeBoolean(flow)
 	}
 
@@ -720,6 +714,19 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	}
 
 	/**
+	 * Observe whether the wall feature question should be asked or not.
+	 *
+	 * @return Observed state whether the question should be asked or not.
+	 */
+	@Composable
+	fun observeQuestionWallFeature() : Boolean
+	{
+		val flow = getQuestionWallFeatureFlow()
+
+		return observeBoolean(flow)
+	}
+
+	/**
 	 * Observe whether or not the user will boulder.
 	 *
 	 * @return Observe state whether the user will climb a specific type or not.
@@ -735,10 +742,10 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	/**
 	 * Observe whether the user will use a particular bouldering grade or not.
 	 *
-	 * @param  grade  Name of a grade.
+	 * @param grade Name of a grade.
 	 *
 	 * @return Observe state whether the user will use a particular grading
-	 *     system or not.
+	 *         system or not.
 	 */
 	@Composable
 	fun observeWillGradeWith(grade: String) : Boolean

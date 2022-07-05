@@ -5,7 +5,7 @@ package me.gabeg.sicksends.problem.type
  *
  * @param  value  Value associated with an enum.
  */
-enum class SsClimbingTechniqueType(val value: Long)
+enum class SsClimbingTechniqueType(val value : Long)
 {
 
 	ARM_BAR(1 shl 0),
@@ -24,8 +24,8 @@ enum class SsClimbingTechniqueType(val value: Long)
 	LAYBACK(1 shl 13),
 	MANTLE(1 shl 14),
 	ROSE_MOVE(1 shl 15),
-	SMEARING(1 shl 16),
-	STEMMING(1 shl 17),
+	SMEAR(1 shl 16),
+	STEM(1 shl 17),
 	TOE_HOOK(1 shl 18)
 
 	//// CHange this shit into hand work and foot work

@@ -5,7 +5,7 @@ package me.gabeg.sicksends.problem.type
  *
  * @param  value  Value associated with an enum.
  */
-enum class SsRouteFeatureType(val value: Long)
+enum class SsWallFeatureType(val value : Long)
 {
 
 	ARETE(1 shl 0),

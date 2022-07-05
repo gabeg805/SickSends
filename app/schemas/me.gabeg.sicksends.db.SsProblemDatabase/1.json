@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a92407f6e415c23cbc04a08eaad86345",
+    "identityHash": "f6022bce8ba37c4b9ef5c7dc9b225821",
     "entities": [
       {
         "tableName": "boulder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `media_path` TEXT, `note` TEXT, `howDidItFeel` TEXT NOT NULL, `hasHowDidItFeelScale` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `media_path` TEXT, `note` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -39,7 +39,7 @@
             "notNull": false
           },
           {
-            "fieldPath": "howDidItFeelScale",
+            "fieldPath": "howDidItFeel",
             "columnName": "how_did_it_feel_scale",
             "affinity": "INTEGER",
             "notNull": false
@@ -93,19 +93,19 @@
             "notNull": false
           },
           {
-            "fieldPath": "routeFeatureType",
-            "columnName": "route_feature_type",
+            "fieldPath": "wallFeature",
+            "columnName": "wall_feature_type",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "holdType",
+            "fieldPath": "hold",
             "columnName": "hold_type",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "climbingTechniqueType",
+            "fieldPath": "climbingTechnique",
             "columnName": "climbing_technique_type",
             "affinity": "INTEGER",
             "notNull": false
@@ -121,18 +121,6 @@
             "columnName": "note",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "howDidItFeel",
-            "columnName": "howDidItFeel",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hasHowDidItFeelScale",
-            "columnName": "hasHowDidItFeelScale",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -146,7 +134,7 @@
       },
       {
         "tableName": "sport",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER, `howDidItFeel` TEXT NOT NULL, `hasHowDidItFeelScale` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -179,7 +167,7 @@
             "notNull": false
           },
           {
-            "fieldPath": "howDidItFeelScale",
+            "fieldPath": "howDidItFeel",
             "columnName": "how_did_it_feel_scale",
             "affinity": "INTEGER",
             "notNull": false
@@ -233,19 +221,19 @@
             "notNull": false
           },
           {
-            "fieldPath": "routeFeatureType",
-            "columnName": "route_feature_type",
+            "fieldPath": "wallFeature",
+            "columnName": "wall_feature_type",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "holdType",
+            "fieldPath": "hold",
             "columnName": "hold_type",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "climbingTechniqueType",
+            "fieldPath": "climbingTechnique",
             "columnName": "climbing_technique_type",
             "affinity": "INTEGER",
             "notNull": false
@@ -279,18 +267,6 @@
             "columnName": "is_redpoint",
             "affinity": "INTEGER",
             "notNull": false
-          },
-          {
-            "fieldPath": "howDidItFeel",
-            "columnName": "howDidItFeel",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hasHowDidItFeelScale",
-            "columnName": "hasHowDidItFeelScale",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -304,7 +280,7 @@
       },
       {
         "tableName": "top_rope",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER, `howDidItFeel` TEXT NOT NULL, `hasHowDidItFeelScale` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -337,7 +313,7 @@
             "notNull": false
           },
           {
-            "fieldPath": "howDidItFeelScale",
+            "fieldPath": "howDidItFeel",
             "columnName": "how_did_it_feel_scale",
             "affinity": "INTEGER",
             "notNull": false
@@ -391,19 +367,19 @@
             "notNull": false
           },
           {
-            "fieldPath": "routeFeatureType",
-            "columnName": "route_feature_type",
+            "fieldPath": "wallFeature",
+            "columnName": "wall_feature_type",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "holdType",
+            "fieldPath": "hold",
             "columnName": "hold_type",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "climbingTechniqueType",
+            "fieldPath": "climbingTechnique",
             "columnName": "climbing_technique_type",
             "affinity": "INTEGER",
             "notNull": false
@@ -437,18 +413,6 @@
             "columnName": "is_redpoint",
             "affinity": "INTEGER",
             "notNull": false
-          },
-          {
-            "fieldPath": "howDidItFeel",
-            "columnName": "howDidItFeel",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hasHowDidItFeelScale",
-            "columnName": "hasHowDidItFeelScale",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -462,7 +426,7 @@
       },
       {
         "tableName": "trad",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `route_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER, `howDidItFeel` TEXT NOT NULL, `hasHowDidItFeelScale` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel_scale` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature_type` INTEGER, `hold_type` INTEGER, `climbing_technique_type` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -495,7 +459,7 @@
             "notNull": false
           },
           {
-            "fieldPath": "howDidItFeelScale",
+            "fieldPath": "howDidItFeel",
             "columnName": "how_did_it_feel_scale",
             "affinity": "INTEGER",
             "notNull": false
@@ -549,19 +513,19 @@
             "notNull": false
           },
           {
-            "fieldPath": "routeFeatureType",
-            "columnName": "route_feature_type",
+            "fieldPath": "wallFeature",
+            "columnName": "wall_feature_type",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "holdType",
+            "fieldPath": "hold",
             "columnName": "hold_type",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "climbingTechniqueType",
+            "fieldPath": "climbingTechnique",
             "columnName": "climbing_technique_type",
             "affinity": "INTEGER",
             "notNull": false
@@ -595,18 +559,6 @@
             "columnName": "is_redpoint",
             "affinity": "INTEGER",
             "notNull": false
-          },
-          {
-            "fieldPath": "howDidItFeel",
-            "columnName": "howDidItFeel",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hasHowDidItFeelScale",
-            "columnName": "hasHowDidItFeelScale",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -622,7 +574,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a92407f6e415c23cbc04a08eaad86345')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f6022bce8ba37c4b9ef5c7dc9b225821')"
     ]
   }
 }

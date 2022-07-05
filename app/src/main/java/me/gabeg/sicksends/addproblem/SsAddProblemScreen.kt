@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -39,8 +40,10 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
 import me.gabeg.sicksends.addproblem.boulder.SsAddBoulderProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
+import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Companion.getSubtitle
 import me.gabeg.sicksends.addproblem.generic.question.*
 import me.gabeg.sicksends.db.generic.SsGenericProblem
+import me.gabeg.sicksends.shared.getYesOrNo
 import me.gabeg.sicksends.ui.*
 
 const val ADD_PROBLEM_SCREEN_ROUTE = "Add problem"
@@ -67,7 +70,7 @@ fun SsAddClimbScreen(
 	val askNumAttempt = dataStore.observeQuestionNumAttempt()
 	val askProject = dataStore.observeQuestionIsProject()
 	val askOutdoor = dataStore.observeQuestionIsOutdoor()
-	val askLocation = dataStore.observeQuestionLocation() || dataStore.observeQuestionLocationName()
+	val askLocation = dataStore.observeQuestionLocation()
 	val askNote = dataStore.observeQuestionNote()
 
 	println("Ask name ? $askName")
@@ -77,9 +80,6 @@ fun SsAddClimbScreen(
 	println("Ask outdoor ? $askOutdoor")
 	println("Ask location ? $askLocation")
 	println("Ask note ? $askNote")
-
-	val isFlash by viewModel.problem.observableIsFlash.observeAsState()
-	val isProject by viewModel.problem.observableIsProject.observeAsState()
 
 	LaunchedEffect(true)
 	{
@@ -126,12 +126,9 @@ fun SsAddClimbScreen(
 				// Is flash
 				if (askFlash)
 				{
-					AnimatedVisibility(visible =  (isProject != true))
-					{
-						SsFlashQuestion(
-							viewModel = viewModel,
-							scrollState = scrollState)
-					}
+					SsFlashQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
 				}
 				// Number of attempts
 				else if (askNumAttempt)
@@ -146,18 +143,13 @@ fun SsAddClimbScreen(
 
 		/**
 		 * Is project?
-		 *
-		 * TODO: Which question should come first, is project or is flash?
 		 */
 		if (askProject)
 		{
 			item {
-				AnimatedVisibility(visible = (isFlash != true))
-				{
-					SsProjectQuestion(
-						viewModel = viewModel,
-						scrollState = scrollState)
-				}
+				SsProjectQuestion(
+					viewModel = viewModel,
+					scrollState = scrollState)
 			}
 		}
 
@@ -202,6 +194,9 @@ fun SsAddClimbScreen(
 		// TODO: Wall features
 		// TODO: Holds
 
+		item {
+			Spacer(modifier = Modifier.padding(vertical = 32.dp))
+		}
 	}
 
 }
@@ -289,7 +284,7 @@ fun SsQuestion(
 					modifier = Modifier
 						.fillMaxWidth()
 						.clickable { onClick() }
-						.padding(top = 0.dp, bottom = 32.dp, start = 8.dp, end = 8.dp))
+						.padding(top = 0.dp, bottom = 32.dp, start = 0.dp, end = 16.dp))
 				//.onGloballyPositioned { coord ->
 				//		bodyHeight = with(localDensity) { coord.size.height.toDp() + 32.dp }
 				//		println("Height : $index   $bodyHeight")
@@ -325,7 +320,10 @@ fun SsQuestion(
 		LaunchedEffect(true)
 		{
 			println("Delay! $index")
-			delay(500)
+			//if (index == 0)
+			//{
+			//	delay(500)
+			//}
 			println("CAAAAAALL onDone! $index")
 			currentOnDone()
 			isDone = false
@@ -402,8 +400,7 @@ fun SsBody(
 	{
 
 		Row(
-			verticalAlignment = Alignment.CenterVertically
-		)
+			verticalAlignment = Alignment.CenterVertically)
 		{
 
 			// Title
@@ -454,9 +451,16 @@ fun SsIcon(
 
 	Box(
 		modifier = modifier
-			.clickable { onClick() }
-			.background(color = Color.White, shape = CircleShape)
-			.border(width = 3.dp, color = borderColor, shape = CircleShape))
+			.clickable {
+				onClick()
+			}
+			.background(
+				color = Color.White,
+				shape = CircleShape)
+			.border(
+				width = 3.dp,
+				color = borderColor,
+				shape = CircleShape))
 	{
 		content()
 	}
@@ -482,7 +486,7 @@ fun SsTextFieldBody(
 {
 
 	// Subtitle
-	var subtitle by remember { mutableStateOf(question) }
+	val subtitle = getSubtitle(initial, question, visible)
 
 	// Text
 	var text by remember { mutableStateOf(initial) }
@@ -492,7 +496,7 @@ fun SsTextFieldBody(
 	var imeAction = if (singleLine) ImeAction.Next else ImeAction.Default
 
 	// Body
-	SsBody(title, if (visible || (subtitle != question)) subtitle else "")
+	SsBody(title, subtitle)
 	{
 
 		// Animate visibility as needed
@@ -514,9 +518,7 @@ fun SsTextFieldBody(
 						// The user is done with this question
 						if (singleLine && isDone)
 						{
-							subtitle = text
-
-							onDone(subtitle)
+							onDone(text)
 							return@onKeyEvent true
 						}
 						else
@@ -532,9 +534,7 @@ fun SsTextFieldBody(
 				keyboardOptions = KeyboardOptions(imeAction = imeAction),
 				keyboardActions = KeyboardActions(
 					onNext = {
-						subtitle = text
-
-						onDone(subtitle)
+						onDone(text)
 					}))
 
 			// Focus the text field, if it is visible
@@ -575,18 +575,23 @@ fun SsVerticalLine(
 @Composable
 fun SsYesNoBody(
 	title : String,
-	question: String,
-	initial: Boolean? = null,
+	question : String,
+	initialState : Boolean? = null,
+	disableYesButton : Boolean = false,
+	disableNoButton : Boolean = false,
 	visible : Boolean = true,
+	onDisabled : (Boolean?, String) -> Unit = {_,_ -> },
 	onDone : (Boolean?, String) -> Unit = {_,_ -> })
 {
 
-	var subtitle by remember { mutableStateOf(question) }
-	var isYes by remember { mutableStateOf<Boolean?>(initial) }
+	// Get the subtitle
+	val subtitle = getSubtitle(initialState, question, visible)
+
+	// State of the buttons
+	var state by remember { mutableStateOf<Boolean?>(initialState) }
 
 	// Body
-	//SsBody(title, subtitle)
-	SsBody(title, if (visible || (subtitle != question)) subtitle else "")
+	SsBody(title, subtitle)
 	{
 
 		// Animate the visibility
@@ -600,22 +605,33 @@ fun SsYesNoBody(
 			))
 		{
 
-			var buttonSpacing = 16.dp
-			var borderWidth = 2.dp
-			var yesBorderColor = if (isYes == true) Color.Magenta else Color.LightGray
-			var yesContentColor = if (isYes == true) Color.Magenta else Color.Black
-			var noBorderColor = if (isYes == false) Color.Magenta else Color.LightGray
-			var noContentColor = if (isYes == false) Color.Magenta else Color.Black
+			val buttonSpacing = 16.dp
+			val borderWidth = 2.dp
+			val disabledAlpha = 0.3f
+
+			// Yes button attributes
+			val yesBorderColor = if (state == true) Color.Magenta else Color.LightGray
+			val yesContentColor = if (state == true) Color.Magenta else Color.Black
+			val yesAlpha = if (disableYesButton) disabledAlpha else 1f
+
+			// No button attributes
+			val noBorderColor = if (state == false) Color.Magenta else Color.LightGray
+			val noContentColor = if (state == false) Color.Magenta else Color.Black
+			val noAlpha = if (disableNoButton) disabledAlpha else 1f
 
 			// TODO: If the buttons took up 50% of the width, that might look
 			// better?
 			//modifier = Modifier.fillMaxWidth())
 			//horizontalArrangement = Arrangement.SpaceAround)
-			Row()
+			Row(
+				modifier = Modifier.fillMaxWidth(),
+				horizontalArrangement = Arrangement.Center)
 			{
 
 				// Yes button
 				SsYesIconTextButton(
+					modifier = Modifier
+						.alpha(yesAlpha),
 					border = BorderStroke(
 						width = borderWidth,
 						color = yesBorderColor),
@@ -623,10 +639,18 @@ fun SsYesNoBody(
 						contentColor = yesContentColor,
 						backgroundColor = Color.Transparent))
 				{
-					isYes = true
-					subtitle = it
+					// Disabled
+					if (disableYesButton)
+					{
+						onDisabled(true, it)
+					}
+					// Done
+					else
+					{
+						state = true
 
-					onDone(isYes, subtitle)
+						onDone(state, it)
+					}
 				}
 
 				// Space
@@ -636,6 +660,8 @@ fun SsYesNoBody(
 
 				// No button
 				SsNoIconTextButton(
+					modifier = Modifier
+						.alpha(noAlpha),
 					border = BorderStroke(
 						width = borderWidth,
 						color = noBorderColor),
@@ -643,10 +669,18 @@ fun SsYesNoBody(
 						contentColor = noContentColor,
 						backgroundColor = Color.Transparent))
 				{
-					isYes = false
-					subtitle = it
+					// Disabled
+					if (disableNoButton)
+					{
+						onDisabled(false, it)
+					}
+					// Done
+					else
+					{
+						state = false
 
-					onDone(isYes, subtitle)
+						onDone(state, it)
+					}
 				}
 
 			}

@@ -45,13 +45,13 @@ fun SsNoteBody(
 	onDone : (String) -> Unit = {})
 {
 
-	println("Note : $visible")
-	val initialNote = viewModel.getInitialNote()
+	val note = viewModel.problem.note
+	println("Note : $note || Visible : $visible")
 
 	SsTextFieldBody(
 		title = "Notes",
 		question = "Do you have any notes for the climb?",
-		initial = initialNote,
+		initial = note ?: "",
 		singleLine = false,
 		visible = visible,
 		onDone = { newNote ->

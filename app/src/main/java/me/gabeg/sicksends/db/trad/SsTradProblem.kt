@@ -57,7 +57,7 @@ data class SsTradProblem(
 	 * 5 = Very Hard
 	 */
 	@ColumnInfo(name = "how_did_it_feel_scale")
-	override var howDidItFeelScale : Int? = null,
+	override var howDidItFeel : Int? = null,
 
 	/**
 	 * Name of the problem.
@@ -108,22 +108,22 @@ data class SsTradProblem(
 	override var isOutdoor : Boolean? = null,
 
 	/**
-	 * Types of route features on the problem.
+	 * Types of wall features on the problem.
 	 */
-	@ColumnInfo(name = "route_feature_type")
-	override var routeFeatureType : Long? = null,
+	@ColumnInfo(name = "wall_feature_type")
+	override var wallFeature : Long? = null,
 
 	/**
 	 * Types of holds on the problem.
 	 */
 	@ColumnInfo(name = "hold_type")
-	override var holdType : Long? = null,
+	override var hold : Long? = null,
 
 	/**
 	 * Types of climbing techniques used on the problem.
 	 */
 	@ColumnInfo(name = "climbing_technique_type")
-	override var climbingTechniqueType : Long? = null,
+	override var climbingTechnique : Long? = null,
 
 	/**
 	 * File path to the image.

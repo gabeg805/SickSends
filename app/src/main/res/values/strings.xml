@@ -7,6 +7,9 @@
 	<string name="app_rating_counter">app_rating_counter</string>
 	<string name="home">Home</string>
 	<string name="about">About</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="general">General</string>
 
 	<string name="name">Name</string>
 	<string name="attempts">Attempts</string>
@@ -15,6 +18,61 @@
 	<string name="feel_scale">Feel scale</string>
 	<string name="hold_type">Holds</string>
 
+
+	<!-- How did it feel -->
+	<string name="very_easy">Very Easy</string>
+	<string name="easy">Easy</string>
+	<string name="normal">Normal</string>
+	<string name="hard">Hard</string>
+	<string name="very_hard">Very Hard</string>
+
+
+	<!-- Climbing techniques -->
+	<string name="arm_bar">Arm bar</string>
+	<string name="bat_hang">Bat hang</string>
+	<string name="bicycle">Bicycle</string>
+	<string name="campus">Campus</string>
+	<string name="drop_knee">Drop knee</string>
+	<string name="dyno">Dyno</string>
+	<string name="figure_four">Figure four</string>
+	<string name="finger_jam">Finger jam</string>
+	<string name="fist_jam">Fist jam</string>
+	<string name="gaston">Gaston</string>
+	<string name="hand_jam">Hand jam</string>
+	<string name="heel_hook">Heel hook</string>
+	<string name="knee_bar">Knee bar</string>
+	<string name="layback">Layback</string>
+	<string name="mantle">Mantle</string>
+	<string name="rose_move">Rose move</string>
+	<string name="smear">Smear</string>
+	<string name="stem">Stem</string>
+	<string name="toe_hook">Toe hook</string>
+
+
+	<!-- Holds -->
+	<string name="crimp">Crimp</string>
+	<string name="horn">Horn</string>
+	<string name="jug">Jug</string>
+	<string name="pinch">Pinch</string>
+	<string name="pocket">Pocket</string>
+	<string name="sloper">Sloper</string>
+	<string name="side_pull">Side pull</string>
+	<string name="undercling">Undercling</string>
+	<string name="volume">Volume</string>
+
+
+	<!-- Wall features-->
+	<string name="arete">Arete</string>
+	<string name="chimney">Chimney</string>
+	<string name="crack">Crack</string>
+	<string name="dihedral">Dihedral</string>
+	<string name="face">Face</string>
+	<string name="high_ball">High ball</string>
+	<string name="overhang">Overhang</string>
+	<string name="roof">Roof</string>
+	<string name="slab">Slab</string>
+	<string name="top_out">Top out</string>
+	<string name="traverse">Traverse</string>
 
 
 	<!-- Questions -->

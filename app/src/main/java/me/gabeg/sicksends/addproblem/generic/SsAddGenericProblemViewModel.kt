@@ -2,7 +2,6 @@ package me.gabeg.sicksends.addproblem.generic
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
@@ -11,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.shared.SsSharedBaseClimbingDataStore
+import me.gabeg.sicksends.shared.getYesOrNo
+import me.gabeg.sicksends.shared.howDidItFeelToName
 import kotlin.math.roundToLong
 
 /**
@@ -36,6 +37,9 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	 * List of answers.
 	 */
 	var answers = MutableList<Any?>(size) { null }
+
+	// YOOOO
+	var hasGradingSystemBeenSelected = false
 
 	/**
 	 * Questions.
@@ -82,7 +86,47 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 		 */
 		fun getSubtitle(text : String, question : String, visible : Boolean) : String
 		{
-			return if (visible || (text != question)) text else ""
+			return if (visible)
+			{
+				question
+			}
+			else
+			{
+				if (text.isNotEmpty())
+				{
+					text
+				}
+				else
+				{
+					""
+				}
+			}
+			//return if (visible || (text != question)) text else ""
+		}
+
+		/**
+		 * Get the subtitle to show.
+		 *
+		 * @return The subtitle to show.
+		 */
+		@Composable
+		fun getSubtitle(state : Boolean?, question : String, visible : Boolean) : String
+		{
+			return if (visible)
+			{
+				question
+			}
+			else
+			{
+				if (state != null)
+				{
+					getYesOrNo(state)
+				}
+				else
+				{
+					""
+				}
+			}
 		}
 
 	}
@@ -119,7 +163,7 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	{
 		val gradingSystem = problem.gradingSystem
 		val grade = problem.grade
-		val howDidItFeel = problem.howDidItFeel
+		val howDidItFeel = problem.howDidItFeelName
 		val perceivedGrade = problem.perceivedGrade ?: ""
 
 		if (gradingSystem.isEmpty())
@@ -166,24 +210,24 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	 *
 	 * @return The initial how did it feel value.
 	 */
-	fun getInitialHowDidItFeelScale() : String
-	{
-		return problem.howDidItFeel
-	}
+	//fun getInitialHowDidItFeelScale() : String
+	//{
+	//	return problem.howDidItFeelName
+	//}
 
 	/**
 	 * Get the initial name.
 	 *
 	 * @return The initial name.
 	 */
-	fun getInitialName() : String
-	{
-		return problem.name ?: ""
+	//fun getInitialName() : String
+	//{
+	//	return problem.name ?: ""
 
-		//val initial = problem.name ?: ""
+	//	//val initial = problem.name ?: ""
 
-		//return getInitialSubtitle(initial, nameQuestion)
-	}
+	//	//return getInitialSubtitle(initial, nameQuestion)
+	//}
 
 	/**
 	 * Get the initial note.
@@ -391,7 +435,7 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 		val askNumAttempt = dataStore.getQuestionNumAttempt()
 		val askProject = dataStore.getQuestionIsProject()
 		val askOutdoor = dataStore.getQuestionIsOutdoor()
-		val askLocation = dataStore.getQuestionLocation() || dataStore.getQuestionLocationName()
+		val askLocation = dataStore.getQuestionLocation()
 		val askNote = dataStore.getQuestionNote()
 
 		if (askName)

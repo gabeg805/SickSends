@@ -1,7 +1,9 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
+import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.SsYesNoBody
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
@@ -38,7 +40,7 @@ fun SsProjectQuestion(
 /**
  * Body of the project question.
  *
- * TODO: If is flash, then can't be project.
+ * TODO: Might want to just disable one of the buttons, instead of hiding? Idk
  */
 @Composable
 fun SsIsProjectBody(
@@ -47,19 +49,32 @@ fun SsIsProjectBody(
 	onDone : (String) -> Unit = {})
 {
 
-	println("Is Project : $visible")
+	// Project and flash states
 	val isProject = viewModel.problem.isProject
+	val isFlash = viewModel.problem.isFlash
 
+	println("Is Project : $isProject || Visible : $visible")
+
+	// Setup in case need to show the toast
+	val context = LocalContext.current
+	val msg = "Unable to project a flash"
+
+	// Body
 	SsYesNoBody(
 		title = "Project",
 		question = "Are you projecting this problem?",
-		initial = isProject,
+		initialState = isProject,
 		visible = visible,
+		disableYesButton = isFlash ?: false,
+		onDisabled = { status, subtitle ->
+			Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+		},
 		onDone = { status, subtitle ->
-			viewModel.problem.observableIsProject.value = status
+			//viewModel.problem.observableIsProject.value = status
+			viewModel.problem.isProject = status
 
 			// Reset the is flash attribute
-			if (viewModel.problem.isFlash == true)
+			if ((status == true) && (isFlash == true))
 			{
 				viewModel.problem.isFlash = null
 			}

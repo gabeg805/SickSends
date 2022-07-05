@@ -73,13 +73,15 @@ fun WelcomePage(onClick : () -> Unit = {})
 			shape = RoundedCornerShape(32.dp),
 			onClick = onClick)
 		{
-			Text(text = "Get Started", modifier = Modifier.padding(vertical = 4.dp, horizontal = 12.dp))
+			Text("GET STARTED",
+				modifier = Modifier
+					.padding(vertical = 4.dp, horizontal = 16.dp))
 		}
 
 	}
 }
 
-/*
+/**
  * Preview the page.
  */
 @Composable

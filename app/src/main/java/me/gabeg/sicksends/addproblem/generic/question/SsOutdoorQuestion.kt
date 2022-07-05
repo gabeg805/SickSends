@@ -45,13 +45,13 @@ fun SsIsOutdoorBody(
 	onDone : (String) -> Unit = {})
 {
 
-	println("Is Outdoor : $visible")
 	val isOutdoor = viewModel.problem.isOutdoor
+	println("Is Outdoor : $isOutdoor || Visible : $visible")
 
 	SsYesNoBody(
 		title = "Outdoor",
 		question = "Was the problem outdoors?",
-		initial = isOutdoor,
+		initialState = isOutdoor,
 		visible = visible,
 		onDone = { status, subtitle ->
 			viewModel.problem.isOutdoor = status

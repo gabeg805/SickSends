@@ -49,7 +49,6 @@ fun SsOnboardingScreen(navController: NavHostController)
 	val dataStore = SsSharedDataStore(LocalContext.current)
 
 	// Onboarding screen
-	// TODO: Change the color/grading system button color
 	Column(
 		modifier = Modifier
 			.fillMaxSize()
@@ -103,8 +102,6 @@ fun SsOnboardingScreen(navController: NavHostController)
 					.align(Alignment.CenterHorizontally),
 				pagerState = pagerState)
 
-		//println("Pager state : ${pagerState.currentPage} || ${pagerState.currentPageOffset} || ${pagerState.targetPage}")
-
 		SsNavigationButtons(
 			pagerState = pagerState,
 			onDone = {
@@ -117,20 +114,6 @@ fun SsOnboardingScreen(navController: NavHostController)
 				// Go to the main screen
 				navController.popBackStack()
 				navController.navigate(MAIN_SCREEN_ROUTE)
-			},
-			onNext = {
-				val nextPage = pagerState.currentPage + 1
-
-				scope.launch {
-					pagerState.animateScrollToPage(nextPage)
-				}
-			},
-			onPrev = {
-				val prevPage = pagerState.currentPage - 1
-
-				scope.launch {
-					pagerState.animateScrollToPage(prevPage)
-				}
 			})
 
 	}
@@ -144,9 +127,7 @@ fun SsOnboardingScreen(navController: NavHostController)
 @Composable
 fun SsNavigationButtons(
 	pagerState : PagerState,
-	onDone : () -> Unit = {},
-	onNext : () -> Unit = {},
-	onPrev : () -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	// Take up space that the button will occupy, so it does not suddenly pop into existence
@@ -174,11 +155,6 @@ fun SsNavigationButtons(
 				.width(0.dp),
 			onClick = {},
 			content = {})
-
-		//SsNextPrevButtons(
-		//	pagerState = pagerState,
-		//	onNext = onNext,
-		//	onPrev = onPrev)
 
 	}
 }
@@ -208,55 +184,6 @@ fun SsDoneButton(
 			onClick = onDone)
 		{
 			Text(text = "DONE", modifier = Modifier.padding(4.dp))
-		}
-
-	}
-}
-
-/**
- * Next and previous buttons beneath the page indicator.
- */
-@ExperimentalPagerApi
-@Composable
-fun SsNextPrevButtons(
-	pagerState : PagerState,
-	onNext : () -> Unit = {},
-	onPrev : () -> Unit = {})
-{
-	AnimatedVisibility(
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(horizontal = 8.dp),
-		visible = pagerState.currentPage != 3)
-	{
-
-		Row()
-		{
-
-			// Previous button
-			//if (pagerState.currentPage != 0)
-			if ((pagerState.currentPage != 0) || (pagerState.currentPageOffset > 0.5f))
-			{
-				TextButton(
-					colors = ButtonDefaults.textButtonColors(
-						contentColor = Color.Black),
-					onClick = onPrev)
-				{
-					Text(text = "PREV", modifier = Modifier.padding(4.dp))
-				}
-			}
-
-			Spacer(modifier = Modifier.weight(1f))
-
-			// Next button
-			TextButton(
-				colors = ButtonDefaults.textButtonColors(
-					contentColor = Color.Black),
-				onClick = onNext)
-			{
-				Text(text = "NEXT", modifier = Modifier.padding(4.dp))
-			}
-
 		}
 
 	}

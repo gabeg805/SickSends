@@ -99,6 +99,7 @@ fun SsIconTextButton(
  */
 @Composable
 fun SsNoIconTextButton(
+	modifier : Modifier = Modifier,
 	border : BorderStroke = ButtonDefaults.outlinedBorder,
 	colors : ButtonColors = ButtonDefaults.outlinedButtonColors(),
 	fontSize : TextUnit = MaterialTheme.typography.subtitle2.fontSize,
@@ -108,6 +109,7 @@ fun SsNoIconTextButton(
 
 	SsIconTextButton(
 		text = "No",
+		modifier = modifier,
 		border = border,
 		colors = colors,
 		fontSize = fontSize,
@@ -124,6 +126,7 @@ fun SsNoIconTextButton(
  */
 @Composable
 fun SsYesIconTextButton(
+	modifier : Modifier = Modifier,
 	border : BorderStroke = ButtonDefaults.outlinedBorder,
 	colors : ButtonColors = ButtonDefaults.outlinedButtonColors(),
 	fontSize : TextUnit = MaterialTheme.typography.subtitle2.fontSize,
@@ -133,6 +136,7 @@ fun SsYesIconTextButton(
 
 	SsIconTextButton(
 		text = "Yes",
+		modifier = modifier,
 		border = border,
 		colors = colors,
 		fontSize = fontSize,

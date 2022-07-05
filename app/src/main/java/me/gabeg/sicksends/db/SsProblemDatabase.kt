@@ -22,11 +22,14 @@ import me.gabeg.sicksends.db.trad.SsTradDao
 import me.gabeg.sicksends.db.trad.SsTradProblem
 import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
 import me.gabeg.sicksends.problem.type.SsHoldType
-import me.gabeg.sicksends.problem.type.SsRouteFeatureType
+import me.gabeg.sicksends.problem.type.SsWallFeatureType
 import javax.inject.Singleton
 
 /**
  * Database that can be used to access stored climbing information.
+ *
+ * TODO: Create converters for the differnt LONG types like wall features,
+ * holds, etc.
  */
 @Database(
 	entities = [SsBoulderProblem::class, SsSportProblem::class, SsTopRopeProblem::class, SsTradProblem::class],
@@ -144,9 +147,9 @@ abstract class SsProblemDatabase : RoomDatabase()
 					var p = SsBoulderProblem()
 
 					p.timestamp = timestamp - 86400*(i % 5)
-					p.holdType = SsHoldType.CRIMP.value or SsHoldType.PINCH.value or SsHoldType.POCKET.value
-					p.routeFeatureType = SsRouteFeatureType.ARETE.value or SsRouteFeatureType.OVERHANG.value
-					p.climbingTechniqueType = SsClimbingTechniqueType.KNEE_BAR.value or SsClimbingTechniqueType.SMEARING.value
+					p.hold = SsHoldType.CRIMP.value or SsHoldType.PINCH.value or SsHoldType.POCKET.value
+					p.wallFeature = SsWallFeatureType.ARETE.value or SsWallFeatureType.OVERHANG.value
+					p.climbingTechnique = SsClimbingTechniqueType.KNEE_BAR.value or SsClimbingTechniqueType.SMEAR.value
 					p.numAttempt = i.toLong()
 					p.isFlash = false
 					p.isOutdoor = false
@@ -155,52 +158,52 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.name = ""
 						p.grade = "V0"
 						p.locationName = ""
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 1) {
 						p.name = ""
 						p.grade = "V0"
 						p.locationName = ""
-						p.howDidItFeelScale = 1
+						p.howDidItFeel = 1
 					} else if (i == 2) {
 						p.name = ""
 						p.grade = "V0"
 						p.locationName = ""
-						p.howDidItFeelScale = 2
+						p.howDidItFeel = 2
 					} else if (i == 3) {
 						p.name = "The Flying Salmon"
 						p.grade = "V2"
 						p.locationName = ""
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 4) {
 						p.name = "The Flying Salmon"
 						p.grade = "V2"
 						p.locationName = ""
-						p.howDidItFeelScale = 4
+						p.howDidItFeel = 4
 					} else if (i == 5) {
 						p.name = "The Flying Salmon"
 						p.grade = "V2"
 						p.locationName = ""
-						p.howDidItFeelScale = 5
+						p.howDidItFeel = 5
 					} else if (i == 6) {
 						p.name = "The Flying Salmon"
 						p.grade = "V2"
 						p.locationName = "Wide Boyz"
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 7) {
 						p.name = "The Flying Salmon"
 						p.grade = "V4"
 						p.locationName = "Wide Boyz"
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 8) {
 						p.name = "The Flying Salmon"
 						p.grade = "V4"
 						p.locationName = "Wide Boyz"
-						p.howDidItFeelScale = 1
+						p.howDidItFeel = 1
 					} else if (i == 9) {
 						p.name = "The Flying Salmon"
 						p.grade = "V4"
 						p.locationName = "Wide Boyz"
-						p.howDidItFeelScale = 2
+						p.howDidItFeel = 2
 					} else if (i == 10) {
 						p.name = ""
 						p.grade = "V8"
@@ -208,7 +211,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = false
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 11) {
 						p.name = ""
 						p.grade = "V8"
@@ -216,7 +219,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = true
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 12) {
 						p.name = ""
 						p.grade = "V8"
@@ -224,7 +227,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = false
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 13) {
 						p.name = ""
 						p.grade = "V8"
@@ -232,7 +235,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = true
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 14) {
 						p.name = ""
 						p.grade = "V10"
@@ -240,7 +243,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = false
-						p.howDidItFeelScale = 1
+						p.howDidItFeel = 1
 					} else if (i == 15) {
 						p.name = ""
 						p.grade = "V8"
@@ -248,7 +251,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = true
-						p.howDidItFeelScale = 2
+						p.howDidItFeel = 2
 					} else if (i == 16) {
 						p.name = ""
 						p.grade = "V8"
@@ -256,7 +259,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = false
-						p.howDidItFeelScale = 4
+						p.howDidItFeel = 4
 					} else if (i == 17) {
 						p.name = ""
 						p.grade = "V8"
@@ -264,7 +267,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = true
-						p.howDidItFeelScale = 5
+						p.howDidItFeel = 5
 					} else if (i == 18) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -272,7 +275,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = false
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 19) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -280,7 +283,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = true
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 20) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -288,7 +291,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = false
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 21) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -296,7 +299,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = true
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 22) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -304,7 +307,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = false
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 23) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -312,7 +315,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = true
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 24) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -320,7 +323,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = false
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 25) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -328,7 +331,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = true
-						p.howDidItFeelScale = 0
+						p.howDidItFeel = 0
 					} else if (i == 26) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -336,7 +339,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = false
-						p.howDidItFeelScale = 1
+						p.howDidItFeel = 1
 					} else if (i == 27) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -344,7 +347,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = true
 						p.isFlash = false
 						p.isOutdoor = true
-						p.howDidItFeelScale = 2
+						p.howDidItFeel = 2
 					} else if (i == 28) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -352,7 +355,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = false
-						p.howDidItFeelScale = 4
+						p.howDidItFeel = 4
 					} else if (i == 29) {
 						p.name = "Silence in the Night"
 						p.grade = "V8"
@@ -360,7 +363,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.isProject = false
 						p.isFlash = true
 						p.isOutdoor = true
-						p.howDidItFeelScale = 4
+						p.howDidItFeel = 4
 					}
 
 					boulderDao.insert(p);

@@ -45,13 +45,13 @@ fun SsNameBody(
 	onDone : (String) -> Unit = {})
 {
 
-	println("Name : $visible")
-	val initialName = viewModel.getInitialName()
+	val name = viewModel.problem.name
+	println("Name : $name || Visible : $visible")
 
 	SsTextFieldBody(
 		title = "Name",
 		question = "What is the name of the climb?",
-		initial = initialName,
+		initial = name ?: "",
 		singleLine = true,
 		visible = visible,
 		onDone = { newName ->

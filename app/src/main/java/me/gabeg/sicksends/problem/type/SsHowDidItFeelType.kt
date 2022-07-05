@@ -1,9 +1,9 @@
 package me.gabeg.sicksends.problem.type
 
 /**
- * Types for how the climb felt on a scale from easy to hard.
+ * Types for how the climb felt on a scale from very easy to very hard.
  */
-enum class SsHowDidItFeelType(val value: Int)
+enum class SsHowDidItFeelType(val value : Int)
 {
 
 	VERY_EASY(0),

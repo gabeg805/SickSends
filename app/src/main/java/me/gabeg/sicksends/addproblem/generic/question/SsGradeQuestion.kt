@@ -29,8 +29,9 @@ import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
 import me.gabeg.sicksends.problem.ui.SsGradeIcon
 import me.gabeg.sicksends.shared.getAllBoulderGradesForGradingSystem
+import me.gabeg.sicksends.shared.getAllHowDidItFeelNames
 import me.gabeg.sicksends.shared.getExampleGrade
-import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
+import me.gabeg.sicksends.shared.howDidItFeelToName
 import me.gabeg.sicksends.ui.SsButtonToggleGroup
 import me.gabeg.sicksends.ui.SsDropdownMenuState
 import me.gabeg.sicksends.ui.SsExposedDropdownMenu
@@ -78,7 +79,7 @@ fun SsGradeBody(
 
 	val scope = rememberCoroutineScope()
 	val pagerState = rememberPagerState()
-	val delayMilliSec = 500L
+	val delayMilliSec = 200L
 
 	val dataStore = viewModel.dataStore
 	val askHowDidItFeel = dataStore.observeQuestionHowDidItFeel()
@@ -106,7 +107,7 @@ fun SsGradeBody(
 					{
 						if (askHowDidItFeel)
 						{
-							viewModel.problem.howDidItFeel
+							viewModel.problem.howDidItFeelName
 						}
 						else if (askPerceivedGrade)
 						{
@@ -266,6 +267,25 @@ fun SsGradeBody(
 				}
 			}
 
+			when (pagerState.currentPage)
+			{
+				0 ->
+				{
+					if (!viewModel.hasGradingSystemBeenSelected)
+					{
+						LaunchedEffect(true)
+						{
+							delay(750)
+							pagerState.animateScrollToPage(1)
+						}
+					}
+				}
+				else ->
+				{
+					viewModel.hasGradingSystemBeenSelected = true
+				}
+			}
+
 		}
 
 	}
@@ -289,7 +309,7 @@ fun SsGradePage(
 	val index = allGrades.indexOf(viewModel.problem.grade)
 
 	// Save the state of the dropdown menu
-	val menuState = remember { SsDropdownMenuState(index = index) }
+	val menuState = remember(index) { SsDropdownMenuState(index = index) }
 
 	// Dropdown menu with all the grades
 	SsExposedDropdownMenu(
@@ -328,6 +348,14 @@ fun SsGradingSystemPage(
 		toggleable = false,
 		initialSelect = viewModel.problem.gradingSystem,
 		onClick = { name, isChecked ->
+
+			// A different grading system was chosen. Clear out the grade
+			if (name != viewModel.problem.gradingSystem)
+			{
+				viewModel.problem.grade = ""
+			}
+
+			// Set the grading system
 			viewModel.problem.gradingSystem = name
 
 			onGradingSystemSelected(name)
@@ -340,13 +368,9 @@ fun SsGradingSystemPage(
 	// Show the example grade
 	if (exampleGradingSystem.isNotEmpty())
 	{
-		val context = LocalContext.current
 		var example = getExampleGrade(exampleGradingSystem)
 
-		LaunchedEffect(true)
-		{
-			Toast.makeText(context, example, Toast.LENGTH_SHORT).show()
-		}
+		Toast.makeText(LocalContext.current, example, Toast.LENGTH_SHORT).show()
 
 		exampleGradingSystem = ""
 	}
@@ -362,15 +386,16 @@ fun SsHowDidItFeelPage(
 	onDone : (String) -> Unit = {})
 {
 
-	// Determine the initial how did it feel scale
-	val initialFeelScale = viewModel.getInitialHowDidItFeelScale()
-
 	// Determine the initial slider position
-	val feelScale = viewModel.problem.howDidItFeelScale
+	val allHowDidItFeelNames = getAllHowDidItFeelNames()
+	val howDidItFeel = viewModel.problem.howDidItFeel
 	val normalFeel = SsHowDidItFeelType.NORMAL.value
 	var sliderPosition by remember {
-		mutableStateOf(feelScale?.toFloat() ?: normalFeel.toFloat())
+		mutableStateOf(howDidItFeel?.toFloat() ?: normalFeel.toFloat())
 	}
+
+	// Determine the initial how did it feel scale
+	val initialFeelScale = howDidItFeelToName(howDidItFeel)
 
 	// Subtitle
 	var subtitle by remember { mutableStateOf(initialFeelScale) }
@@ -379,15 +404,19 @@ fun SsHowDidItFeelPage(
 	Column()
 	{
 
+		// Slider
 		Slider(
 			value = sliderPosition,
 			onValueChange = {
 				sliderPosition = round(it)
-				subtitle = getHowDidItFeelScaleName(sliderPosition.toInt())
+				val index = sliderPosition.toInt()
+
+				subtitle = allHowDidItFeelNames[index]
 			},
 			valueRange = 0f..4f,
 			onValueChangeFinished = {
-				viewModel.problem.howDidItFeelScale = sliderPosition.toInt()
+				viewModel.problem.howDidItFeel = sliderPosition.toInt()
+				viewModel.problem.howDidItFeelName = subtitle
 
 				onDone(subtitle)
 			},
@@ -398,32 +427,27 @@ fun SsHowDidItFeelPage(
 			)
 		)
 
-
+		// Row of text labels indicating what each slider position is for
 		Row(
 			modifier = Modifier
 				.fillMaxWidth(),
 			horizontalArrangement = Arrangement.SpaceBetween,
 			verticalAlignment = Alignment.CenterVertically)
 		{
-			Text("Very\nEasy",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
 
-			Text("Easy",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
+			// Iterate over each name
+			allHowDidItFeelNames.forEach {
 
-			Text("Normal",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
+				// Replace any spaces with new lines so that each name does not
+				// interfere with the next one and so that they all fit on one
+				// line
+				val text = it.replace(" ", "\n")
 
-			Text("Hard",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
-
-			Text("Very\nHard",
-				textAlign = TextAlign.Center,
-				fontSize = MaterialTheme.typography.body2.fontSize)
+				// Text for each slider position
+				Text(text,
+					textAlign = TextAlign.Center,
+					fontSize = MaterialTheme.typography.body2.fontSize)
+			}
 
 		}
 

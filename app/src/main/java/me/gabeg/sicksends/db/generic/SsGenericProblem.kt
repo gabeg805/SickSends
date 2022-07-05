@@ -1,18 +1,11 @@
 package me.gabeg.sicksends.db.generic
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Ignore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flow
 import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
-import me.gabeg.sicksends.shared.getHowDidItFeelScaleName
+import me.gabeg.sicksends.shared.howDidItFeelToName
 
 /**
  * Generic problem attributes.
@@ -68,7 +61,7 @@ abstract class SsGenericProblem
 	 * 3 = Hard
 	 * 4 = Very Hard
 	 */
-	abstract var howDidItFeelScale : Int?
+	abstract var howDidItFeel : Int?
 
 	/**
 	 * How how did it feel on a scale from easy to hard?
@@ -79,17 +72,19 @@ abstract class SsGenericProblem
 	 * 3 = Hard
 	 * 4 = Very Hard
 	 */
-	var howDidItFeel : String = ""
-		get() = getHowDidItFeelScaleName(howDidItFeelScale)
+	@Ignore
+	var howDidItFeelName : String = ""
+	//	get() = howDidItFeelToName(howDidItFeel)
 
 	/**
 	 * Check if there is a "How did it feel" scale.
 	 *
 	 * @return True if there is a scale, and False if it is null or NORMAL.
 	 */
-	var hasHowDidItFeelScale : Boolean = false
-		get() = (howDidItFeelScale != null)
-			&& (howDidItFeelScale != SsHowDidItFeelType.NORMAL.value)
+	@Ignore
+	var hasHowDidItFeel : Boolean = false
+		get() = (howDidItFeel != null)
+			&& (howDidItFeel != SsHowDidItFeelType.NORMAL.value)
 
 	/**
 	 * Name of the problem.
@@ -132,24 +127,22 @@ abstract class SsGenericProblem
 	abstract var isOutdoor : Boolean?
 
 	/**
-	 * Types of route features on the problem.
+	 * Types of wall features on the problem.
 	 */
-	abstract var routeFeatureType : Long?
+	abstract var wallFeature : Long?
 
 	/**
 	 * Types of holds on the problem.
 	 */
-	abstract var holdType : Long?
+	abstract var hold : Long?
 
 	/**
 	 * Types of climbing techniques used on the problem.
 	 */
-	abstract var climbingTechniqueType : Long?
+	abstract var climbingTechnique : Long?
 
 	/**
 	 * File path to the image.
-	 *
-	 * TODO: Change this to media path.
 	 */
 	abstract var mediaPath : String?
 
@@ -187,6 +180,12 @@ abstract class SsGenericProblem
 	}
 
 	/**
+	 * Generic extra data to associate with a problem.
+	 */
+	@Ignore
+	var data : Any? = null
+
+	/**
 	 * Debug.
 	 */
 	fun debug()
@@ -196,7 +195,7 @@ abstract class SsGenericProblem
 		Log.i("ProblemDebug", "name                  : $name")
 		Log.i("ProblemDebug", "grade                 : $grade")
 		Log.i("ProblemDebug", "perceivedGrade        : $perceivedGrade")
-		Log.i("ProblemDebug", "howDidItFeel          : $howDidItFeelScale")
+		Log.i("ProblemDebug", "howDidItFeel          : $howDidItFeel")
 		Log.i("ProblemDebug", "numAttempt            : $numAttempt")
 		Log.i("ProblemDebug", "locationName          : $locationName")
 		Log.i("ProblemDebug", "locationLat           : $locationLat")
@@ -204,9 +203,9 @@ abstract class SsGenericProblem
 		Log.i("ProblemDebug", "isProject             : $isProject")
 		Log.i("ProblemDebug", "isFlash               : $isFlash")
 		Log.i("ProblemDebug", "isOutdoor             : $isOutdoor")
-		Log.i("ProblemDebug", "routeFeatureType      : $routeFeatureType")
-		Log.i("ProblemDebug", "holdType              : $holdType")
-		Log.i("ProblemDebug", "climbingTechniqueType : $climbingTechniqueType")
+		Log.i("ProblemDebug", "wallFeatureType       : $wallFeature")
+		Log.i("ProblemDebug", "holdType              : $hold")
+		Log.i("ProblemDebug", "climbingTechniqueType : $climbingTechnique")
 		Log.i("ProblemDebug", "mediaPath             : $mediaPath")
 		Log.i("ProblemDebug", "note                  : $note")
 	}

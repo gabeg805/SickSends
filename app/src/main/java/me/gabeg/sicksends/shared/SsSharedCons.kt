@@ -4,8 +4,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import me.gabeg.sicksends.R
+import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
+import me.gabeg.sicksends.problem.type.SsHoldType
 import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
-import java.util.*
+import me.gabeg.sicksends.problem.type.SsWallFeatureType
+
+/**
+ * Convert the enumerated value of a climbing technique to its name.
+ *
+ * @return The name for a climbing technique.
+ */
+@Composable
+fun climbingTechniqueToName(value : Long?) : String
+{
+	return when(value)
+	{
+		SsClimbingTechniqueType.ARM_BAR.value     -> stringResource(R.string.arm_bar)
+		SsClimbingTechniqueType.BAT_HANG.value    -> stringResource(R.string.bat_hang)
+		SsClimbingTechniqueType.BICYCLE.value     -> stringResource(R.string.bicycle)
+		SsClimbingTechniqueType.CAMPUS.value      -> stringResource(R.string.campus)
+		SsClimbingTechniqueType.DROP_KNEE.value   -> stringResource(R.string.drop_knee)
+		SsClimbingTechniqueType.DYNO.value        -> stringResource(R.string.dyno)
+		SsClimbingTechniqueType.FIGURE_FOUR.value -> stringResource(R.string.figure_four)
+		SsClimbingTechniqueType.FINGER_JAM.value  -> stringResource(R.string.finger_jam)
+		SsClimbingTechniqueType.FIST_JAM.value    -> stringResource(R.string.fist_jam)
+		SsClimbingTechniqueType.GASTON.value      -> stringResource(R.string.gaston)
+		SsClimbingTechniqueType.HAND_JAM.value    -> stringResource(R.string.hand_jam)
+		SsClimbingTechniqueType.HEEL_HOOK.value   -> stringResource(R.string.heel_hook)
+		SsClimbingTechniqueType.KNEE_BAR.value    -> stringResource(R.string.knee_bar)
+		SsClimbingTechniqueType.LAYBACK.value     -> stringResource(R.string.layback)
+		SsClimbingTechniqueType.MANTLE.value      -> stringResource(R.string.mantle)
+		SsClimbingTechniqueType.ROSE_MOVE.value   -> stringResource(R.string.rose_move)
+		SsClimbingTechniqueType.SMEAR.value       -> stringResource(R.string.smear)
+		SsClimbingTechniqueType.STEM.value        -> stringResource(R.string.stem)
+		SsClimbingTechniqueType.TOE_HOOK.value    -> stringResource(R.string.toe_hook)
+		else                                      -> ""
+	}
+}
 
 /**
  * Get a list of all the bouldering grades for the Fontainebleau grading system.
@@ -106,6 +141,96 @@ fun getAllClimbNames() : List<String>
 		stringResource(R.string.sport),
 		stringResource(R.string.top_rope),
 		stringResource(R.string.trad))
+}
+
+/**
+ * @return List of possible grades for Australian rope climbing.
+ */
+@Composable
+fun getAllRopeGradesAustralian() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_aus).toList()
+}
+
+/**
+ * @return List of possible grades for Brasilian rope climbing.
+ */
+@Composable
+fun getAllRopeGradesBrasilian() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_bra).toList()
+}
+
+/**
+ * @return List of possible grades for Finnish rope climbing.
+ */
+@Composable
+fun getAllRopeGradesFinnish() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_fin).toList()
+}
+
+/**
+ * @return List of possible grades for French rope climbing.
+ */
+@Composable
+fun getAllRopeGradesFrench() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_fre).toList()
+}
+
+/**
+ * @return List of possible grades for Norway rope climbing.
+ */
+@Composable
+fun getAllRopeGradesNorway() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_nor).toList()
+}
+
+/**
+ * @return List of possible grades for Poland rope climbing.
+ */
+@Composable
+fun getAllRopeGradesPoland() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_pol).toList()
+}
+
+/**
+ * @return List of possible grades for Saxon rope climbing.
+ */
+@Composable
+fun getAllRopeGradesSaxon() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_sax).toList()
+}
+
+/**
+ * @return List of possible grades for UIAA rope climbing.
+ */
+@Composable
+fun getAllRopeGradesUiaa() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_uiaa).toList()
+}
+
+/**
+ * @return List of possible grades for USA rope climbing.
+ */
+@Composable
+fun getAllRopeGradesUsa() : List<String>
+{
+	return stringArrayResource(R.array.grades_rope_usa).toList()
+}
+
+/**
+ * @return List of possible grades for British trad climbing.
+ */
+@Composable
+fun getAllTradGradesBritish() : List<String>
+{
+	return stringArrayResource(R.array.grades_trad_bri).toList()
 }
 
 /**
@@ -490,19 +615,115 @@ fun getGradeTradBritish() : String
 }
 
 /**
- * Get the name for how a climb felt.
- *
- * @return The name for how a climb felt.
+ * No.
  */
-fun getHowDidItFeelScaleName(value : Int?) : String
+@Composable
+fun getNo() : String
+{
+	return stringResource(R.string.no)
+}
+
+/**
+ * Yes.
+ */
+@Composable
+fun getYes() : String
+{
+	return stringResource(R.string.yes)
+}
+
+/**
+ * Yes or no, depending on the boolean.
+ *
+ * @param value Boolean value.
+ */
+@Composable
+fun getYesOrNo(value : Boolean) : String
+{
+	return if (value) getYes() else getNo()
+}
+
+/**
+ * Get all names for how a climb felt.
+ *
+ * @return All names for how a climb felt.
+ */
+@Composable
+fun getAllHowDidItFeelNames() : List<String>
+{
+	val values = SsHowDidItFeelType.values()
+	val names = mutableListOf<String>()
+
+	values.forEach {
+		names.add(howDidItFeelToName(it.value))
+	}
+
+	return names
+}
+
+/**
+ * Convert the enumerated value of a hold to its name.
+ *
+ * @return The name for a hold.
+ */
+@Composable
+fun holdToName(value : Long?) : String
 {
 	return when(value)
 	{
-		SsHowDidItFeelType.VERY_EASY.value -> "Very Easy"
-		SsHowDidItFeelType.EASY.value      -> "Easy"
-		SsHowDidItFeelType.NORMAL.value    -> "Normal"
-		SsHowDidItFeelType.HARD.value      -> "Hard"
-		SsHowDidItFeelType.VERY_HARD.value -> "Very Hard"
+		SsHoldType.CRIMP.value      -> stringResource(R.string.crimp)
+		SsHoldType.HORN.value       -> stringResource(R.string.horn)
+		SsHoldType.JUG.value        -> stringResource(R.string.jug)
+		SsHoldType.PINCH.value      -> stringResource(R.string.pinch)
+		SsHoldType.POCKET.value     -> stringResource(R.string.pocket)
+		SsHoldType.SLOPER.value     -> stringResource(R.string.sloper)
+		SsHoldType.SIDE_PULL.value  -> stringResource(R.string.side_pull)
+		SsHoldType.UNDERCLING.value -> stringResource(R.string.undercling)
+		SsHoldType.VOLUME.value     -> stringResource(R.string.volume)
+		else                        -> ""
+	}
+}
+
+/**
+ * Convert the enumerated value of how a climb felt to its name.
+ *
+ * @return The name for how a climb felt.
+ */
+@Composable
+fun howDidItFeelToName(value : Int?) : String
+{
+	return when(value)
+	{
+		SsHowDidItFeelType.VERY_EASY.value -> stringResource(R.string.very_easy)
+		SsHowDidItFeelType.EASY.value      -> stringResource(R.string.easy)
+		SsHowDidItFeelType.NORMAL.value    -> stringResource(R.string.normal)
+		SsHowDidItFeelType.HARD.value      -> stringResource(R.string.hard)
+		SsHowDidItFeelType.VERY_HARD.value -> stringResource(R.string.very_hard)
 		else                               -> ""
+	}
+}
+
+/**
+ * Convert the enumerated value of a wall feature to its name.
+ *
+ * @return The name for a wall feature.
+ */
+@Composable
+fun wallFeatureToName(value : Long?) : String
+{
+	return when(value)
+	{
+		SsWallFeatureType.ARETE.value     -> stringResource(R.string.arete)
+		SsWallFeatureType.CHIMNEY.value   -> stringResource(R.string.chimney)
+		SsWallFeatureType.CRACK.value     -> stringResource(R.string.crack)
+		SsWallFeatureType.DIHEDRAL.value  -> stringResource(R.string.dihedral)
+		SsWallFeatureType.FACE.value      -> stringResource(R.string.face)
+		SsWallFeatureType.HIGH_BALL.value -> stringResource(R.string.high_ball)
+		SsWallFeatureType.OVERHANG.value  -> stringResource(R.string.overhang)
+		SsWallFeatureType.ROOF.value      -> stringResource(R.string.roof)
+		SsWallFeatureType.SLAB.value      -> stringResource(R.string.slab)
+		SsWallFeatureType.TOP_OUT.value   -> stringResource(R.string.top_out)
+		SsWallFeatureType.TRAVERSE.value  -> stringResource(R.string.traverse)
+		else                              -> ""
 	}
 }

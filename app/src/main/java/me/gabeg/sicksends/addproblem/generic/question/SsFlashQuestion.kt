@@ -1,7 +1,9 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
+import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.SsYesNoBody
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
@@ -45,19 +47,32 @@ fun SsIsFlashBody(
 	onDone : (String) -> Unit = {})
 {
 
-	println("Is Flash : $visible")
+	// Flash and project states
 	val isFlash = viewModel.problem.isFlash
+	val isProject = viewModel.problem.isProject
 
+	println("Is Flash : $isFlash || Visible : $visible")
+
+	// Setup in case need to show the toast
+	val context = LocalContext.current
+	val msg = "Unable to flash a project"
+
+	// Body
 	SsYesNoBody(
 		title = "Flash",
 		question = "Did you flash the problem?",
-		initial = isFlash,
+		initialState = isFlash,
 		visible = visible,
+		disableYesButton = isProject ?: false,
+		onDisabled = { status, subtitle ->
+			Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+		},
 		onDone = { status, subtitle ->
-			viewModel.problem.observableIsFlash.value = status
+			//viewModel.problem.observableIsFlash.value = status
+			viewModel.problem.isFlash = status
 
 			// Reset the is project attribute
-			if (viewModel.problem.isProject == true)
+			if ((status == true) && (isProject == true))
 			{
 				viewModel.problem.isProject = null
 			}

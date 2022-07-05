@@ -7,7 +7,7 @@ package me.gabeg.sicksends.problem.type
  *
  * @param  value  Value associated with an enum.
  */
-enum class SsHoldType(val value: Long)
+enum class SsHoldType(val value : Long)
 {
 
 	CRIMP(1 shl 0),

@@ -2,6 +2,7 @@ package me.gabeg.sicksends.addproblem
 
 import android.view.KeyEvent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -29,6 +31,7 @@ import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
@@ -43,8 +46,13 @@ import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Companion.getSubtitle
 import me.gabeg.sicksends.addproblem.generic.question.*
 import me.gabeg.sicksends.db.generic.SsGenericProblem
+import me.gabeg.sicksends.problem.type.SsHoldType
+import me.gabeg.sicksends.shared.getAllHoldNames
 import me.gabeg.sicksends.shared.getYesOrNo
 import me.gabeg.sicksends.ui.*
+import me.gabeg.sicksends.util.toNames
+import me.gabeg.sicksends.util.toggle
+import java.util.*
 
 const val ADD_PROBLEM_SCREEN_ROUTE = "Add problem"
 
@@ -72,14 +80,18 @@ fun SsAddClimbScreen(
 	val askOutdoor = dataStore.observeQuestionIsOutdoor()
 	val askLocation = dataStore.observeQuestionLocation()
 	val askNote = dataStore.observeQuestionNote()
+	val askHold = dataStore.observeQuestionHold()
+	val askWallFeature = dataStore.observeQuestionWallFeature()
+	val askClimbingTechnique = dataStore.observeQuestionClimbingTechnique()
 
-	println("Ask name ? $askName")
-	println("Ask flash ? $askFlash")
-	println("Ask attempt ? $askNumAttempt")
-	println("Ask project ? $askProject")
-	println("Ask outdoor ? $askOutdoor")
+	println("Ask name     ? $askName")
+	println("Ask flash    ? $askFlash")
+	println("Ask attempt  ? $askNumAttempt")
+	println("Ask project  ? $askProject")
+	println("Ask outdoor  ? $askOutdoor")
 	println("Ask location ? $askLocation")
-	println("Ask note ? $askNote")
+	println("Ask note     ? $askNote")
+	println("Ask hold     ? $askHold")
 
 	LaunchedEffect(true)
 	{
@@ -189,10 +201,43 @@ fun SsAddClimbScreen(
 			}
 		}
 
+		/**
+		 * Holds
+		 */
+		if (askHold)
+		{
+			item {
+				SsHoldQuestion(
+					viewModel = viewModel,
+					scrollState = scrollState)
+			}
+		}
+
+		/**
+		 * Wall features
+		 */
+		if (askWallFeature)
+		{
+			item {
+				SsWallFeatureQuestion(
+					viewModel = viewModel,
+					scrollState = scrollState)
+			}
+		}
+
+		/**
+		 * Climbing techniques
+		 */
+		if (askClimbingTechnique)
+		{
+			item {
+				SsClimbingTechniqueQuestion(
+					viewModel = viewModel,
+					scrollState = scrollState)
+			}
+		}
+
 		// TODO: Media/images/videos
-		// TODO: Climbing technique
-		// TODO: Wall features
-		// TODO: Holds
 
 		item {
 			Spacer(modifier = Modifier.padding(vertical = 32.dp))
@@ -685,6 +730,95 @@ fun SsYesNoBody(
 
 			}
 
+		}
+
+	}
+
+}
+
+/**
+ * Body that contains a button toggle group.
+ */
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+inline fun <reified T : Enum<T>> SsButtonToggleGroupBody(
+	title : String,
+	question : String,
+	initialState : EnumSet<T>,
+	allStateNames : List<String>,
+	visible : Boolean = true,
+	noinline onClick : (EnumSet<T>) -> Unit = {},
+	noinline onDone : (String) -> Unit = {})
+{
+
+	// State names
+	val names = initialState.toNames(allStateNames)
+
+	// Subtitle
+	val subtitle = getSubtitle(names, question, visible)
+
+	println("$title : $initialState || Visible : $visible || Names : $names")
+
+	// Body
+	SsBody(title, subtitle)
+	{
+
+		AnimatedVisibility(visible = visible)
+		{
+
+			Column()
+			{
+
+				// Show all the buttons
+				SsButtonToggleGroup(
+					items = allStateNames,
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 16.dp, vertical = 4.dp),
+					numPerRow = 2,
+					select = names,
+					onClick = { index, name, isChecked ->
+
+						// Get the enum that was selected
+						val allEnums = enumValues<T>()
+						val enum = allEnums[index]
+
+						// Create a copy of the new state
+						val newState = EnumSet.copyOf(initialState)
+
+						// Toggle the enum
+						newState.toggle(enum)
+
+						// Call the onClick() function with the new state
+						onClick(newState)
+					})
+
+
+				// Continue/Skip button
+				Button(
+					modifier = Modifier
+						.fillMaxWidth(),
+					colors = ButtonDefaults.buttonColors(
+						backgroundColor = Color.Cyan,
+						contentColor = Color.Black),
+					shape = RoundedCornerShape(32.dp),
+					onClick = {
+						onDone(names.joinToString())
+					})
+				{
+
+					Crossfade(targetState = initialState.isEmpty())
+					{
+						val text = if (it) "Skip" else "Continue"
+
+						Text(text,
+							modifier = Modifier
+								.fillMaxWidth(),
+							textAlign = TextAlign.Center)
+					}
+				}
+
+			}
 		}
 
 	}

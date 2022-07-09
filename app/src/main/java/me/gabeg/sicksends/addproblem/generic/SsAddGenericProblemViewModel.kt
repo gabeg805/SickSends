@@ -48,9 +48,12 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	val gradeQuestion = "What was the grade?"
 	val perceivedGradeQuestion = "What grade do you think it was?"
 	val howDidItFeelQuestion = "How did it feel?"
-	val nameQuestion = "What is the name of the climb?"
+	val nameQuestion = "What is the name of the problem?"
 	val noteQuestion = "Do you have any notes for the climb?"
 	val numAttemptQuestion = "How many attempts did you do?"
+	val holdQuestion = "What type of holds did the problem have?"
+	val wallFeatureQuestion = "What type of holds did the problem have?"
+	val climbingTechniqueQuestion = "What type of holds did the problem have?"
 
 	/**
 	 * Indices.
@@ -62,6 +65,9 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	var outdoorIndex = 0
 	var locationIndex = 0
 	var noteIndex = 0
+	var holdIndex = 0
+	var wallFeatureIndex = 0
+	var climbingTechniqueIndex = 0
 
 	/**
 	 * Companion.
@@ -101,7 +107,6 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 					""
 				}
 			}
-			//return if (visible || (text != question)) text else ""
 		}
 
 		/**
@@ -121,6 +126,30 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 				if (state != null)
 				{
 					getYesOrNo(state)
+				}
+				else
+				{
+					""
+				}
+			}
+		}
+
+		/**
+		 * Get the subtitle to show.
+		 *
+		 * @return The subtitle to show.
+		 */
+		fun getSubtitle(names : List<String>, question : String, visible : Boolean) : String
+		{
+			return if (visible)
+			{
+				question
+			}
+			else
+			{
+				if (names.isNotEmpty())
+				{
+					names.joinToString()
 				}
 				else
 				{
@@ -153,7 +182,8 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	fun getAllIndices() : List<Int>
 	{
 		return listOf(gradeIndex, nameIndex, attemptIndex, projectIndex,
-			outdoorIndex, locationIndex, noteIndex)
+			outdoorIndex, locationIndex, noteIndex, holdIndex, wallFeatureIndex,
+			climbingTechniqueIndex)
 	}
 
 	/**
@@ -437,6 +467,9 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 		val askOutdoor = dataStore.getQuestionIsOutdoor()
 		val askLocation = dataStore.getQuestionLocation()
 		val askNote = dataStore.getQuestionNote()
+		val askHold = dataStore.getQuestionHold()
+		val askWallFeature = dataStore.getQuestionWallFeature()
+		val askClimbingTechnique = dataStore.getQuestionClimbingTechnique()
 
 		if (askName)
 		{
@@ -446,6 +479,9 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 			outdoorIndex++
 			locationIndex++
 			noteIndex++
+			holdIndex++
+			wallFeatureIndex++
+			climbingTechniqueIndex++
 		}
 
 		if (askFlash || askNumAttempt)
@@ -455,6 +491,9 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 			outdoorIndex++
 			locationIndex++
 			noteIndex++
+			holdIndex++
+			wallFeatureIndex++
+			climbingTechniqueIndex++
 		}
 
 		if (askProject)
@@ -463,6 +502,9 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 			outdoorIndex++
 			locationIndex++
 			noteIndex++
+			holdIndex++
+			wallFeatureIndex++
+			climbingTechniqueIndex++
 		}
 
 		if (askOutdoor)
@@ -470,17 +512,44 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 			outdoorIndex++
 			locationIndex++
 			noteIndex++
+			holdIndex++
+			wallFeatureIndex++
+			climbingTechniqueIndex++
 		}
 
 		if (askLocation)
 		{
 			locationIndex++
 			noteIndex++
+			holdIndex++
+			wallFeatureIndex++
+			climbingTechniqueIndex++
 		}
 
 		if (askNote)
 		{
 			noteIndex++
+			holdIndex++
+			wallFeatureIndex++
+			climbingTechniqueIndex++
+		}
+
+		if (askHold)
+		{
+			holdIndex++
+			wallFeatureIndex++
+			climbingTechniqueIndex++
+		}
+
+		if (askWallFeature)
+		{
+			wallFeatureIndex++
+			climbingTechniqueIndex++
+		}
+
+		if (askClimbingTechnique)
+		{
+			climbingTechniqueIndex++
 		}
 	}
 

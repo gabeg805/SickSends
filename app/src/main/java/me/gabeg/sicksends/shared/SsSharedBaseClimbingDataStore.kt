@@ -254,9 +254,33 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	 *
 	 * @return Whether the question should be asked or not.
 	 */
+	suspend fun getQuestionClimbingTechnique() : Boolean
+	{
+		val flow = getQuestionClimbingTechniqueFlow()
+
+		return getBoolean(flow)
+	}
+
+	/**
+	 * Get whether the climbing technique question should be asked or not.
+	 *
+	 * @return Whether the question should be asked or not.
+	 */
 	fun getQuestionClimbingTechniqueFlow() : Flow<Boolean>
 	{
 		return getBooleanFlow(KEY_QUESTION_CLIMBING_TECHNIQUE, false)
+	}
+
+	/**
+	 * Get whether the hold question should be asked or not.
+	 *
+	 * @return Whether the question should be asked or not.
+	 */
+	suspend fun getQuestionHold() : Boolean
+	{
+		val flow = getQuestionHoldFlow()
+
+		return getBoolean(flow)
 	}
 
 	/**
@@ -451,6 +475,18 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	fun getQuestionPerceivedGradeFlow() : Flow<Boolean>
 	{
 		return getBooleanFlow(KEY_QUESTION_PERCEIVED_GRADE, false)
+	}
+
+	/**
+	 * Get whether the wall feature question should be asked or not.
+	 *
+	 * @return Whether the question should be asked or not.
+	 */
+	suspend fun getQuestionWallFeature() : Boolean
+	{
+		val flow = getQuestionWallFeatureFlow()
+
+		return getBoolean(flow)
 	}
 
 	/**

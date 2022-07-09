@@ -229,7 +229,7 @@ fun buildGradingSystemButtons(
 				overflow = TextOverflow.Ellipsis,
 				softWrap = false)
 		},
-		onClick = { name, isChecked ->
+		onClick = { index, name, isChecked ->
 			onGradingSystemToggled(name, isChecked)
 		},
 		onLongClick = { name ->

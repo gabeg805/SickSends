@@ -1,7 +1,11 @@
 package me.gabeg.sicksends.problem.type
 
+import java.util.*
+
 /**
  * Types of climbing techniques that a person may utilize.
+ *
+ * TODO: Change into hand and foot work?
  *
  * @param  value  Value associated with an enum.
  */
@@ -26,25 +30,8 @@ enum class SsClimbingTechniqueType(val value : Long)
 	ROSE_MOVE(1 shl 15),
 	SMEAR(1 shl 16),
 	STEM(1 shl 17),
-	TOE_HOOK(1 shl 18)
+	TOE_HOOK(1 shl 18);
 
-	//// CHange this shit into hand work and foot work
-	//HEEL_HOOK(1 << 17),
-	//LAYBACK(1 << 20),
-	//MANTLE(1 << 22),
-	//SMEARING(1 << 24),
-	//TOE_HOOK(1 << 26);
-	//BICYCLE(1 << 3),
-	//DROP_KNEE(1 << 7),
-	//DYNO(1 << 8),
-	//KNEE_BAR(1 << 19),
-	//CAMPUS(1 << 5),
-	//GASTON(1 << 15),
-	//HAND_JAM(1 << 16),
-	//FINGER_JAM(1 << 11),
-	//FIST_JAM(1 << 12),
-	//STEMMING(1 << 25),
-	//ARM_BAR(1 << 0),
 	////BACK_STEP(1 << 1),
 	////BUMP(1 << 4),
 	////DEADPOINT(1 << 6),
@@ -53,8 +40,20 @@ enum class SsClimbingTechniqueType(val value : Long)
 	////FOOT_JAM(1 << 14),
 	////HEEL_TOE_CAM(1 << 18),
 	////LOCKOFF(1 << 21),
-	//FIGURE_FOUR(1 << 10),
-	//ROSE_MOVE(1 << 23),
-	//BAT_HANG(1 << 2),
+
+	companion object
+	{
+
+		/**
+		 * Create an empty EnumSet of this type.
+		 *
+		 * @return An empty EnumSet of this type.
+		 */
+		fun emptySet() : EnumSet<SsClimbingTechniqueType>
+		{
+			return EnumSet.noneOf(SsClimbingTechniqueType::class.java)
+		}
+
+	}
 
 }

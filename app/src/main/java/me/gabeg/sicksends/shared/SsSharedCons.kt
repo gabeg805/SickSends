@@ -129,6 +129,24 @@ fun getAllClimbIcons() : List<Int>
 }
 
 /**
+ * Get all names for each type of climbing technique.
+ *
+ * @return All names for each type of climbing technique.
+ */
+@Composable
+fun getAllClimbingTechniqueNames() : List<String>
+{
+	val values = SsClimbingTechniqueType.values()
+	val names = mutableListOf<String>()
+
+	values.forEach {
+		names.add(climbingTechniqueToName(it.value))
+	}
+
+	return names
+}
+
+/**
  * Get all the names of climbs that a user can do.
  *
  * @return List of all the names of climbs that a user can do.
@@ -141,6 +159,42 @@ fun getAllClimbNames() : List<String>
 		stringResource(R.string.sport),
 		stringResource(R.string.top_rope),
 		stringResource(R.string.trad))
+}
+
+/**
+ * Get all names for each type of hold.
+ *
+ * @return All names for each type of hold.
+ */
+@Composable
+fun getAllHoldNames() : List<String>
+{
+	val values = SsHoldType.values()
+	val names = mutableListOf<String>()
+
+	values.forEach {
+		names.add(holdToName(it.value))
+	}
+
+	return names
+}
+
+/**
+ * Get all names for how a climb felt.
+ *
+ * @return All names for how a climb felt.
+ */
+@Composable
+fun getAllHowDidItFeelNames() : List<String>
+{
+	val values = SsHowDidItFeelType.values()
+	val names = mutableListOf<String>()
+
+	values.forEach {
+		names.add(howDidItFeelToName(it.value))
+	}
+
+	return names
 }
 
 /**
@@ -225,15 +279,6 @@ fun getAllRopeGradesUsa() : List<String>
 }
 
 /**
- * @return List of possible grades for British trad climbing.
- */
-@Composable
-fun getAllTradGradesBritish() : List<String>
-{
-	return stringArrayResource(R.array.grades_trad_bri).toList()
-}
-
-/**
  * Get the name of all grading systems for ropes.
  *
  * @return The name of all grading systems for ropes.
@@ -265,14 +310,12 @@ fun getAllSportGradingSystems() : List<String>
 }
 
 /**
- * Get the name of all top rope grading systems.
- *
- * @return The name of all top rope grading systems.
+ * @return List of possible grades for British trad climbing.
  */
 @Composable
-fun getAllTopRopeGradingSystems() : List<String>
+fun getAllTradGradesBritish() : List<String>
 {
-	return getAllRopeGradingSystems()
+	return stringArrayResource(R.array.grades_trad_bri).toList()
 }
 
 /**
@@ -288,6 +331,35 @@ fun getAllTradGradingSystems() : List<String>
 	allGradingSystems.add(2, getGradeTradBritish())
 
 	return allGradingSystems
+}
+
+/**
+ * Get the name of all top rope grading systems.
+ *
+ * @return The name of all top rope grading systems.
+ */
+@Composable
+fun getAllTopRopeGradingSystems() : List<String>
+{
+	return getAllRopeGradingSystems()
+}
+
+/**
+ * Get all names for each type of wall feature.
+ *
+ * @return All names for each type of wall feature.
+ */
+@Composable
+fun getAllWallFeatureNames() : List<String>
+{
+	val values = SsWallFeatureType.values()
+	val names = mutableListOf<String>()
+
+	values.forEach {
+		names.add(wallFeatureToName(it.value))
+	}
+
+	return names
 }
 
 /**
@@ -641,24 +713,6 @@ fun getYes() : String
 fun getYesOrNo(value : Boolean) : String
 {
 	return if (value) getYes() else getNo()
-}
-
-/**
- * Get all names for how a climb felt.
- *
- * @return All names for how a climb felt.
- */
-@Composable
-fun getAllHowDidItFeelNames() : List<String>
-{
-	val values = SsHowDidItFeelType.values()
-	val names = mutableListOf<String>()
-
-	values.forEach {
-		names.add(howDidItFeelToName(it.value))
-	}
-
-	return names
 }
 
 /**

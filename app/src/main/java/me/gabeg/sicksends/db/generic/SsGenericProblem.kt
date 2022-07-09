@@ -4,8 +4,12 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Ignore
+import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
+import me.gabeg.sicksends.problem.type.SsHoldType
 import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
+import me.gabeg.sicksends.problem.type.SsWallFeatureType
 import me.gabeg.sicksends.shared.howDidItFeelToName
+import java.util.*
 
 /**
  * Generic problem attributes.
@@ -53,7 +57,7 @@ abstract class SsGenericProblem
 	abstract var perceivedGrade : String?
 
 	/**
-	 * How how did it feel on a scale from easy to hard?
+	 * Value for how a problem felt, on a scale from very easy to very hard?
 	 *
 	 * 0 = Very Easy
 	 * 1 = Easy
@@ -64,22 +68,16 @@ abstract class SsGenericProblem
 	abstract var howDidItFeel : Int?
 
 	/**
-	 * How how did it feel on a scale from easy to hard?
-	 *
-	 * 0 = Very Easy
-	 * 1 = Easy
-	 * 2 = Normal
-	 * 3 = Hard
-	 * 4 = Very Hard
+	 * The name for how a problem felt.
 	 */
 	@Ignore
 	var howDidItFeelName : String = ""
-	//	get() = howDidItFeelToName(howDidItFeel)
 
 	/**
-	 * Check if there is a "How did it feel" scale.
+	 * Check if there is a non-normal value set for how a problem felt.
 	 *
-	 * @return True if there is a scale, and False if it is null or NORMAL.
+	 * @return True if there is a how did it feel value, and False if it is null
+	 *         or NORMAL.
 	 */
 	@Ignore
 	var hasHowDidItFeel : Boolean = false
@@ -129,17 +127,26 @@ abstract class SsGenericProblem
 	/**
 	 * Types of wall features on the problem.
 	 */
-	abstract var wallFeature : Long?
+	abstract var wallFeature : EnumSet<SsWallFeatureType>
 
 	/**
 	 * Types of holds on the problem.
 	 */
-	abstract var hold : Long?
+	abstract var hold : EnumSet<SsHoldType>
+
+	/**
+	 * Check if there is one or more hold set.
+	 *
+	 * @return True if there is one or more hold set, and False otherwise.
+	 */
+	@Ignore
+	var hasHold : Boolean = false
+		get() = hold.isNotEmpty()
 
 	/**
 	 * Types of climbing techniques used on the problem.
 	 */
-	abstract var climbingTechnique : Long?
+	abstract var climbingTechnique : EnumSet<SsClimbingTechniqueType>
 
 	/**
 	 * File path to the image.
@@ -176,6 +183,48 @@ abstract class SsGenericProblem
 			super.setValue(value)
 
 			isProject = value
+		}
+	}
+
+	/**
+	 * An observable of the type of holds on the problem.
+	 */
+	@Ignore
+	var observableHold = object : MutableLiveData<EnumSet<SsHoldType>>(SsHoldType.emptySet())
+	{
+		override fun setValue(value : EnumSet<SsHoldType>)
+		{
+			super.setValue(value)
+
+			hold = value
+		}
+	}
+
+	/**
+	 * An observable of the type of features on the wall of the problem.
+	 */
+	@Ignore
+	var observableWallFeature = object : MutableLiveData<EnumSet<SsWallFeatureType>>(SsWallFeatureType.emptySet())
+	{
+		override fun setValue(value : EnumSet<SsWallFeatureType>)
+		{
+			super.setValue(value)
+
+			wallFeature = value
+		}
+	}
+
+	/**
+	 * An observable of the type of climbing techniques used on the problem.
+	 */
+	@Ignore
+	var observableClimbingTechnique = object : MutableLiveData<EnumSet<SsClimbingTechniqueType>>(SsClimbingTechniqueType.emptySet())
+	{
+		override fun setValue(value : EnumSet<SsClimbingTechniqueType>)
+		{
+			super.setValue(value)
+
+			climbingTechnique = value
 		}
 	}
 

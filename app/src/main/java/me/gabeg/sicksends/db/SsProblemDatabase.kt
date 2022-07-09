@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
@@ -20,9 +21,13 @@ import me.gabeg.sicksends.db.toprope.SsTopRopeDao
 import me.gabeg.sicksends.db.toprope.SsTopRopeProblem
 import me.gabeg.sicksends.db.trad.SsTradDao
 import me.gabeg.sicksends.db.trad.SsTradProblem
+import me.gabeg.sicksends.db.typeconverter.SsClimbingTechniqueTypeConverter
+import me.gabeg.sicksends.db.typeconverter.SsHoldTypeConverter
+import me.gabeg.sicksends.db.typeconverter.SsWallFeatureTypeConverter
 import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
 import me.gabeg.sicksends.problem.type.SsHoldType
 import me.gabeg.sicksends.problem.type.SsWallFeatureType
+import java.util.*
 import javax.inject.Singleton
 
 /**
@@ -32,8 +37,11 @@ import javax.inject.Singleton
  * holds, etc.
  */
 @Database(
-	entities = [SsBoulderProblem::class, SsSportProblem::class, SsTopRopeProblem::class, SsTradProblem::class],
+	entities = [SsBoulderProblem::class, SsSportProblem::class,
+		SsTopRopeProblem::class, SsTradProblem::class],
 	version = 1)
+@TypeConverters(SsClimbingTechniqueTypeConverter::class,
+	SsHoldTypeConverter::class, SsWallFeatureTypeConverter::class)
 abstract class SsProblemDatabase : RoomDatabase()
 {
 
@@ -147,9 +155,12 @@ abstract class SsProblemDatabase : RoomDatabase()
 					var p = SsBoulderProblem()
 
 					p.timestamp = timestamp - 86400*(i % 5)
-					p.hold = SsHoldType.CRIMP.value or SsHoldType.PINCH.value or SsHoldType.POCKET.value
-					p.wallFeature = SsWallFeatureType.ARETE.value or SsWallFeatureType.OVERHANG.value
-					p.climbingTechnique = SsClimbingTechniqueType.KNEE_BAR.value or SsClimbingTechniqueType.SMEAR.value
+					//p.hold = SsHoldType.CRIMP.value or SsHoldType.PINCH.value or SsHoldType.POCKET.value
+					//p.wallFeature = SsWallFeatureType.ARETE.value or SsWallFeatureType.OVERHANG.value
+					//p.climbingTechnique = SsClimbingTechniqueType.KNEE_BAR.value or SsClimbingTechniqueType.SMEAR.value
+					p.hold = EnumSet.of(SsHoldType.CRIMP, SsHoldType.PINCH, SsHoldType.POCKET)
+					p.wallFeature = EnumSet.of(SsWallFeatureType.ARETE, SsWallFeatureType.OVERHANG)
+					p.climbingTechnique = EnumSet.of(SsClimbingTechniqueType.KNEE_BAR, SsClimbingTechniqueType.SMEAR)
 					p.numAttempt = i.toLong()
 					p.isFlash = false
 					p.isOutdoor = false

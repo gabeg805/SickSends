@@ -347,7 +347,7 @@ fun SsGradingSystemPage(
 		singleSelection = true,
 		toggleable = false,
 		initialSelect = viewModel.problem.gradingSystem,
-		onClick = { name, isChecked ->
+		onClick = { index, name, isChecked ->
 
 			// A different grading system was chosen. Clear out the grade
 			if (name != viewModel.problem.gradingSystem)

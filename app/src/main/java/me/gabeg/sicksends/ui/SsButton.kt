@@ -42,7 +42,7 @@ fun SsButtonToggleGroup(
 			softWrap = false)
 	},
 	endButtonContent : @Composable RowScope.(String) -> Unit = {},
-	onClick : (String, Boolean) -> Unit = { _,_ -> },
+	onClick : (Int, String, Boolean) -> Unit = { _,_,_ -> },
 	onLongClick : (String) -> Unit = {},
 )
 {
@@ -58,15 +58,18 @@ fun SsButtonToggleGroup(
 
 		// Iterate over each item in chunks, based on how many buttons should
 		// appear per row
-		items.chunked(numPerRow).forEach { chunkedItems ->
+		items.chunked(numPerRow).forEachIndexed { i, chunkedItems ->
 
 			// Row for the buttons
 			Row(modifier = rowModifier)
 			{
 
 				// Iterate over each button that will be in the row
-				for ((i,name) in chunkedItems.withIndex())
+				for ((j,name) in chunkedItems.withIndex())
 				{
+
+					// Index of the button
+					val index = (numPerRow * i) + j
 
 					// Whether or not the grading system button is selected
 					var isChecked : Boolean
@@ -92,7 +95,7 @@ fun SsButtonToggleGroup(
 					// Create a button
 					SsLongClickOutlinedButton(
 						modifier = Modifier
-							.fillMaxWidth(1f / (numPerRow - i)),
+							.fillMaxWidth(1f / (numPerRow - j)),
 						colors = if (isChecked) checkedColor else uncheckedColor,
 						onClick = {
 
@@ -121,14 +124,14 @@ fun SsButtonToggleGroup(
 									// as if it was just clicked to true
 									if (isChecked)
 									{
-										onClick(name, isChecked)
+										onClick(index, name, isChecked)
 										return@SsLongClickOutlinedButton
 									}
 								}
 							}
 
 							// Call the onClick() method
-							onClick(name, !isChecked)
+							onClick(index, name, !isChecked)
 
 						},
 						onLongClick = {

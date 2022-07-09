@@ -8,6 +8,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import me.gabeg.sicksends.db.generic.SsGenericRopeProblem
+import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
+import me.gabeg.sicksends.problem.type.SsHoldType
+import me.gabeg.sicksends.problem.type.SsWallFeatureType
+import java.util.*
 
 /**
  * Aspects of a top rope problem that are saved.
@@ -56,7 +60,7 @@ data class SsTopRopeProblem(
 	 * 4 = Hard
 	 * 5 = Very Hard
 	 */
-	@ColumnInfo(name = "how_did_it_feel_scale")
+	@ColumnInfo(name = "how_did_it_feel")
 	override var howDidItFeel : Int? = null,
 
 	/**
@@ -110,20 +114,20 @@ data class SsTopRopeProblem(
 	/**
 	 * Types of wall features on the problem.
 	 */
-	@ColumnInfo(name = "wall_feature_type")
-	override var wallFeature : Long? = null,
+	@ColumnInfo(name = "wall_feature")
+	override var wallFeature : EnumSet<SsWallFeatureType> = SsWallFeatureType.emptySet(),
 
 	/**
 	 * Types of holds on the problem.
 	 */
-	@ColumnInfo(name = "hold_type")
-	override var hold : Long? = null,
+	@ColumnInfo(name = "hold")
+	override var hold : EnumSet<SsHoldType> = SsHoldType.emptySet(),
 
 	/**
 	 * Types of climbing techniques used on the problem.
 	 */
-	@ColumnInfo(name = "climbing_technique_type")
-	override var climbingTechnique : Long? = null,
+	@ColumnInfo(name = "climbing_technique")
+	override var climbingTechnique : EnumSet<SsClimbingTechniqueType> = SsClimbingTechniqueType.emptySet(),
 
 	/**
 	 * File path to the image.

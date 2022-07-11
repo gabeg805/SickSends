@@ -153,49 +153,70 @@ fun SsAskAboutProblemQuestionsPage()
 			}
 
 			// Flash
+			//item {
+			//	SsAskQuestions(
+			//		icon = { SsFlashIcon() },
+			//		title = "Flash")
+			//	{
+
+			//		// Flash
+			//		SsQuestionButton(
+			//			modifier = Modifier
+			//				.width(screenWidth / 4),
+			//			icon = { SsFlashIcon() },
+			//			text = "Flash",
+			//			description = "Whether or not the problem was flashed.",
+			//			selected = isFlash,
+			//			onClick = {
+			//				scope.launch {
+			//					for (ds in allDataStores)
+			//					{
+			//						ds.editQuestionIsFlash(it)
+			//					}
+			//				}
+			//			},
+			//			onLongClick = it)
+
+			//		// Number of attempts
+			//		SsQuestionButton(
+			//			modifier = Modifier
+			//				.width(screenWidth / 4),
+			//			icon = { SsNumberOfAttemptsIcon() },
+			//			text = "Number of\nAttempts",
+			//			description = "Number of times the climb was attempted.",
+			//			selected = numAttempt,
+			//			onClick = {
+			//				scope.launch {
+			//					for (ds in allDataStores)
+			//					{
+			//						ds.editQuestionNumAttempt(it)
+			//					}
+			//				}
+			//			},
+			//			onLongClick = it)
+
+			//	}
+			//}
+
+			// Number of attempts
 			item {
-				SsAskQuestions(
-					icon = { SsFlashIcon() },
-					title = "Flash")
-				{
-
-					// Flash
-					SsQuestionButton(
-						modifier = Modifier
-							.width(screenWidth / 4),
-						icon = { SsFlashIcon() },
-						text = "Flash",
-						description = "Whether or not the problem was flashed.",
-						selected = isFlash,
-						onClick = {
-							scope.launch {
-								for (ds in allDataStores)
-								{
-									ds.editQuestionIsFlash(it)
-								}
+				SsAskQuestion(
+					icon = {
+						SsNumberOfAttemptsIcon(
+							modifier = Modifier
+								.size(28.dp))
+					},
+					title = "Attempts",
+					description = "Number of times the climb was attempted.",
+					selected = numAttempt,
+					onClick = {
+						scope.launch {
+							for (ds in allDataStores)
+							{
+								ds.editQuestionNumAttempt(it)
 							}
-						},
-						onLongClick = it)
-
-					// Number of attempts
-					SsQuestionButton(
-						modifier = Modifier
-							.width(screenWidth / 4),
-						icon = { SsNumberOfAttemptsIcon() },
-						text = "Number of\nAttempts",
-						description = "Number of times the climb was attempted.",
-						selected = numAttempt,
-						onClick = {
-							scope.launch {
-								for (ds in allDataStores)
-								{
-									ds.editQuestionNumAttempt(it)
-								}
-							}
-						},
-						onLongClick = it)
-
-				}
+						}
+					})
 			}
 
 			// Project
@@ -337,7 +358,11 @@ fun SsAskAboutProblemQuestionsPage()
 			// Holds
 			item {
 				SsAskQuestion(
-					icon = { SsTechniqueIcon() },
+					icon = {
+						SsBoulderIcon(
+							modifier = Modifier
+								.size(24.dp))
+					},
 					title = "Holds",
 					description = "The different types of holds on the climb, such as:\n\nCrimp, Pinch, Sloper, etc.",
 					selected = hold,

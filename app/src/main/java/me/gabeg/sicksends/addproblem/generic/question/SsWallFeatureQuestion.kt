@@ -45,7 +45,7 @@ fun SsWallFeatureQuestion(
 fun SsWallFeatureBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	// Wall features

@@ -16,10 +16,6 @@ fun SsOutdoorQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Get the index
-	val index = viewModel.outdoorIndex
-
-	// Create the question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -31,7 +27,7 @@ fun SsOutdoorQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = index,
+		index = viewModel.outdoorIndex,
 		scrollState = scrollState)
 }
 
@@ -42,21 +38,23 @@ fun SsOutdoorQuestion(
 fun SsIsOutdoorBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
+	// Outdoor
 	val isOutdoor = viewModel.problem.isOutdoor
 	println("Is Outdoor : $isOutdoor || Visible : $visible")
 
+	// Body
 	SsYesNoBody(
-		title = "Outdoor",
-		question = "Was the problem outdoors?",
+		title = "Outdoors",
+		question = viewModel.outdoorQuestion,
 		initialState = isOutdoor,
 		visible = visible,
-		onDone = { status, subtitle ->
+		onDone = { status ->
 			viewModel.problem.isOutdoor = status
 
-			onDone(subtitle)
+			onDone()
 		})
 
 }

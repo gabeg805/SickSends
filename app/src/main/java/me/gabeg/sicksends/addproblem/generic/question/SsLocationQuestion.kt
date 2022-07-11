@@ -34,10 +34,6 @@ fun SsLocationQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Get the index
-	val index = viewModel.locationIndex
-
-	// Create the question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -49,7 +45,7 @@ fun SsLocationQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = index,
+		index = viewModel.locationIndex,
 		scrollState = scrollState)
 }
 
@@ -61,7 +57,7 @@ fun SsLocationQuestion(
 fun SsLocationBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	val location = viewModel.problem.locationName
@@ -109,7 +105,7 @@ fun SsLocationBody(
 							{
 								subtitle = text
 
-								onDone(subtitle)
+								onDone()
 								return@onKeyEvent true
 							}
 							else
@@ -127,7 +123,7 @@ fun SsLocationBody(
 						onNext = {
 							subtitle = text
 
-							onDone(subtitle)
+							onDone()
 						}))
 
 				// Focus the text field, if it is visible

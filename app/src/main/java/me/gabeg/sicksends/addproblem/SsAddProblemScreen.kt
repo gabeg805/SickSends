@@ -3,6 +3,8 @@ package me.gabeg.sicksends.addproblem
 import android.view.KeyEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
@@ -26,6 +28,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
@@ -34,13 +37,18 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import me.gabeg.sicksends.SsLongClickButton
+import me.gabeg.sicksends.SsLongClickOutlinedButton
 import me.gabeg.sicksends.addproblem.boulder.SsAddBoulderProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Companion.getSubtitle
@@ -103,7 +111,6 @@ fun SsAddClimbScreen(
 		modifier = Modifier
 			.fillMaxSize()
 			.padding(vertical = 24.dp, horizontal = 16.dp),
-			//.padding(innerPadding),
 		state = scrollState)
 	{
 
@@ -247,6 +254,54 @@ fun SsAddClimbScreen(
 }
 
 /**
+ */
+@Composable
+fun SsQuestionSubcompose(
+	modifier: Modifier = Modifier,
+	mainContent: @Composable () -> Unit,
+	dependentContent: @Composable (IntSize) -> Unit)
+{
+
+	// Subcompose layout
+	SubcomposeLayout(modifier = modifier) { constraints ->
+
+		// Main
+		val mainMeasureables = subcompose(SlotsEnum.Main, mainContent)
+		var mainPlaceables = mainMeasureables.map { it.measure(constraints) }
+
+		// Get max width and height of the main component
+		val maxSize = mainPlaceables.fold(IntSize.Zero) { currentMax, placeable ->
+			IntSize(
+				width = maxOf(currentMax.width, placeable.width),
+				height = maxOf(currentMax.height, placeable.height)
+			)
+		}
+
+		// Dependent
+		val depMeasureables = subcompose(SlotsEnum.Dependent) {
+			dependentContent(maxSize)
+		}
+		val depPlaceables = depMeasureables.map {
+			it.measure(constraints)
+		}
+		var depWidth = depPlaceables.maxOf { it.width }
+
+		// Recompute width of main
+		mainPlaceables = subcompose(SlotsEnum.New, mainContent).map {
+			it.measure(Constraints(depWidth, constraints.maxWidth - depWidth))
+		}
+
+		// Layout
+		layout(maxSize.width, maxSize.height) {
+			mainPlaceables.forEach { it.placeRelative(depWidth, 0) }
+			depPlaceables.forEach { it.placeRelative(0, 0) }
+		}
+	}
+}
+
+enum class SlotsEnum { Main, Dependent, New }
+
+/**
  * Question widget.
  */
 @Composable
@@ -256,25 +311,21 @@ fun SsQuestion(
 		modifier : Modifier) -> Unit,
 	body : @Composable (
 		visible : Boolean,
-		onDone : (String) -> Unit) -> Unit = {_,_ -> },
+		onDone : () -> Unit) -> Unit = {_,_ -> },
 	index : Int,
 	scrollState : LazyListState = rememberLazyListState(),
 	onClick : () -> Unit = {
 		viewModel.showOnly(index)
 	},
-	onDone : () -> Unit = {
-
-		println("Doing onDone!")
+	onDone : suspend CoroutineScope.() -> Unit = {
 		viewModel.showOnly(index+1)
-		println("TEST Body : ${viewModel.getVisible(index)} || $index")
-
-		//scrollState.animateScrollToItem(index+1)
+		delay(250)
+		scrollState.animateScrollToItem(index)
 	})
 {
 
-	var scope = rememberCoroutineScope()
-	var isDone by remember { mutableStateOf(false) }
-	val currentOnDone by rememberUpdatedState(onDone)
+	// Coroutine scope
+	val scope = rememberCoroutineScope()
 
 	// Whether the current element should be visible
 	var isVisible by remember { viewModel.getVisible(index) }
@@ -324,106 +375,38 @@ fun SsQuestion(
 			},
 			mainContent = {
 
+				val bottom : Dp by animateDpAsState(
+					if ((index == 0) && isVisible)
+						64.dp
+					else
+						32.dp
+				)
+
 				// Body
 				Column(
 					modifier = Modifier
 						.fillMaxWidth()
 						.clickable { onClick() }
-						.padding(top = 0.dp, bottom = 32.dp, start = 0.dp, end = 16.dp))
+						.padding(top = 0.dp, bottom = bottom, start = 0.dp, end = 16.dp))
 				//.onGloballyPositioned { coord ->
 				//		bodyHeight = with(localDensity) { coord.size.height.toDp() + 32.dp }
 				//		println("Height : $index   $bodyHeight")
 				//	})
 				{
-
 					body(isVisible)
-					{ subtitle ->
-						if (viewModel.answers.size >= index + 1)
-						{
-							println("Answer in proper index! $index")
-							viewModel.answers[index] = subtitle
+					{
+						scope.launch {
+							println("CAAAAAALL onDone! $index")
+							onDone()
 						}
-						else
-						{
-							println("Answer added index! $index")
-							viewModel.answers.add(index, subtitle)
-						}
-
-						println("Cancelling scope! $index")
-						isDone = true
 					}
-
 				}
 
 			})
 
 	}
 
-	// Done with question
-	if (isDone)
-	{
-		LaunchedEffect(true)
-		{
-			println("Delay! $index")
-			//if (index == 0)
-			//{
-			//	delay(500)
-			//}
-			println("CAAAAAALL onDone! $index")
-			currentOnDone()
-			isDone = false
-		}
-	}
-
 }
-
-/**
- */
-@Composable
-fun SsQuestionSubcompose(
-	modifier: Modifier = Modifier,
-	mainContent: @Composable () -> Unit,
-	dependentContent: @Composable (IntSize) -> Unit)
-{
-
-	// Subcompose layout
-	SubcomposeLayout(modifier = modifier) { constraints ->
-
-		// Main
-		val mainMeasureables = subcompose(SlotsEnum.Main, mainContent)
-		var mainPlaceables = mainMeasureables.map { it.measure(constraints) }
-
-		// Get max width and height of the main component
-		val maxSize = mainPlaceables.fold(IntSize.Zero) { currentMax, placeable ->
-			IntSize(
-				width = maxOf(currentMax.width, placeable.width),
-				height = maxOf(currentMax.height, placeable.height)
-			)
-		}
-
-		// Dependent
-		val depMeasureables = subcompose(SlotsEnum.Dependent) {
-			dependentContent(maxSize)
-		}
-		val depPlaceables = depMeasureables.map {
-			it.measure(constraints)
-		}
-		var depWidth = depPlaceables.maxOf { it.width }
-
-		// Recompute width of main
-		mainPlaceables = subcompose(SlotsEnum.New, mainContent).map {
-			it.measure(Constraints(depWidth, constraints.maxWidth - depWidth))
-		}
-
-		// Layout
-		layout(maxSize.width, maxSize.height) {
-			mainPlaceables.forEach { it.placeRelative(depWidth, 0) }
-			depPlaceables.forEach { it.placeRelative(0, 0) }
-		}
-	}
-}
-
-enum class SlotsEnum { Main, Dependent, New }
 
 /**
  * Create the body.
@@ -433,10 +416,14 @@ enum class SlotsEnum { Main, Dependent, New }
 fun SsBody(
 	title : String,
 	subtitle : String,
+	note : String = "",
 	modifier : Modifier = Modifier,
 	pagerState : PagerState? = null,
 	content : @Composable () -> Unit = {})
 {
+
+	val titlePadding : Dp by animateDpAsState(if (subtitle.isEmpty()) 12.dp else 0.dp)
+	val subtitlePadding : Dp by animateDpAsState(if (subtitle.isEmpty()) 16.dp else 32.dp)
 
 	// Parent
 	Column(
@@ -445,6 +432,8 @@ fun SsBody(
 	{
 
 		Row(
+			modifier = Modifier
+				.padding(top = titlePadding),
 			verticalAlignment = Alignment.CenterVertically)
 		{
 
@@ -468,11 +457,21 @@ fun SsBody(
 		// Subtitle
 		Text(subtitle,
 			modifier = Modifier
-				.padding(bottom = 24.dp),
-			maxLines = 1,
+				.padding(bottom = if (note.isEmpty()) subtitlePadding else 0.dp),
+			//maxLines = 1,
 			overflow = TextOverflow.Ellipsis,
 			fontSize = MaterialTheme.typography.h6.fontSize,
 			fontWeight = FontWeight.SemiBold)
+
+		// Note
+		if (note.isNotEmpty())
+		{
+			Text(note,
+				modifier = Modifier
+					.padding(bottom = subtitlePadding),
+				fontSize = MaterialTheme.typography.subtitle2.fontSize,
+				fontWeight = FontWeight.Light)
+		}
 
 		// Body
 		content()
@@ -525,8 +524,11 @@ fun SsTextFieldBody(
 	title : String,
 	question : String = "",
 	initial : String = "",
+	modifier : Modifier = Modifier,
 	singleLine : Boolean = false,
+	maxLines : Int = Int.MAX_VALUE,
 	visible : Boolean = true,
+	onTextChange : (String) -> Unit = {},
 	onDone : (String) -> Unit = {})
 {
 
@@ -548,9 +550,8 @@ fun SsTextFieldBody(
 		AnimatedVisibility(visible = visible)
 		{
 
-			// TODO: Capture "Enter" key press and go to next line
 			OutlinedTextField(
-				modifier = Modifier
+				modifier = modifier
 					.focusRequester(focusRequester)
 					.onKeyEvent {
 
@@ -574,8 +575,11 @@ fun SsTextFieldBody(
 				value = text,
 				onValueChange = {
 					text = if (singleLine) it.replace("\n", "") else it
+
+					onTextChange(text)
 				},
 				singleLine = singleLine,
+				maxLines = maxLines,
 				keyboardOptions = KeyboardOptions(imeAction = imeAction),
 				keyboardActions = KeyboardActions(
 					onNext = {
@@ -621,22 +625,20 @@ fun SsVerticalLine(
 fun SsYesNoBody(
 	title : String,
 	question : String,
+	note : String = "",
 	initialState : Boolean? = null,
 	disableYesButton : Boolean = false,
 	disableNoButton : Boolean = false,
 	visible : Boolean = true,
-	onDisabled : (Boolean?, String) -> Unit = {_,_ -> },
-	onDone : (Boolean?, String) -> Unit = {_,_ -> })
+	onDisabled : (Boolean?) -> Unit = {},
+	onDone : (Boolean?) -> Unit = {})
 {
 
 	// Get the subtitle
 	val subtitle = getSubtitle(initialState, question, visible)
 
-	// State of the buttons
-	var state by remember { mutableStateOf<Boolean?>(initialState) }
-
 	// Body
-	SsBody(title, subtitle)
+	SsBody(title, subtitle, note = note)
 	{
 
 		// Animate the visibility
@@ -655,14 +657,18 @@ fun SsYesNoBody(
 			val disabledAlpha = 0.3f
 
 			// Yes button attributes
-			val yesBorderColor = if (state == true) Color.Magenta else Color.LightGray
-			val yesContentColor = if (state == true) Color.Magenta else Color.Black
+			val yesBorderColor = if (initialState == true) Color.Magenta else Color.LightGray
+			val yesContentColor = if (initialState == true) Color.Magenta else Color.Black
 			val yesAlpha = if (disableYesButton) disabledAlpha else 1f
 
 			// No button attributes
-			val noBorderColor = if (state == false) Color.Magenta else Color.LightGray
-			val noContentColor = if (state == false) Color.Magenta else Color.Black
+			val noBorderColor = if (initialState == false) Color.Magenta else Color.LightGray
+			val noContentColor = if (initialState == false) Color.Magenta else Color.Black
 			val noAlpha = if (disableNoButton) disabledAlpha else 1f
+
+			// Skip button attributes
+			val skipBorderColor = if (initialState == null) Color.Magenta else Color.LightGray
+			val skipContentColor = if (initialState == null) Color.Magenta else Color.Black
 
 			// TODO: If the buttons took up 50% of the width, that might look
 			// better?
@@ -687,14 +693,15 @@ fun SsYesNoBody(
 					// Disabled
 					if (disableYesButton)
 					{
-						onDisabled(true, it)
+						onDisabled(true)
 					}
 					// Done
 					else
 					{
-						state = true
+						//state = true
+						//onDone(state)
 
-						onDone(state, it)
+						onDone(true)
 					}
 				}
 
@@ -717,16 +724,31 @@ fun SsYesNoBody(
 					// Disabled
 					if (disableNoButton)
 					{
-						onDisabled(false, it)
+						onDisabled(false)
 					}
 					// Done
 					else
 					{
-						state = false
-
-						onDone(state, it)
+						onDone(false)
 					}
 				}
+
+				//// Space
+			//	Spacer(
+			//		modifier = Modifier
+			//			.padding(horizontal = buttonSpacing))
+
+			//	// Skip button
+			//	SsSkipIconTextButton(
+			//		border = BorderStroke(
+			//			width = borderWidth,
+			//			color = skipBorderColor),
+			//		colors = ButtonDefaults.buttonColors(
+			//			contentColor = skipContentColor,
+			//			backgroundColor = Color.Transparent))
+			//	{
+			//		onDone(null)
+			//	}
 
 			}
 
@@ -748,7 +770,7 @@ inline fun <reified T : Enum<T>> SsButtonToggleGroupBody(
 	allStateNames : List<String>,
 	visible : Boolean = true,
 	noinline onClick : (EnumSet<T>) -> Unit = {},
-	noinline onDone : (String) -> Unit = {})
+	noinline onDone : () -> Unit = {})
 {
 
 	// State names
@@ -795,32 +817,74 @@ inline fun <reified T : Enum<T>> SsButtonToggleGroupBody(
 
 
 				// Continue/Skip button
-				Button(
-					modifier = Modifier
-						.fillMaxWidth(),
-					colors = ButtonDefaults.buttonColors(
-						backgroundColor = Color.Cyan,
-						contentColor = Color.Black),
-					shape = RoundedCornerShape(32.dp),
+				SsContinueSkipButton(
+					state = initialState.isNotEmpty(),
 					onClick = {
-						onDone(names.joinToString())
+						onDone()
 					})
-				{
-
-					Crossfade(targetState = initialState.isEmpty())
-					{
-						val text = if (it) "Skip" else "Continue"
-
-						Text(text,
-							modifier = Modifier
-								.fillMaxWidth(),
-							textAlign = TextAlign.Center)
-					}
-				}
 
 			}
 		}
 
 	}
 
+}
+
+/**
+ * Continue or skip button.
+ *
+ * @param state Whether to continue or skip. True is for continue and False is
+ *              for skip.
+ */
+@Composable
+fun SsContinueSkipButton(
+	modifier : Modifier = Modifier
+		.fillMaxWidth()
+		.padding(vertical = 32.dp),
+	state : Boolean = true,
+	colors : ButtonColors = ButtonDefaults.buttonColors(
+		backgroundColor = Color.Magenta,
+		contentColor = Color.White),
+	shape : Shape = RoundedCornerShape(32.dp),
+	onContinue : () -> Unit = {},
+	onSkip : () -> Unit = {},
+	onClick : (() -> Unit)? = null)
+{
+	SsLongClickButton(
+		modifier = modifier,
+		colors = colors,
+		shape = shape,
+		onClick = {
+
+			// Click
+			if (onClick != null)
+			{
+				onClick()
+			}
+			else
+			{
+				// Continue
+				if (state)
+				{
+					onContinue()
+				}
+				// Skip
+				else
+				{
+					onSkip()
+				}
+			}
+
+		})
+	{
+		Crossfade(targetState = state)
+		{
+			val text = if (it) "CONTINUE" else "SKIP"
+
+			Text(text,
+				modifier = Modifier
+					.fillMaxWidth(),
+				textAlign = TextAlign.Center)
+		}
+	}
 }

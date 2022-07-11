@@ -46,7 +46,7 @@ fun SsClimbingTechniqueQuestion(
 fun SsClimbingTechniqueBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	// Climbing techniques

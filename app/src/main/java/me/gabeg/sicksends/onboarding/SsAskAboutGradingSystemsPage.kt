@@ -88,18 +88,38 @@ fun SsAskAboutGradingSystemPage()
 						scope.launch {
 							ds.editWillGradeWith(gradingSystem, isEnabled)
 
+							// Enabled a grading system
 							if (isEnabled)
 							{
+								// No other grading system has been clicked.
+								// This one is the default grading system
 								if (willUse.size == 0)
 								{
 									ds.editDefaultGradingSystem(gradingSystem)
 								}
 							}
+							// Disabled a grading system
 							else
 							{
-								if (willUse.size == 1)
+								// Get the current default grading system
+								val defaultGradingSystem = ds.getDefaultGradingSystem()
+
+								// The current default grading system was just
+								// deselected. Need to find the next grading
+								// system that should be the default
+								if (gradingSystem == defaultGradingSystem)
 								{
-									ds.editDefaultGradingSystem("")
+									// Find the next grading system that should
+									// be the default
+									val nextDefaultGradingSystem = willUse.firstOrNull {
+										it != gradingSystem
+									}
+
+									// Set the default grading system. If no
+									// defaultwas found, this will clear the
+									// default
+									ds.editDefaultGradingSystem(nextDefaultGradingSystem
+										?: "")
 								}
 							}
 
@@ -176,11 +196,7 @@ fun buildGradingSystems(
 
 /**
  * Build the grading system buttons.
- *
- * TODO: Small bug when clicking on one, then clicking on another, then
- * clicking again on the first one to deselect it. The D is still sort of there
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun buildGradingSystemButtons(
 	dataStore: SsSharedBaseClimbingDataStore,

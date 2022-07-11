@@ -18,10 +18,6 @@ fun SsFlashQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Get the index
-	val index = viewModel.attemptIndex
-
-	// Create the question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -33,7 +29,7 @@ fun SsFlashQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = index,
+		index = viewModel.attemptIndex,
 		scrollState = scrollState)
 }
 
@@ -44,7 +40,7 @@ fun SsFlashQuestion(
 fun SsIsFlashBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	// Flash and project states
@@ -60,15 +56,14 @@ fun SsIsFlashBody(
 	// Body
 	SsYesNoBody(
 		title = "Flash",
-		question = "Did you flash the problem?",
+		question = viewModel.flashQuestion,
 		initialState = isFlash,
 		visible = visible,
 		disableYesButton = isProject ?: false,
-		onDisabled = { status, subtitle ->
+		onDisabled = { status ->
 			Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
 		},
-		onDone = { status, subtitle ->
-			//viewModel.problem.observableIsFlash.value = status
+		onDone = { status ->
 			viewModel.problem.isFlash = status
 
 			// Reset the is project attribute
@@ -77,7 +72,7 @@ fun SsIsFlashBody(
 				viewModel.problem.isProject = null
 			}
 
-			onDone(subtitle)
+			onDone()
 		})
 
 }

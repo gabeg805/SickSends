@@ -1,7 +1,16 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import me.gabeg.sicksends.addproblem.SsContinueSkipButton
 import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.SsTextFieldBody
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
@@ -16,10 +25,6 @@ fun SsNoteQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Get the index
-	val index = viewModel.noteIndex
-
-	// Create the question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -31,33 +36,54 @@ fun SsNoteQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = index,
+		index = viewModel.noteIndex,
 		scrollState = scrollState)
 }
 
 /**
  * Notes for a climb.
+ *
+ * TODO: Note height seems to overlap other things.
  */
 @Composable
 fun SsNoteBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
-	val note = viewModel.problem.note
+	// Note
+	val note by viewModel.problem.observableNote.observeAsState()
 	println("Note : $note || Visible : $visible")
 
+	// Body
 	SsTextFieldBody(
 		title = "Notes",
-		question = "Do you have any notes for the climb?",
+		question = viewModel.noteQuestion,
 		initial = note ?: "",
-		singleLine = false,
+		modifier = Modifier.fillMaxSize(),
+		maxLines = 6,
 		visible = visible,
-		onDone = { newNote ->
-			viewModel.problem.note = newNote
-
-			onDone(newNote)
+		onTextChange = { newNote ->
+			viewModel.problem.observableNote.value = newNote
 		})
 
+	// Continue/skip button
+	AnimatedVisibility(visible = visible)
+	{
+		SsContinueSkipButton(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 32.dp, bottom = 64.dp),
+			state = note?.isNotEmpty() ?: false,
+			onContinue = {
+				onDone()
+			},
+			onSkip = {
+				viewModel.problem.observableNote.value = null
+
+				onDone()
+			}
+		)
+	}
 }

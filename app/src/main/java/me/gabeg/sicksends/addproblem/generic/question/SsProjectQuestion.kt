@@ -1,9 +1,11 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import me.gabeg.sicksends.addproblem.SsContinueSkipButton
 import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.SsYesNoBody
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
@@ -18,10 +20,6 @@ fun SsProjectQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Get the index
-	val index = viewModel.projectIndex
-
-	// Create the question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -33,7 +31,7 @@ fun SsProjectQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = index,
+		index = viewModel.projectIndex,
 		scrollState = scrollState)
 }
 
@@ -46,7 +44,7 @@ fun SsProjectQuestion(
 fun SsIsProjectBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	// Project and flash states
@@ -62,15 +60,14 @@ fun SsIsProjectBody(
 	// Body
 	SsYesNoBody(
 		title = "Project",
-		question = "Are you projecting this problem?",
+		question = viewModel.projectQuestion,
 		initialState = isProject,
 		visible = visible,
 		disableYesButton = isFlash ?: false,
-		onDisabled = { status, subtitle ->
+		onDisabled = { status ->
 			Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
 		},
-		onDone = { status, subtitle ->
-			//viewModel.problem.observableIsProject.value = status
+		onDone = { status ->
 			viewModel.problem.isProject = status
 
 			// Reset the is flash attribute
@@ -79,7 +76,19 @@ fun SsIsProjectBody(
 				viewModel.problem.isFlash = null
 			}
 
-			onDone(subtitle)
+			onDone()
 		})
+
+	//// Skip button
+	//AnimatedVisibility(visible = visible)
+	//{
+	//	SsContinueSkipButton(
+	//		state = false,
+	//		onSkip = {
+	//			viewModel.problem.isProject = null
+
+	//			onDone()
+	//		})
+	//}
 
 }

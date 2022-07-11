@@ -42,7 +42,7 @@ fun SsHoldQuestion(
 fun SsHoldBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	// Holds

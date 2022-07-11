@@ -11,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import me.gabeg.sicksends.SsLongClickOutlinedButton
 import me.gabeg.sicksends.problem.ui.SsNoIcon
+import me.gabeg.sicksends.problem.ui.SsSkipIcon
 import me.gabeg.sicksends.problem.ui.SsYesIcon
 
 /**
@@ -117,6 +118,33 @@ fun SsNoIconTextButton(
 		onClick = onClick)
 	{
 		SsNoIcon()
+	}
+
+}
+
+/**
+ * An icon and text button for "Skip".
+ */
+@Composable
+fun SsSkipIconTextButton(
+	modifier : Modifier = Modifier,
+	border : BorderStroke = ButtonDefaults.outlinedBorder,
+	colors : ButtonColors = ButtonDefaults.outlinedButtonColors(),
+	fontSize : TextUnit = MaterialTheme.typography.subtitle2.fontSize,
+	fontWeight: FontWeight = FontWeight.Normal,
+	onClick : (String) -> Unit = {})
+{
+
+	SsIconTextButton(
+		text = "Skip",
+		modifier = modifier,
+		border = border,
+		colors = colors,
+		fontSize = fontSize,
+		fontWeight = fontWeight,
+		onClick = onClick)
+	{
+		SsSkipIcon()
 	}
 
 }

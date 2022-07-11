@@ -16,10 +16,6 @@ fun SsNameQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Get the index
-	val index = viewModel.nameIndex
-
-	// Create the question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -31,7 +27,7 @@ fun SsNameQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = index,
+		index = viewModel.nameIndex,
 		scrollState = scrollState)
 }
 
@@ -42,7 +38,7 @@ fun SsNameQuestion(
 fun SsNameBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	val name = viewModel.problem.name
@@ -50,14 +46,14 @@ fun SsNameBody(
 
 	SsTextFieldBody(
 		title = "Name",
-		question = "What is the name of the climb?",
+		question = viewModel.nameQuestion,
 		initial = name ?: "",
 		singleLine = true,
 		visible = visible,
 		onDone = { newName ->
 			viewModel.problem.name = newName
 
-			onDone(newName)
+			onDone()
 		})
 
 }

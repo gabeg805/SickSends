@@ -262,6 +262,17 @@ fun SsSearchIcon(modifier : Modifier = Modifier)
 }
 
 /**
+ * Skip icon.
+ */
+@Composable
+fun SsSkipIcon(modifier : Modifier = Modifier)
+{
+	Icon(Icons.Default.KeyboardArrowRight,
+		modifier = modifier,
+		contentDescription = "Skip")
+}
+
+/**
  * Sport icon.
  */
 @Composable
@@ -272,6 +283,19 @@ fun SsSportIcon(modifier : Modifier = Modifier)
 	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Sport")
+}
+
+/**
+ * Subtract icon.
+ */
+@Composable
+fun SsSubtractIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_remove_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Subtract")
 }
 
 /**

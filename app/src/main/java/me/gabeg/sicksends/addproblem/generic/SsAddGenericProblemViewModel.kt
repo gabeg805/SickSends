@@ -36,7 +36,7 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	/**
 	 * List of answers.
 	 */
-	var answers = MutableList<Any?>(size) { null }
+	//var answers = MutableList<Any?>(size) { null }
 
 	// YOOOO
 	var hasGradingSystemBeenSelected = false
@@ -48,12 +48,22 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	val gradeQuestion = "What was the grade?"
 	val perceivedGradeQuestion = "What grade do you think it was?"
 	val howDidItFeelQuestion = "How did it feel?"
-	val nameQuestion = "What is the name of the problem?"
-	val noteQuestion = "Do you have any notes for the climb?"
-	val numAttemptQuestion = "How many attempts did you do?"
-	val holdQuestion = "What type of holds did the problem have?"
-	val wallFeatureQuestion = "What type of holds did the problem have?"
-	val climbingTechniqueQuestion = "What type of holds did the problem have?"
+	val nameQuestion = "What was the name?"
+	//val nameQuestion = "What is the name of the problem?"
+	//val noteQuestion = "Do you have any notes for the climb?"
+	val noteQuestion = "Do you have any notes?"
+	//val numAttemptQuestion = "How many attempts did you do?"
+	val numAttemptQuestion = "How many times did you attempt it?"
+	//val projectQuestion = "Are you projecting this problem?"
+	val projectQuestion = "Is this a project?"
+	//val outdoorQuestion = "Was the problem outdoors?"
+	val outdoorQuestion = "Was it outdoors?"
+	//val flashQuestion = "Did you flash the problem?"
+	val flashQuestion = "Was this a flash?"
+	//val holdQuestion = "What type of holds did the problem have?"
+	val holdQuestion = "What type of holds were there?"
+	val wallFeatureQuestion = "What features did the wall have?"
+	val climbingTechniqueQuestion = "What type of techniques did you use?"
 
 	/**
 	 * Indices.
@@ -74,16 +84,6 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	 */
 	companion object
 	{
-
-		/**
-		 * Get the initial subtitle to show.
-		 *
-		 * @return The initial subtitle to show.
-		 */
-		fun getInitialSubtitle(initial: String, question: String): String
-		{
-			return if (initial.isEmpty()) question else initial
-		}
 
 		/**
 		 * Get the subtitle to show.
@@ -236,64 +236,6 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	}
 
 	/**
-	 * Get the initial how did it feel value.
-	 *
-	 * @return The initial how did it feel value.
-	 */
-	//fun getInitialHowDidItFeelScale() : String
-	//{
-	//	return problem.howDidItFeelName
-	//}
-
-	/**
-	 * Get the initial name.
-	 *
-	 * @return The initial name.
-	 */
-	//fun getInitialName() : String
-	//{
-	//	return problem.name ?: ""
-
-	//	//val initial = problem.name ?: ""
-
-	//	//return getInitialSubtitle(initial, nameQuestion)
-	//}
-
-	/**
-	 * Get the initial note.
-	 *
-	 * @return The initial note.
-	 */
-	fun getInitialNote() : String
-	{
-		return problem.note ?: ""
-
-		//val initial = problem.note ?: ""
-
-		//return getInitialSubtitle(initial, noteQuestion)
-	}
-
-	/**
-	 * Get the initial number of attempts.
-	 *
-	 * @return The initial number of attempts.
-	 */
-	fun getInitialNumAttemptSubtitle() : String
-	{
-		val initial = problem.numAttempt?.toString() ?: ""
-
-		return getInitialSubtitle(initial, numAttemptQuestion)
-	}
-
-	/**
-	 * Number of attempts subtitle.
-	 */
-	fun getNumAttemptsSubtitle(text : String, visible : Boolean) : String
-	{
-		return getSubtitle(text, numAttemptQuestion, visible)
-	}
-
-	/**
 	 * Get the initial grading system that should be shown.
 	 */
 	/**
@@ -400,8 +342,54 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 			return false
 		}
 
+		if (index == gradeIndex)
+		{
+			return this.problem.grade.isNotEmpty()
+		}
+		else if (index == nameIndex)
+		{
+			return this.problem.name?.isNotEmpty() ?: false
+		}
+		else if (index == attemptIndex)
+		{
+			return (this.problem.isFlash != null) || (this.problem.numAttempt != null)
+		}
+		else if (index == projectIndex)
+		{
+			return this.problem.isProject != null
+		}
+		else if (index == outdoorIndex)
+		{
+			return this.problem.isOutdoor != null
+		}
+		else if (index == locationIndex)
+		{
+			// TODO: Might want to check lat/lon or simply not null
+			return this.problem.locationName?.isNotEmpty() ?: false
+		}
+		else if (index == noteIndex)
+		{
+			return this.problem.note?.isNotEmpty() ?: false
+		}
+		else if (index == holdIndex)
+		{
+			return this.problem.hold.isNotEmpty()
+		}
+		else if (index == wallFeatureIndex)
+		{
+			return this.problem.wallFeature.isNotEmpty()
+		}
+		else if (index == climbingTechniqueIndex)
+		{
+			return this.problem.climbingTechnique.isNotEmpty()
+		}
+		else
+		{
+			return false
+		}
+
 		// Check if the question is answered
-		return answers.getOrNull(index) != null
+		//return answers.getOrNull(index) != null
 	}
 
 	/**
@@ -562,7 +550,7 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 
 		size = (indices.maxOrNull() ?: -1) + 1
 		allVisibility = MutableList(size) { mutableStateOf(false) }
-		answers = MutableList<Any?>(size) { null }
+		//answers = MutableList<Any?>(size) { null }
 		println("Setting up size! $size")
 	}
 

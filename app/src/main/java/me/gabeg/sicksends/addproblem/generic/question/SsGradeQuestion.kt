@@ -45,10 +45,6 @@ fun SsGradeQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Get the index
-	val index = viewModel.gradeIndex
-
-	// Create the question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -61,7 +57,7 @@ fun SsGradeQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = index,
+		index = viewModel.gradeIndex,
 		scrollState = scrollState)
 }
 
@@ -74,7 +70,7 @@ fun SsGradeBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	val scope = rememberCoroutineScope()
@@ -217,7 +213,7 @@ fun SsGradeBody(
 									{
 										isDone = true
 										isAnswered = false
-										onDone(viewModel.getGradeSubtitle())
+										onDone()
 									}
 								}
 							})
@@ -238,7 +234,7 @@ fun SsGradeBody(
 
 										isDone = true
 										isAnswered = false
-										onDone(viewModel.getGradeSubtitle())
+										onDone()
 									}
 
 								})
@@ -256,7 +252,7 @@ fun SsGradeBody(
 
 										isDone = true
 										isAnswered = false
-										onDone(viewModel.getGradeSubtitle())
+										onDone()
 									}
 
 								})
@@ -267,24 +263,24 @@ fun SsGradeBody(
 				}
 			}
 
-			when (pagerState.currentPage)
-			{
-				0 ->
-				{
-					if (!viewModel.hasGradingSystemBeenSelected)
-					{
-						LaunchedEffect(true)
-						{
-							delay(750)
-							pagerState.animateScrollToPage(1)
-						}
-					}
-				}
-				else ->
-				{
-					viewModel.hasGradingSystemBeenSelected = true
-				}
-			}
+			//when (pagerState.currentPage)
+			//{
+			//	0 ->
+			//	{
+			//		if (!viewModel.hasGradingSystemBeenSelected)
+			//		{
+			//			LaunchedEffect(true)
+			//			{
+			//				delay(750)
+			//				pagerState.animateScrollToPage(1)
+			//			}
+			//		}
+			//	}
+			//	else ->
+			//	{
+			//		viewModel.hasGradingSystemBeenSelected = true
+			//	}
+			//}
 
 		}
 
@@ -383,7 +379,7 @@ fun SsGradingSystemPage(
 @Composable
 fun SsHowDidItFeelPage(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
 	// Determine the initial slider position
@@ -418,7 +414,7 @@ fun SsHowDidItFeelPage(
 				viewModel.problem.howDidItFeel = sliderPosition.toInt()
 				viewModel.problem.howDidItFeelName = subtitle
 
-				onDone(subtitle)
+				onDone()
 			},
 			steps = 3,
 			colors = SliderDefaults.colors(

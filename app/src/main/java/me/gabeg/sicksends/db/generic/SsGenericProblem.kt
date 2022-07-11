@@ -159,6 +159,20 @@ abstract class SsGenericProblem
 	abstract var note : String?
 
 	/**
+	 * An observable of the number of times a problem was attempted.
+	 */
+	@Ignore
+	var observableNumAttempt = object : MutableLiveData<Long?>(null)
+	{
+		override fun setValue(value : Long?)
+		{
+			super.setValue(value)
+
+			numAttempt = value
+		}
+	}
+
+	/**
 	 * An observable of whether the problem is a flash or not.
 	 */
 	@Ignore
@@ -183,6 +197,20 @@ abstract class SsGenericProblem
 			super.setValue(value)
 
 			isProject = value
+		}
+	}
+
+	/**
+	 * An observable note on the problem.
+	 */
+	@Ignore
+	var observableNote = object : MutableLiveData<String?>(null)
+	{
+		override fun setValue(value : String?)
+		{
+			super.setValue(value)
+
+			note = value
 		}
 	}
 

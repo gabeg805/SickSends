@@ -1,30 +1,34 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.*
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
+import me.gabeg.sicksends.SsLongClickOutlinedButton
 import me.gabeg.sicksends.addproblem.SsBody
+import me.gabeg.sicksends.addproblem.SsContinueSkipButton
 import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
+import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Companion.getSubtitle
 import me.gabeg.sicksends.db.generic.SsGenericProblem
+import me.gabeg.sicksends.problem.ui.SsAddIcon
 import me.gabeg.sicksends.problem.ui.SsNumberOfAttemptsIcon
+import me.gabeg.sicksends.problem.ui.SsSubtractIcon
 
 /**
  * Number of attempts question.
@@ -34,10 +38,6 @@ fun SsNumAttemptQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Get the index
-	val index = viewModel.attemptIndex
-
-	// Create the question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -49,7 +49,7 @@ fun SsNumAttemptQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = index,
+		index = viewModel.attemptIndex,
 		scrollState = scrollState)
 }
 
@@ -61,67 +61,134 @@ fun SsNumAttemptQuestion(
 fun SsNumAttemptBody(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	visible : Boolean = true,
-	onDone : (String) -> Unit = {})
+	onDone : () -> Unit = {})
 {
 
-	println("Num attempt : $visible")
+	// Number of attempts
+	val numAttempt by viewModel.problem.observableNumAttempt.observeAsState()
+	val text = numAttempt?.toString() ?: ""
 
-	// Initial text to show depending on if a number of attempts has been stored
-	// or not
-	val initial = viewModel.getInitialNumAttemptSubtitle()
-
-	// Field value
-	var fieldValue by remember { mutableStateOf(TextFieldValue(initial)) }
+	println("Num attempt : $numAttempt || Visible : $visible")
 
 	// Subtitle
-	var subtitle = viewModel.getNumAttemptsSubtitle(fieldValue.text, visible)
-
-	// Request focus to show the keyboard
-	val focusRequester = remember { FocusRequester() }
+	var subtitle = getSubtitle(text, viewModel.numAttemptQuestion, visible)
 
 	// Body
 	SsBody("Attempts", subtitle)
 	{
 
+		// Whether to show the composables or not
 		AnimatedVisibility(visible = visible)
 		{
 
-			BasicTextField(
-				modifier = Modifier
-					.focusRequester(focusRequester)
-					.onFocusChanged {
-						if (it.isFocused)
-						{
-							val selection = TextRange(0, initial.length)
-
-							fieldValue = fieldValue.copy(selection = selection)
-						}
-					}
-					.height(0.dp),
-				value = fieldValue,
-				onValueChange = {
-					fieldValue = it
-				},
-				keyboardOptions = KeyboardOptions(
-					imeAction = ImeAction.Next,
-					keyboardType = KeyboardType.Number),
-				keyboardActions = KeyboardActions(
-					onNext = {
-						val numAttempt = viewModel.numAttemptsFromTextFieldValue(fieldValue)
-
-						viewModel.problem.numAttempt = numAttempt
-						fieldValue = fieldValue.copy(text = numAttempt.toString())
-
-						onDone(fieldValue.text)
-					}),
-				cursorBrush = SolidColor(Color.Transparent),
-				textStyle = TextStyle(
-					color = Color.Transparent))
-
-			// Focus the text field
-			if (visible)
+			// Column
+			Column()
 			{
-				focusRequester.requestFocus()
+
+				// Add/subtract number of attempts
+				Row(
+					modifier = Modifier
+						.fillMaxWidth()
+						.height(IntrinsicSize.Min)
+						.padding(bottom = 16.dp),
+					horizontalArrangement = Arrangement.Center,
+					verticalAlignment = Alignment.CenterVertically)
+				{
+
+					// Minus button
+					SsLongClickOutlinedButton(
+						modifier = Modifier
+							.fillMaxHeight()
+							.padding(end = 32.dp),
+						onClick = {
+
+							// New number of attempts
+							val newNumAttempt =
+								if ((numAttempt == null) || (numAttempt == 0L))
+								{
+									null
+								}
+								else
+								{
+									numAttempt!! -1
+								}
+
+							// Set the number of attempts
+							viewModel.problem.observableNumAttempt.value = newNumAttempt
+						})
+					{
+						SsSubtractIcon()
+					}
+
+					// Text field
+					OutlinedTextField(
+						modifier = Modifier
+							.width(75.dp),
+						value = text,
+						onValueChange = {
+
+							// Remove any non-number characters from the text
+							val sanitizedText = it.onEach {
+								if (it.digitToIntOrNull() == null)
+									""
+								else
+									it
+							}
+
+							// New number of attempts
+							val newNumAttempts = sanitizedText.toLongOrNull()
+
+							// Set the number of attempts
+							viewModel.problem.observableNumAttempt.value = newNumAttempts
+						},
+						singleLine = true,
+						colors = TextFieldDefaults.textFieldColors(
+							backgroundColor = Color.Transparent
+						),
+						textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+						keyboardOptions = KeyboardOptions(
+							imeAction = ImeAction.Next,
+							keyboardType = KeyboardType.Number),
+						keyboardActions = KeyboardActions(
+							onNext = {
+								onDone()
+							}),
+					)
+
+
+					// Plus button
+					SsLongClickOutlinedButton(
+						modifier = Modifier
+							.fillMaxHeight()
+							.padding(start = 32.dp),
+						onClick = {
+
+							// New number of attempts
+							val newNumAttempt =
+								if (numAttempt == null)
+								{
+									1
+								}
+								else
+								{
+									numAttempt!! + 1
+								}
+
+							// Set the number of attempts
+							viewModel.problem.observableNumAttempt.value = newNumAttempt
+						})
+					{
+						SsAddIcon()
+					}
+
+				}
+
+				// Continue/skip button
+				SsContinueSkipButton(
+					state = (numAttempt != null),
+					onClick = {
+						onDone()
+					})
 			}
 
 		}

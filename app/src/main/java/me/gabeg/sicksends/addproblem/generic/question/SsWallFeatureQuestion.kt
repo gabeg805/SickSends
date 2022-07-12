@@ -23,6 +23,10 @@ fun SsWallFeatureQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.wallFeature)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -34,7 +38,7 @@ fun SsWallFeatureQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.wallFeatureIndex,
+		index = index,
 		scrollState = scrollState)
 }
 
@@ -54,7 +58,7 @@ fun SsWallFeatureBody(
 	// Body
 	SsButtonToggleGroupBody(
 		title = "Wall Features",
-		question = viewModel.wallFeatureQuestion,
+		question = viewModel.wallFeature.question,
 		initialState = wallFeatures,
 		allStateNames = getAllWallFeatureNames(),
 		visible = visible,

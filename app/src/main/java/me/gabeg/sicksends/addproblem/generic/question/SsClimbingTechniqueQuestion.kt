@@ -24,6 +24,10 @@ fun SsClimbingTechniqueQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.climbingTechnique)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -35,7 +39,7 @@ fun SsClimbingTechniqueQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.climbingTechniqueIndex,
+		index = index,
 		scrollState = scrollState)
 }
 
@@ -55,7 +59,7 @@ fun SsClimbingTechniqueBody(
 	// Body
 	SsButtonToggleGroupBody(
 		title = "Climbing Techniques",
-		question = viewModel.climbingTechniqueQuestion,
+		question = viewModel.climbingTechnique.question,
 		initialState = climbingTechniques,
 		allStateNames = getAllClimbingTechniqueNames(),
 		visible = visible,

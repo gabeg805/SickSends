@@ -1,5 +1,7 @@
 package me.gabeg.sicksends.ui
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
@@ -27,12 +29,22 @@ fun SsButtonToggleGroup(
 	select : List<String> = listOf(),
 	numPerRow : Int = items.size,
 	checkCriteria : @Composable ((String) -> Boolean)? = null,
-	checkedColor : ButtonColors = ButtonDefaults.buttonColors(
-		backgroundColor = Color.Magenta,
-		contentColor = Color.White),
-	uncheckedColor : ButtonColors = ButtonDefaults.buttonColors(
-		backgroundColor = Color.White,
-		contentColor = Color.Black),
+	colors : @Composable (Boolean) -> ButtonColors = {
+
+		// Animate the colors
+		val backgroundColor by animateColorAsState(
+			targetValue = if (it) Color.Magenta else Color.LightGray)
+		val contentColor by animateColorAsState(
+			targetValue = if (it) Color.White else Color.Black)
+
+		// Return
+		ButtonDefaults.outlinedButtonColors(
+			backgroundColor = backgroundColor,
+			contentColor = contentColor)
+	},
+	border : @Composable (Boolean) -> BorderStroke? = {
+		ButtonDefaults.outlinedBorder
+	},
 	alignment : Alignment.Horizontal = Alignment.CenterHorizontally,
 	spacing : Dp = 0.dp,
 	startButtonContent : @Composable RowScope.(String) -> Unit = {},
@@ -96,7 +108,8 @@ fun SsButtonToggleGroup(
 					SsLongClickOutlinedButton(
 						modifier = Modifier
 							.fillMaxWidth(1f / (numPerRow - j)),
-						colors = if (isChecked) checkedColor else uncheckedColor,
+						border = border(isChecked),
+						colors = colors(isChecked),
 						onClick = {
 
 							// Single selection button
@@ -150,7 +163,19 @@ fun SsButtonToggleGroup(
 
 					}
 
+					// Spacing
+					if (j+1 < numPerRow)
+					{
+						Spacer(modifier = Modifier.padding(horizontal = spacing / 2))
+					}
+
 				}
+			}
+
+			// Spacing
+			if ((i*numPerRow + 1) < items.size)
+			{
+				Spacer(modifier = Modifier.padding(vertical = spacing / 2))
 			}
 
 		}

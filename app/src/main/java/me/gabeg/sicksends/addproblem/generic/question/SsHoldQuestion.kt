@@ -20,6 +20,10 @@ fun SsHoldQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.hold)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -31,7 +35,7 @@ fun SsHoldQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.holdIndex,
+		index = index,
 		scrollState = scrollState)
 }
 
@@ -51,7 +55,7 @@ fun SsHoldBody(
 	// Body
 	SsButtonToggleGroupBody(
 		title = "Holds",
-		question = viewModel.holdQuestion,
+		question = viewModel.hold.question,
 		initialState = holds,
 		allStateNames = getAllHoldNames(),
 		visible = visible,

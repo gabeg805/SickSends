@@ -20,6 +20,10 @@ fun SsProjectQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.project)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -31,7 +35,7 @@ fun SsProjectQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.projectIndex,
+		index = index,
 		scrollState = scrollState)
 }
 
@@ -60,7 +64,7 @@ fun SsIsProjectBody(
 	// Body
 	SsYesNoBody(
 		title = "Project",
-		question = viewModel.projectQuestion,
+		question = viewModel.project.question,
 		initialState = isProject,
 		visible = visible,
 		disableYesButton = isFlash ?: false,

@@ -18,6 +18,10 @@ fun SsFlashQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.numAttempt)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -29,7 +33,7 @@ fun SsFlashQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.attemptIndex,
+		index = index,
 		scrollState = scrollState)
 }
 

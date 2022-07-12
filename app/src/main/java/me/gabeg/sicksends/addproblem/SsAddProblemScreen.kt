@@ -67,8 +67,7 @@ const val ADD_PROBLEM_SCREEN_ROUTE = "Add problem"
 /**
  * Add climb screen.
  *
- * TODO: perceived grade, location name, location lat/lon,
- * route features, hold type, climbing technique, image
+ * TODO: perceived grade, location name, location lat/lon, image
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -121,18 +120,6 @@ fun SsAddClimbScreen(
 			SsGradeQuestion(
 				viewModel = viewModel,
 				scrollState = scrollState)
-		}
-
-		/**
-		 * Name
-		 */
-		if (askName)
-		{
-			item {
-				SsNameQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
-			}
 		}
 
 		/**
@@ -191,6 +178,18 @@ fun SsAddClimbScreen(
 		{
 			item {
 				SsLocationQuestion(
+					viewModel = viewModel,
+					scrollState = scrollState)
+			}
+		}
+
+		/**
+		 * Name
+		 */
+		if (askName)
+		{
+			item {
+				SsNameQuestion(
 					viewModel = viewModel,
 					scrollState = scrollState)
 			}
@@ -332,7 +331,7 @@ fun SsQuestion(
 	var isHighlighted = isVisible || viewModel.isAnswered(index)
 
 	// Whether to show the line or not
-	val showLine = ((index+1) != viewModel.size)
+	val showLine = ((index+1) < viewModel.size)
 
 	// Container
 	Row()

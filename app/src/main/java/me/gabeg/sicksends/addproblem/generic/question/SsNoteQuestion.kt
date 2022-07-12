@@ -25,6 +25,10 @@ fun SsNoteQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.note)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -36,7 +40,7 @@ fun SsNoteQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.noteIndex,
+		index = index,
 		scrollState = scrollState)
 }
 
@@ -59,7 +63,7 @@ fun SsNoteBody(
 	// Body
 	SsTextFieldBody(
 		title = "Notes",
-		question = viewModel.noteQuestion,
+		question = viewModel.note.question,
 		initial = note ?: "",
 		modifier = Modifier.fillMaxSize(),
 		maxLines = 6,

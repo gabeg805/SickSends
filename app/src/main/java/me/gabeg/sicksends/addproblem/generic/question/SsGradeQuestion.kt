@@ -45,6 +45,10 @@ fun SsGradeQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index. This should be the zeroth index
+	val index = viewModel.grade.index
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -57,7 +61,7 @@ fun SsGradeQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.gradeIndex,
+		index = index,
 		scrollState = scrollState)
 }
 
@@ -121,17 +125,34 @@ fun SsGradeBody(
 			{
 				when (pagerState.targetPage)
 				{
-					0 -> viewModel.gradingSystemQuestion
-					1 -> viewModel.gradeQuestion
+					//0 -> viewModel.gradingSystemQuestion
+					//1 -> viewModel.gradeQuestion
+					//2 ->
+				//	{
+				//		if (askHowDidItFeel)
+				//		{
+				//			viewModel.howDidItFeelQuestion
+				//		}
+				//		else if (askPerceivedGrade)
+				//		{
+				//			viewModel.perceivedGradeQuestion
+				//		}
+				//		else
+				//		{
+				//			""
+				//		}
+				//	}
+					0 -> viewModel.grade.questions[0]
+					1 -> viewModel.grade.questions[1]
 					2 ->
 					{
 						if (askHowDidItFeel)
 						{
-							viewModel.howDidItFeelQuestion
+							viewModel.grade.questions[3]
 						}
 						else if (askPerceivedGrade)
 						{
-							viewModel.perceivedGradeQuestion
+							viewModel.grade.questions[2]
 						}
 						else
 						{

@@ -38,6 +38,10 @@ fun SsNumAttemptQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.numAttempt)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -49,7 +53,7 @@ fun SsNumAttemptQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.attemptIndex,
+		index = index,
 		scrollState = scrollState)
 }
 
@@ -71,7 +75,7 @@ fun SsNumAttemptBody(
 	println("Num attempt : $numAttempt || Visible : $visible")
 
 	// Subtitle
-	var subtitle = getSubtitle(text, viewModel.numAttemptQuestion, visible)
+	var subtitle = getSubtitle(text, viewModel.numAttempt.question, visible)
 
 	// Body
 	SsBody("Attempts", subtitle)

@@ -34,6 +34,10 @@ fun SsLocationQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.location)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -45,7 +49,7 @@ fun SsLocationQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.locationIndex,
+		index = index,
 		scrollState = scrollState)
 }
 

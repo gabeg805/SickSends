@@ -3,7 +3,6 @@ package me.gabeg.sicksends.addproblem.generic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +10,6 @@ import kotlinx.coroutines.launch
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.shared.SsSharedBaseClimbingDataStore
 import me.gabeg.sicksends.shared.getYesOrNo
-import me.gabeg.sicksends.shared.howDidItFeelToName
-import kotlin.math.roundToLong
 
 /**
  * Add problem view model.
@@ -33,51 +30,85 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	 */
 	var allVisibility = MutableList(size) { mutableStateOf(false) }
 
-	/**
-	 * List of answers.
-	 */
-	//var answers = MutableList<Any?>(size) { null }
-
 	// YOOOO
 	var hasGradingSystemBeenSelected = false
 
 	/**
 	 * Questions.
 	 */
-	val gradingSystemQuestion = "What grading system was used?"
-	val gradeQuestion = "What was the grade?"
-	val perceivedGradeQuestion = "What grade do you think it was?"
-	val howDidItFeelQuestion = "How did it feel?"
-	val nameQuestion = "What was the name?"
-	//val nameQuestion = "What is the name of the problem?"
-	//val noteQuestion = "Do you have any notes for the climb?"
-	val noteQuestion = "Do you have any notes?"
-	//val numAttemptQuestion = "How many attempts did you do?"
-	val numAttemptQuestion = "How many times did you attempt it?"
-	//val projectQuestion = "Are you projecting this problem?"
-	val projectQuestion = "Is this a project?"
-	//val outdoorQuestion = "Was the problem outdoors?"
-	val outdoorQuestion = "Was it outdoors?"
-	//val flashQuestion = "Did you flash the problem?"
+	//val gradingSystemQuestion = "What grading system was used?"
+	//val gradeQuestion = "What was the grade?"
+	//val perceivedGradeQuestion = "What grade do you think it was?"
+	//val howDidItFeelQuestion = "How did it feel?"
+
+	////val numAttemptQuestion = "How many attempts did you do?"
+	//val numAttemptQuestion = "How many times did you attempt it?"
+	////val projectQuestion = "Are you projecting this problem?"
+	//val projectQuestion = "Is this a project?"
+	////val outdoorQuestion = "Was the problem outdoors?"
+	//val outdoorQuestion = "Was it outdoors?"
+	////val flashQuestion = "Did you flash the problem?"
 	val flashQuestion = "Was this a flash?"
-	//val holdQuestion = "What type of holds did the problem have?"
-	val holdQuestion = "What type of holds were there?"
-	val wallFeatureQuestion = "What features did the wall have?"
-	val climbingTechniqueQuestion = "What type of techniques did you use?"
+
+	//val nameQuestion = "What was the name?"
+	////val nameQuestion = "What is the name of the problem?"
+	////val noteQuestion = "Do you have any notes for the climb?"
+	//val noteQuestion = "Do you have any notes?"
+
+	////val holdQuestion = "What type of holds did the problem have?"
+	//val holdQuestion = "What type of holds were there?"
+	//val wallFeatureQuestion = "What features did the wall have?"
+	//val climbingTechniqueQuestion = "What type of techniques did you use?"
 
 	/**
 	 * Indices.
 	 */
-	var gradeIndex = 0
-	var nameIndex = 0
-	var attemptIndex = 0
-	var projectIndex = 0
-	var outdoorIndex = 0
-	var locationIndex = 0
-	var noteIndex = 0
-	var holdIndex = 0
-	var wallFeatureIndex = 0
-	var climbingTechniqueIndex = 0
+	var grade = QuestionIndex(
+		index = 0,
+		questions = listOf(
+			"What grading system was used?",
+			"What was the grade?",
+			"What grade do you think it was?",
+			"How did it feel?"))
+	var name = QuestionIndex(
+		index = 0,
+		question = "What was the name of the climb?")
+	var numAttempt = QuestionIndex(
+		index = 0,
+		question = "How many attempts did you do?")
+	var project = QuestionIndex(
+		index = 0,
+		question = "Was this a project?")
+	var outdoor = QuestionIndex(
+		index = 0,
+		question = "Was this outdoors?")
+	var location = QuestionIndex(
+		index = 0,
+		question = "Where was it located?")
+	var note = QuestionIndex(
+		index = 0,
+		question = "Would you like to write down any notes?")
+	var hold = QuestionIndex(
+		index = 0,
+		question = "What type of holds were there?")
+	var wallFeature = QuestionIndex(
+		index = 0,
+		question = "What features did the wall have?")
+	var climbingTechnique = QuestionIndex(
+		index = 0,
+		question = "What type of techniques did you use?")
+
+	/**
+	 * Index of a question. The class is a container for the value so that the
+	 * object can be passed by reference to a function, and then its value can
+	 * be changed, if need be.
+	 *
+	 * TODO: Can maybe move isAnswered() checks to here?
+	 */
+	data class QuestionIndex(
+		var index : Int,
+		val question : String = "",
+		val questions : List<String> = listOf())
 
 	/**
 	 * Companion.
@@ -166,7 +197,6 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	init
 	{
 		viewModelScope.launch {
-			setupIndices()
 			setupSize()
 
 			// Defaults
@@ -175,15 +205,40 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	}
 
 	/**
+	 * Find the index of a question. If it is not set yet, find the next
+	 * available index and set the value of the object.
+	 *
+	 * @return The index of a question.
+	 */
+	fun findIndex(question : QuestionIndex) : Int
+	{
+		if (question.index == 0)
+		{
+			question.index = findNextAvailableIndex()
+		}
+
+		return question.index
+	}
+
+	/**
+	 * Find the next available index.
+	 *
+	 * @return The next available index.
+	 */
+	fun findNextAvailableIndex() : Int
+	{
+		return getAllIndices().maxBy { it.index }.index + 1
+	}
+
+	/**
 	 * Get all the indices of each question.
 	 *
 	 * @return A list of all the indices of each question.
 	 */
-	fun getAllIndices() : List<Int>
+	fun getAllIndices() : List<QuestionIndex>
 	{
-		return listOf(gradeIndex, nameIndex, attemptIndex, projectIndex,
-			outdoorIndex, locationIndex, noteIndex, holdIndex, wallFeatureIndex,
-			climbingTechniqueIndex)
+		return listOf(grade, name, numAttempt, project, outdoor, location, note,
+			hold, wallFeature, climbingTechnique)
 	}
 
 	/**
@@ -213,26 +268,6 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 			return "$gradingSystem  |  $grade  |  " +
 				if (howDidItFeel.isNotEmpty()) howDidItFeel else perceivedGrade
 		}
-	}
-
-	/**
-	 * Get the initial grading system.
-	 *
-	 * @return The initial grading system.
-	 */
-	// TODO: The initial problem should already be populated with the data store
-	// defaults, so that this check against the data store does not need to
-	// happen
-	@Composable
-	fun getInitialGradingSystem() : String
-	{
-		return problem.gradingSystem
-
-		//val defaultGradingSystem = dataStore.observeDefaultGradingSystem()
-		//val problemGradingSystem = problem.gradingSystem
-
-		//return if (problemGradingSystem.isEmpty()) defaultGradingSystem
-		//	else problemGradingSystem
 	}
 
 	/**
@@ -342,44 +377,44 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 			return false
 		}
 
-		if (index == gradeIndex)
+		if (index == grade.index)
 		{
 			return this.problem.grade.isNotEmpty()
 		}
-		else if (index == nameIndex)
+		else if (index == name.index)
 		{
 			return this.problem.name?.isNotEmpty() ?: false
 		}
-		else if (index == attemptIndex)
+		else if (index == numAttempt.index)
 		{
 			return (this.problem.isFlash != null) || (this.problem.numAttempt != null)
 		}
-		else if (index == projectIndex)
+		else if (index == project.index)
 		{
 			return this.problem.isProject != null
 		}
-		else if (index == outdoorIndex)
+		else if (index == outdoor.index)
 		{
 			return this.problem.isOutdoor != null
 		}
-		else if (index == locationIndex)
+		else if (index == location.index)
 		{
 			// TODO: Might want to check lat/lon or simply not null
 			return this.problem.locationName?.isNotEmpty() ?: false
 		}
-		else if (index == noteIndex)
+		else if (index == note.index)
 		{
 			return this.problem.note?.isNotEmpty() ?: false
 		}
-		else if (index == holdIndex)
+		else if (index == hold.index)
 		{
 			return this.problem.hold.isNotEmpty()
 		}
-		else if (index == wallFeatureIndex)
+		else if (index == wallFeature.index)
 		{
 			return this.problem.wallFeature.isNotEmpty()
 		}
-		else if (index == climbingTechniqueIndex)
+		else if (index == climbingTechnique.index)
 		{
 			return this.problem.climbingTechnique.isNotEmpty()
 		}
@@ -387,9 +422,6 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 		{
 			return false
 		}
-
-		// Check if the question is answered
-		//return answers.getOrNull(index) != null
 	}
 
 	/**
@@ -425,29 +457,11 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	}
 
 	/**
-	 * Set the number of attempts from a text field value.
-	 *
-	 * @param fieldValue A text field value
-	 *
-	 * @return The number of attempts from a text field value.
+	 * Find the number of questions.
 	 */
-	fun numAttemptsFromTextFieldValue(fieldValue: TextFieldValue) : Long?
+	suspend fun findNumOfQuestions() : Int
 	{
-		var text = fieldValue.text
-		var sanitizedText = text.replace(numAttemptQuestion, "")
-
-		return if (sanitizedText.isEmpty())
-			null
-		else
-			sanitizedText.toFloat().roundToLong()
-	}
-
-	/**
-	 * Setup the indices that each question should be shown at.
-	 */
-	suspend fun setupIndices()
-	{
-		println("Setting up indices!")
+		// Determine if a question should be asked or not
 		val askName = dataStore.getQuestionName()
 		val askFlash = dataStore.getQuestionIsFlash()
 		val askNumAttempt = dataStore.getQuestionNumAttempt()
@@ -459,96 +473,29 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 		val askWallFeature = dataStore.getQuestionWallFeature()
 		val askClimbingTechnique = dataStore.getQuestionClimbingTechnique()
 
-		if (askName)
-		{
-			nameIndex++
-			attemptIndex++
-			projectIndex++
-			outdoorIndex++
-			locationIndex++
-			noteIndex++
-			holdIndex++
-			wallFeatureIndex++
-			climbingTechniqueIndex++
-		}
+		// All determinations for each question
+		val allAsk = listOf(askName, askFlash, askNumAttempt, askProject,
+			askOutdoor, askLocation, askNote, askHold, askWallFeature,
+			askClimbingTechnique)
 
-		if (askFlash || askNumAttempt)
-		{
-			attemptIndex++
-			projectIndex++
-			outdoorIndex++
-			locationIndex++
-			noteIndex++
-			holdIndex++
-			wallFeatureIndex++
-			climbingTechniqueIndex++
-		}
+		// Number of questions. There should be at least one question, the grade
+		var num = 1
 
-		if (askProject)
-		{
-			projectIndex++
-			outdoorIndex++
-			locationIndex++
-			noteIndex++
-			holdIndex++
-			wallFeatureIndex++
-			climbingTechniqueIndex++
-		}
+		// Add up the number of times a question should be asked
+		num += allAsk.count { it }
 
-		if (askOutdoor)
-		{
-			outdoorIndex++
-			locationIndex++
-			noteIndex++
-			holdIndex++
-			wallFeatureIndex++
-			climbingTechniqueIndex++
-		}
-
-		if (askLocation)
-		{
-			locationIndex++
-			noteIndex++
-			holdIndex++
-			wallFeatureIndex++
-			climbingTechniqueIndex++
-		}
-
-		if (askNote)
-		{
-			noteIndex++
-			holdIndex++
-			wallFeatureIndex++
-			climbingTechniqueIndex++
-		}
-
-		if (askHold)
-		{
-			holdIndex++
-			wallFeatureIndex++
-			climbingTechniqueIndex++
-		}
-
-		if (askWallFeature)
-		{
-			wallFeatureIndex++
-			climbingTechniqueIndex++
-		}
-
-		if (askClimbingTechnique)
-		{
-			climbingTechniqueIndex++
-		}
+		return num
 	}
 
 	/**
 	 * Find the size of the list of questions and answers.
 	 */
-	fun setupSize()
+	suspend fun setupSize()
 	{
-		val indices = getAllIndices()
+		//val indices = getAllIndices()
 
-		size = (indices.maxOrNull() ?: -1) + 1
+		//size = (indices.maxOrNull() ?: -1) + 1
+		size = findNumOfQuestions()
 		allVisibility = MutableList(size) { mutableStateOf(false) }
 		//answers = MutableList<Any?>(size) { null }
 		println("Setting up size! $size")

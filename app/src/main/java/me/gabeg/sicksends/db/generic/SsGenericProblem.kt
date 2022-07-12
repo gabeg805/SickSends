@@ -201,6 +201,20 @@ abstract class SsGenericProblem
 	}
 
 	/**
+	 * An observable name of the problem.
+	 */
+	@Ignore
+	var observableName = object : MutableLiveData<String?>(null)
+	{
+		override fun setValue(value : String?)
+		{
+			super.setValue(value)
+
+			name = value
+		}
+	}
+
+	/**
 	 * An observable note on the problem.
 	 */
 	@Ignore

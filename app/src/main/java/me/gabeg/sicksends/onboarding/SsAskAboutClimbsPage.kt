@@ -2,10 +2,7 @@ package me.gabeg.sicksends.onboarding
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -14,11 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import me.gabeg.sicksends.problem.ui.SsBoulderIcon
+import me.gabeg.sicksends.problem.ui.SsSportIcon
+import me.gabeg.sicksends.problem.ui.SsTopRopeIcon
+import me.gabeg.sicksends.problem.ui.SsTradIcon
 import me.gabeg.sicksends.shared.*
 
 /*
@@ -34,16 +36,23 @@ fun SsAskAboutTypeOfClimbsPage()
 		subtitle = "This can always be changed later.")
 	{
 
+		// Context
+		val context = LocalContext.current
+
 		// Coroutine scope
 		val scope = rememberCoroutineScope()
 
 		// Get all the data stores
-		val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
-		val sportDataStore = SsSharedSportDataStore(LocalContext.current)
-		val topRopeDataStore = SsSharedTopRopeDataStore(LocalContext.current)
-		val tradDataStore = SsSharedTradDataStore(LocalContext.current)
+		val boulderDataStore = SsSharedBoulderDataStore(context)
+		val sportDataStore = SsSharedSportDataStore(context)
+		val topRopeDataStore = SsSharedTopRopeDataStore(context)
+		val tradDataStore = SsSharedTradDataStore(context)
 		val allDataStores = listOf(boulderDataStore, sportDataStore,
 			topRopeDataStore, tradDataStore)
+
+		// Climb names and icon size
+		val climbNames = getAllClimbNames()
+		val size = 24.dp
 
 		// Iterate over each type of data store and type of climbing
 		for (ds in allDataStores)
@@ -53,13 +62,13 @@ fun SsAskAboutTypeOfClimbsPage()
 			val name = ds.getClimbName()
 
 			// Get whether this type of climbing will be done or not
-			val isChecked by ds.getWillClimbFlow().asLiveData().observeAsState(false)
+			val isChecked = ds.observeWillClimb()
 
 			// Create a row for each climbing type
 			Row(
 				modifier = Modifier
 					.fillMaxWidth()
-					.padding(8.dp)
+					.padding(16.dp)
 					.clickable {
 						scope.launch {
 							ds.editWillClimb(!isChecked)
@@ -69,18 +78,39 @@ fun SsAskAboutTypeOfClimbsPage()
 				verticalAlignment = Alignment.CenterVertically)
 			{
 
-				Checkbox(
-					colors = CheckboxDefaults.colors(Color.Magenta),
+				// Icon
+				when (name)
+				{
+					climbNames[0] -> SsBoulderIcon(modifier = Modifier.size(size))
+					climbNames[1] -> SsSportIcon(modifier = Modifier.size(size))
+					climbNames[2] -> SsTopRopeIcon(modifier = Modifier.size(size))
+					climbNames[3] -> SsTradIcon(modifier = Modifier.size(size))
+					else -> {}
+				}
+
+				// Space
+				Spacer(modifier = Modifier.padding(horizontal = 12.dp))
+
+				// Title
+				Text(name,
+					fontSize = MaterialTheme.typography.body1.fontSize,
+					fontWeight = FontWeight.Bold,
+					overflow = TextOverflow.Ellipsis)
+
+				// Space
+				Spacer(modifier = Modifier.weight(1f))
+
+				// Switch
+				Switch(
+					modifier = Modifier
+						.padding(start = 4.dp),
 					checked = isChecked,
 					onCheckedChange = {
 						scope.launch {
 							ds.editWillClimb(!isChecked)
 						}
-					})
-
-				Text(
-					text = name,
-					fontWeight = FontWeight.SemiBold)
+					},
+					colors = SwitchDefaults.colors(Color.Magenta))
 
 			}
 

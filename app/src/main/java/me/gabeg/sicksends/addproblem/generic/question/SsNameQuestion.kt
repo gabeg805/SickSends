@@ -1,7 +1,15 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import me.gabeg.sicksends.addproblem.SsContinueSkipButton
 import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.SsTextFieldBody
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
@@ -16,6 +24,10 @@ fun SsNameQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
+	// Index
+	val index = viewModel.findIndex(viewModel.name)
+
+	// Question
 	SsQuestion(
 		viewModel = viewModel,
 		icon = { modifier ->
@@ -27,7 +39,7 @@ fun SsNameQuestion(
 				visible = visible,
 				onDone = onDone)
 		},
-		index = viewModel.nameIndex,
+		index = index,
 		scrollState = scrollState)
 }
 
@@ -41,19 +53,40 @@ fun SsNameBody(
 	onDone : () -> Unit = {})
 {
 
-	val name = viewModel.problem.name
+	// Name
+	val name by viewModel.problem.observableName.observeAsState()
 	println("Name : $name || Visible : $visible")
 
+	// Body
 	SsTextFieldBody(
 		title = "Name",
-		question = viewModel.nameQuestion,
+		question = viewModel.name.question,
 		initial = name ?: "",
 		singleLine = true,
 		visible = visible,
-		onDone = { newName ->
-			viewModel.problem.name = newName
-
+		onTextChange = { newName ->
+			viewModel.problem.observableName.value = newName
+		},
+		onDone = {
 			onDone()
 		})
 
+	// Continue/skip button
+	AnimatedVisibility(visible = visible)
+	{
+		SsContinueSkipButton(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 32.dp, bottom = 64.dp),
+			state = name?.isNotEmpty() ?: false,
+			onContinue = {
+				onDone()
+			},
+			onSkip = {
+				viewModel.problem.observableName.value = null
+
+				onDone()
+			}
+		)
+	}
 }

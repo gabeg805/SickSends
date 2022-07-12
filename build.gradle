@@ -2,29 +2,29 @@
 
 buildscript {
 
-    // Project build.gradle file.
-    ext.kotlin_version = '1.6.20'
+    // Versions
+    ext.kotlinVersion = '1.7.0'
+    ext.roomVersion = "2.5.0-alpha02"
+    ext.daggerVersion = "2.42"
+    ext.hiltVersion = "1.0.0"
 
+    // Repos
     repositories {
         google()
 		mavenCentral()
     }
 
+    // Dependencies
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.0"
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.42'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 
 }
-
-// Inside each module using kotlin
-//plugins {
-//    id 'kotlin-android'
-//}
 
 allprojects {
     repositories {

@@ -9,22 +9,17 @@ import androidx.compose.material.Slider
 import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import me.gabeg.sicksends.addproblem.*
+import me.gabeg.sicksends.addproblem.SsBody
+import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
+import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Companion.getSubtitle
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
 import me.gabeg.sicksends.problem.ui.SsGradeIcon
@@ -35,6 +30,7 @@ import me.gabeg.sicksends.shared.howDidItFeelToName
 import me.gabeg.sicksends.ui.SsButtonToggleGroup
 import me.gabeg.sicksends.ui.SsDropdownMenuState
 import me.gabeg.sicksends.ui.SsExposedDropdownMenu
+import me.gabeg.sicksends.ui.rememberSsDropdownMenuState
 import kotlin.math.round
 
 /**
@@ -45,8 +41,8 @@ fun SsGradeQuestion(
 	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
 	scrollState : LazyListState)
 {
-	// Index. This should be the zeroth index
-	val index = viewModel.grade.index
+	// Index
+	val index = viewModel.findIndex(viewModel.grade)
 
 	// Question
 	SsQuestion(
@@ -77,398 +73,52 @@ fun SsGradeBody(
 	onDone : () -> Unit = {})
 {
 
-	val scope = rememberCoroutineScope()
-	val pagerState = rememberPagerState()
-	val delayMilliSec = 200L
+	// Title and question
+	val title = viewModel.grade.title
+	val question = viewModel.grade.question
 
-	val dataStore = viewModel.dataStore
-	val askHowDidItFeel = dataStore.observeQuestionHowDidItFeel()
-	val askPerceivedGrade = dataStore.observeQuestionPerceivedGrade()
-	val pageCount = if (askHowDidItFeel || askPerceivedGrade) 3 else 2
-
-	// Whether or not the grade is done or a question has been answered
-	var isDone by remember { mutableStateOf(false) }
-	var isAnswered by remember { mutableStateOf(false) }
-
-	// Determine the subtitle
-	val subtitle by remember(askHowDidItFeel || askPerceivedGrade) {
-		derivedStateOf {
-			if (isDone)
-			{
-				viewModel.getGradeSubtitle()
-			}
-			else if (isAnswered)
-			{
-				when (pagerState.currentPage)
-				{
-					0 -> viewModel.problem.gradingSystem
-					1 -> viewModel.problem.grade
-					2 ->
-					{
-						if (askHowDidItFeel)
-						{
-							viewModel.problem.howDidItFeelName
-						}
-						else if (askPerceivedGrade)
-						{
-							viewModel.problem.perceivedGrade ?: ""
-						}
-						else
-						{
-							""
-						}
-					}
-					else -> ""
-				}
-			}
-			else
-			{
-				when (pagerState.targetPage)
-				{
-					//0 -> viewModel.gradingSystemQuestion
-					//1 -> viewModel.gradeQuestion
-					//2 ->
-				//	{
-				//		if (askHowDidItFeel)
-				//		{
-				//			viewModel.howDidItFeelQuestion
-				//		}
-				//		else if (askPerceivedGrade)
-				//		{
-				//			viewModel.perceivedGradeQuestion
-				//		}
-				//		else
-				//		{
-				//			""
-				//		}
-				//	}
-					0 -> viewModel.grade.questions[0]
-					1 -> viewModel.grade.questions[1]
-					2 ->
-					{
-						if (askHowDidItFeel)
-						{
-							viewModel.grade.questions[3]
-						}
-						else if (askPerceivedGrade)
-						{
-							viewModel.grade.questions[2]
-						}
-						else
-						{
-							""
-						}
-					}
-					else -> ""
-				}
-			}
-		}
-	}
-
-	// Regular body of the grade section
-	SsBody("Grade", subtitle, pagerState = if (visible) pagerState else null)
-	{
-
-		AnimatedVisibility(visible = visible)
-		{
-
-			HorizontalPager(
-				state = pagerState,
-				count = pageCount,
-				modifier = Modifier
-					.fillMaxHeight()
-					//.fillMaxWidth()
-					.nestedScroll(remember {
-						object : NestedScrollConnection
-						{
-							override fun onPreScroll(
-								available: Offset,
-								source: NestedScrollSource
-							): Offset
-							{
-								return if (available.y > 0) Offset.Zero
-								else Offset(
-									x = 0f,
-									y = -scrollState.dispatchRawDelta(-available.y)
-								)
-							}
-						}
-					}))
-			{ page: Int ->
-
-				when (page)
-				{
-					0 ->
-					{
-						SsGradingSystemPage(
-							viewModel = viewModel,
-							onGradingSystemSelected = {
-								isDone = false
-								isAnswered = true
-
-								scope.launch {
-									delay(delayMilliSec)
-									pagerState.animateScrollToPage(1)
-									isAnswered = false
-								}
-							})
-					}
-
-					1 ->
-					{
-						SsGradePage(
-							viewModel = viewModel,
-							onGradeSelected = {
-								isDone = false
-								isAnswered = true
-
-								scope.launch {
-									delay(delayMilliSec)
-
-									if (pageCount == 3)
-									{
-										pagerState.animateScrollToPage(2)
-										isAnswered = false
-									}
-									else
-									{
-										isDone = true
-										isAnswered = false
-										onDone()
-									}
-								}
-							})
-					}
-
-					2 ->
-					{
-						if (askHowDidItFeel)
-						{
-							SsHowDidItFeelPage(
-								viewModel = viewModel,
-								onDone = {
-									isDone = false
-									isAnswered = true
-
-									scope.launch {
-										delay(delayMilliSec)
-
-										isDone = true
-										isAnswered = false
-										onDone()
-									}
-
-								})
-						}
-						else if (askPerceivedGrade)
-						{
-							SsPerceivedGradePage(
-								viewModel = viewModel,
-								onGradeSelected =  {
-									isDone = false
-									isAnswered = true
-
-									scope.launch {
-										delay(delayMilliSec)
-
-										isDone = true
-										isAnswered = false
-										onDone()
-									}
-
-								})
-						}
-
-					}
-
-				}
-			}
-
-			//when (pagerState.currentPage)
-			//{
-			//	0 ->
-			//	{
-			//		if (!viewModel.hasGradingSystemBeenSelected)
-			//		{
-			//			LaunchedEffect(true)
-			//			{
-			//				delay(750)
-			//				pagerState.animateScrollToPage(1)
-			//			}
-			//		}
-			//	}
-			//	else ->
-			//	{
-			//		viewModel.hasGradingSystemBeenSelected = true
-			//	}
-			//}
-
-		}
-
-	}
-
-}
-
-/**
- * A page asking a user to select a grade.
- */
-@Composable
-fun SsGradePage(
-	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
-	onGradeSelected : (grade : String) -> Unit)
-{
-
-	// Get all grades for a grading system
-	val gradingSystem = viewModel.problem.gradingSystem
-	val allGrades = getAllBoulderGradesForGradingSystem(gradingSystem)
-
-	// Index of the saved grade
-	val index = allGrades.indexOf(viewModel.problem.grade)
-
-	// Save the state of the dropdown menu
-	val menuState = remember(index) { SsDropdownMenuState(index = index) }
-
-	// Dropdown menu with all the grades
-	SsExposedDropdownMenu(
-		options = allGrades,
-		state = menuState,
-		onMenuItemClickedListener = { index, name ->
-			viewModel.problem.grade = name
-
-			onGradeSelected(name)
-		})
-}
-
-/**
- * A page asking a user to select a grading system.
- */
-@Composable
-fun SsGradingSystemPage(
-	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
-	onGradingSystemSelected : (gradingSystem: String) -> Unit)
-{
-
-	// Get all the grading systems that are used
-	val allGradingSystems = viewModel.dataStore.observeAllGradingSystemsWillUse()
-
-	// Things needed to show an example of a grading system
-	var exampleGradingSystem by remember { mutableStateOf("") }
-
-	// Show all the grading systems
-	SsButtonToggleGroup(
-		items = allGradingSystems,
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(horizontal = 16.dp, vertical = 4.dp),
-		numPerRow = 2,
-		singleSelection = true,
-		toggleable = false,
-		initialSelect = viewModel.problem.gradingSystem,
-		onClick = { index, name, isChecked ->
-
-			// A different grading system was chosen. Clear out the grade
-			if (name != viewModel.problem.gradingSystem)
-			{
-				viewModel.problem.grade = ""
-			}
-
-			// Set the grading system
-			viewModel.problem.gradingSystem = name
-
-			onGradingSystemSelected(name)
-		},
-		onLongClick = { name ->
-			exampleGradingSystem = name
-		}
-	)
-
-	// Show the example grade
-	if (exampleGradingSystem.isNotEmpty())
-	{
-		var example = getExampleGrade(exampleGradingSystem)
-
-		Toast.makeText(LocalContext.current, example, Toast.LENGTH_SHORT).show()
-
-		exampleGradingSystem = ""
-	}
-
-}
-
-/**
- * A page asking a user how a climb felt.
- */
-@Composable
-fun SsHowDidItFeelPage(
-	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
-	onDone : () -> Unit = {})
-{
-
-	// Determine the initial slider position
-	val allHowDidItFeelNames = getAllHowDidItFeelNames()
-	val howDidItFeel = viewModel.problem.howDidItFeel
-	val normalFeel = SsHowDidItFeelType.NORMAL.value
-	var sliderPosition by remember {
-		mutableStateOf(howDidItFeel?.toFloat() ?: normalFeel.toFloat())
-	}
-
-	// Determine the initial how did it feel scale
-	val initialFeelScale = howDidItFeelToName(howDidItFeel)
+	// Grade
+	val grade = viewModel.problem.grade
+	//val grade by viewModel.problem.observableGrade.observeAsState("")
 
 	// Subtitle
-	var subtitle by remember { mutableStateOf(initialFeelScale) }
+	val subtitle = getSubtitle(grade, question, visible)
 
-	// View
-	Column()
+	// Body
+	SsBody(title, subtitle)
 	{
-
-		// Slider
-		Slider(
-			value = sliderPosition,
-			onValueChange = {
-				sliderPosition = round(it)
-				val index = sliderPosition.toInt()
-
-				subtitle = allHowDidItFeelNames[index]
-			},
-			valueRange = 0f..4f,
-			onValueChangeFinished = {
-				viewModel.problem.howDidItFeel = sliderPosition.toInt()
-				viewModel.problem.howDidItFeelName = subtitle
-
-				onDone()
-			},
-			steps = 3,
-			colors = SliderDefaults.colors(
-				thumbColor = MaterialTheme.colors.secondary,
-				activeTrackColor = MaterialTheme.colors.secondary
-			)
-		)
-
-		// Row of text labels indicating what each slider position is for
-		Row(
-			modifier = Modifier
-				.fillMaxWidth(),
-			horizontalArrangement = Arrangement.SpaceBetween,
-			verticalAlignment = Alignment.CenterVertically)
+		AnimatedVisibility(visible = visible)
 		{
+			Column()
+			{
 
-			// Iterate over each name
-			allHowDidItFeelNames.forEach {
+				// Get all grades for a grading system
+				val gradingSystem = viewModel.problem.gradingSystem
+				val allGrades = getAllBoulderGradesForGradingSystem(gradingSystem)
 
-				// Replace any spaces with new lines so that each name does not
-				// interfere with the next one and so that they all fit on one
-				// line
-				val text = it.replace(" ", "\n")
+				// Index of the saved grade
+				val index = allGrades.indexOf(grade)
 
-				// Text for each slider position
-				Text(text,
-					textAlign = TextAlign.Center,
-					fontSize = MaterialTheme.typography.body2.fontSize)
+				// Save the state of the dropdown menu
+				val menuState = rememberSsDropdownMenuState(index)
+
+				menuState.select(index)
+
+				// Dropdown menu with all the grades
+				SsExposedDropdownMenu(
+					options = allGrades,
+					state = menuState,
+					onMenuItemClickedListener = { index, name ->
+						// Set the observable so that the Done button is shown
+						viewModel.problem.observableGrade.value = name
+
+						onDone()
+					})
+
 			}
-
 		}
-
 	}
+
 }
 
 /**

@@ -3,6 +3,7 @@ package me.gabeg.sicksends.shared
 import android.content.Context
 import androidx.compose.runtime.Composable
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 
 
 /**
@@ -298,6 +299,18 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	 *
 	 * @return Whether the question should be asked or not.
 	 */
+	suspend fun getQuestionHowDidItFeel() : Boolean
+	{
+		val flow = getQuestionHowDidItFeelFlow()
+
+		return getBoolean(flow)
+	}
+
+	/**
+	 * Get whether the how did it feel question should be asked or not.
+	 *
+	 * @return Whether the question should be asked or not.
+	 */
 	fun getQuestionHowDidItFeelFlow() : Flow<Boolean>
 	{
 		return getBooleanFlow(KEY_QUESTION_HOW_DID_IT_FEEL, false)
@@ -472,6 +485,18 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 	 *
 	 * @return Whether the question should be asked or not.
 	 */
+	suspend fun getQuestionPerceivedGrade() : Boolean
+	{
+		val flow = getQuestionPerceivedGradeFlow()
+
+		return getBoolean(flow)
+	}
+
+	/**
+	 * Get whether the perceived grade question should be asked or not.
+	 *
+	 * @return Whether the question should be asked or not.
+	 */
 	fun getQuestionPerceivedGradeFlow() : Flow<Boolean>
 	{
 		return getBooleanFlow(KEY_QUESTION_PERCEIVED_GRADE, false)
@@ -549,6 +574,37 @@ abstract class SsSharedBaseClimbingDataStore(context : Context)
 		val key = buildWillGradeWithKey(grade)
 
 		return getBooleanFlow(key)
+	}
+
+	/**
+	 * Observe all the grading systems for a type of climbing that a user will
+	 * use.
+	 *
+	 * @return Observe all the grading systems for a type of climbing that a
+	 *         user will use.
+	 */
+	@Composable
+	fun getAllGradingSystemsWillUse() : List<String>
+	{
+		val allGradingSystems = getAllGradingSystems()
+		var allGradingSystemsWillUse = mutableListOf<String>()
+
+		// Iterate over each grading system
+		for (system in allGradingSystems)
+		{
+			// Check if the grading system will be used
+			runBlocking {
+				val willUse = getWillGradeWith(system)
+
+				// The grading system will be used. Add it to the list
+				if (willUse)
+				{
+					allGradingSystemsWillUse.add(system)
+				}
+			}
+		}
+
+		return allGradingSystemsWillUse
 	}
 
 	/**

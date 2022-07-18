@@ -1,8 +1,7 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -59,9 +58,11 @@ fun SsNameBody(
 
 	// Body
 	SsTextFieldBody(
-		title = "Name",
+		title = viewModel.name.title,
 		question = viewModel.name.question,
 		initial = name ?: "",
+		modifier = Modifier
+			.fillMaxWidth(),
 		singleLine = true,
 		visible = visible,
 		onTextChange = { newName ->
@@ -74,10 +75,8 @@ fun SsNameBody(
 	// Continue/skip button
 	AnimatedVisibility(visible = visible)
 	{
+
 		SsContinueSkipButton(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(top = 32.dp, bottom = 64.dp),
 			state = name?.isNotEmpty() ?: false,
 			onContinue = {
 				onDone()
@@ -88,5 +87,7 @@ fun SsNameBody(
 				onDone()
 			}
 		)
+
 	}
+
 }

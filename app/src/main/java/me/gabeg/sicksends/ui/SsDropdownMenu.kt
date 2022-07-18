@@ -55,7 +55,9 @@ fun SsExposedDropdownMenu(
 	// Dropdown menu for the search filter.
 	ExposedDropdownMenuBox(
 		expanded = state.isExpanded,
-		onExpandedChange = { state.toggle() })
+		onExpandedChange = {
+			state.toggle()
+		})
 	{
 
 		// Text containing the item in the dropdown menu.
@@ -183,7 +185,7 @@ data class SsDropdownMenuState(
  * Remember the state of the dropdown menu.
  */
 @Composable
-fun rememberSsDropdownMenuState(index: Int = -1): SsDropdownMenuState
+fun rememberSsDropdownMenuState(index : Int = -1): SsDropdownMenuState
 {
 	return remember { SsDropdownMenuState(index) }
 }

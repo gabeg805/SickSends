@@ -1,10 +1,7 @@
 package me.gabeg.sicksends.main
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -16,15 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.components.SingletonComponent
 import me.gabeg.sicksends.R
 import me.gabeg.sicksends.addproblem.ADD_PROBLEM_SCREEN_ROUTE
 import me.gabeg.sicksends.boulder.BOULDER_SCREEN_ROUTE
@@ -32,6 +21,8 @@ import me.gabeg.sicksends.shared.*
 import me.gabeg.sicksends.sport.SPORT_SCREEN_ROUTE
 import me.gabeg.sicksends.toprope.TOP_ROPE_SCREEN_ROUTE
 import me.gabeg.sicksends.trad.TRAD_SCREEN_ROUTE
+import me.gabeg.sicksends.ui.SsDrawerState
+import me.gabeg.sicksends.ui.SsSearchFilterQueryState
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -50,6 +41,20 @@ class SsMainScreenViewModel @Inject constructor(
 	 */
 	//var currentNavEntry : NavBackStackEntry? = null
 	var currentNavEntry : State<NavBackStackEntry?> = mutableStateOf(null)
+
+	/**
+	 * Current route.
+	 */
+	var currentRoute : String = ""
+		get()
+		{
+			return currentNavEntry.value?.destination?.route ?: ""
+		}
+
+	/**
+	 * Previous route.
+	 */
+	var previousRoute : String? = ""
 
 	/**
 	 * Height of the FAB, in pixels.
@@ -79,7 +84,14 @@ class SsMainScreenViewModel @Inject constructor(
 			scrollBy(delta)
 
 			//isFabVisible.value = shouldFabBeVisible()
-			shouldFabBeVisible.value = abs(scrollTotal).toInt() != fabHeightPx
+
+			// Do not show the FAB when adding a problem
+			//val currentRoute = this@SsMainScreenViewModel.getCurrentNavRoute()
+
+			if (shouldShowFab)
+			{
+				fabVisibilityOnScroll = abs(scrollTotal).toInt() != fabHeightPx
+			}
 
 			return Offset.Zero
 		}
@@ -95,12 +107,23 @@ class SsMainScreenViewModel @Inject constructor(
 	/**
 	 * Whether the FAB should be visible.
 	 */
-	var shouldFabBeVisible = mutableStateOf(false)
+	var shouldShowFab = false
+	var fabVisibilityOnScroll by mutableStateOf(false)
 
 	/**
 	 * Whether the FAB should be visible.
 	 */
 	var shouldBottomNavigationBarBeVisible = mutableStateOf(false)
+
+	/**
+	 * Drawer state.
+	 */
+	var drawerState = SsDrawerState()
+
+	/**
+	 * Query state.
+	 */
+	var queryState = SsSearchFilterQueryState()
 
 	/**
 	 * Get a list of all the navigation icons.
@@ -187,14 +210,6 @@ class SsMainScreenViewModel @Inject constructor(
 	}
 
 	/**
-	 * Current navigation route.
-	 */
-	fun getCurrentNavRoute() : String?
-	{
-		return currentNavEntry.value?.destination?.route
-	}
-
-	/**
 	 * Get the navigation icon of the top bar.
 	 */
 	@Composable
@@ -221,12 +236,30 @@ class SsMainScreenViewModel @Inject constructor(
 
 		if (shouldShowBackButtonInTopBar())
 		{
-			return getCurrentNavRoute() ?: appName
+			return when (currentRoute)
+			{
+				ADD_PROBLEM_SCREEN_ROUTE ->
+				{
+					val name = previousRoute ?: ""
+
+					currentRoute.replace(" ", " $name ")
+				}
+				else -> appName
+			}
 		}
 		else
 		{
 			return appName
 		}
+	}
+
+	/**
+	 * Hide the floating action button.
+	 */
+	fun hideFab()
+	{
+		shouldShowFab = false
+		fabVisibilityOnScroll = false
 	}
 
 	/**
@@ -308,18 +341,17 @@ class SsMainScreenViewModel @Inject constructor(
 	@Composable
 	fun shouldShowBackButtonInTopBar() : Boolean
 	{
-		return (getCurrentNavRoute() in navEntriesToShowBackButtonFor)
+		return (currentRoute in navEntriesToShowBackButtonFor)
 	}
 
 	/**
-	 * Check whether the FAB should be visible or not.
-	 *
-	 * @return True if the FAB should be visible, and False otherwise.
+	 * Show the floating action button.
 	 */
-	//fun shouldFabBeVisible() : Boolean
-	//{
-	//	return abs(scrollTotal).toInt() != fabHeightPx
-	//}
+	fun showFab()
+	{
+		shouldShowFab = true
+		fabVisibilityOnScroll = true
+	}
 
 }
 

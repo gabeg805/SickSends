@@ -1,14 +1,12 @@
 package me.gabeg.sicksends.db.generic
 
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Ignore
 import me.gabeg.sicksends.problem.type.SsClimbingTechniqueType
 import me.gabeg.sicksends.problem.type.SsHoldType
 import me.gabeg.sicksends.problem.type.SsHowDidItFeelType
 import me.gabeg.sicksends.problem.type.SsWallFeatureType
-import me.gabeg.sicksends.shared.howDidItFeelToName
 import java.util.*
 
 /**
@@ -23,9 +21,10 @@ abstract class SsGenericProblem
 	{
 
 		const val WHERE =
-			"WHERE (:isOutdoor IS NULL OR is_outdoor = :isOutdoor) " +
-			"AND   (:isProject IS NULL OR is_project = :isProject) " +
-			"AND   (:isFlash   IS NULL OR is_flash   = :isFlash) "
+			"WHERE ((:isOutdoor IS NULL) OR (is_outdoor  = :isOutdoor)) " +
+			"AND   ((:isProject IS NULL) OR (is_project  = :isProject)) " +
+			"AND   ((:isFlash   IS NULL) OR (:isFlash = 1 AND num_attempt = :isFlash) OR (:isFlash = 0 AND num_attempt != 1))"
+			//"AND   (:isFlash   IS NULL OR is_flash    = :isFlash) "
 
 		const val ORDER_BY = "ORDER BY timestamp DESC"
 
@@ -157,6 +156,48 @@ abstract class SsGenericProblem
 	 * Notes on the problem.
 	 */
 	abstract var note : String?
+
+	/**
+	 * An observable for the grading system of the problem.
+	 */
+	@Ignore
+	var observableGradingSystem = object : MutableLiveData<String>("")
+	{
+		override fun setValue(value : String)
+		{
+			super.setValue(value)
+
+			gradingSystem = value
+		}
+	}
+
+	/**
+	 * An observable of the climbing grade of the problem.
+	 */
+	@Ignore
+	var observableGrade = object : MutableLiveData<String>("")
+	{
+		override fun setValue(value : String)
+		{
+			super.setValue(value)
+
+			grade = value
+		}
+	}
+
+	/**
+	 * An observable for how a problem felt.
+	 */
+	@Ignore
+	var observableHowDidItFeel = object : MutableLiveData<Int?>(null)
+	{
+		override fun setValue(value : Int?)
+		{
+			super.setValue(value)
+
+			howDidItFeel = value
+		}
+	}
 
 	/**
 	 * An observable of the number of times a problem was attempted.

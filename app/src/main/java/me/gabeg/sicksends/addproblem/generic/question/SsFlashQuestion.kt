@@ -19,7 +19,7 @@ fun SsFlashQuestion(
 	scrollState : LazyListState)
 {
 	// Index
-	val index = viewModel.findIndex(viewModel.numAttempt)
+	val index = viewModel.findIndex(viewModel.flash)
 
 	// Question
 	SsQuestion(
@@ -59,8 +59,8 @@ fun SsIsFlashBody(
 
 	// Body
 	SsYesNoBody(
-		title = "Flash",
-		question = viewModel.flashQuestion,
+		title = viewModel.flash.title,
+		question = viewModel.flash.question,
 		initialState = isFlash,
 		visible = visible,
 		disableYesButton = isProject ?: false,

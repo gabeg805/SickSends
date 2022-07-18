@@ -37,6 +37,7 @@ fun SsSickSendsApp()
 		val startDestination = getStartNavDestination()
 
 		// Determine which activity to start first
+		println("START : $startDestination")
 		NavHost(
 			navController = navController,
 			startDestination = startDestination)
@@ -71,22 +72,15 @@ fun getStartNavDestination() : String
 	// Prepare to query the data store
 	val dataStore = SsSharedDataStore(LocalContext.current)
 
-	// Prepare to check whether or not this is the app's first run, as well as
-	// what the name of the desired navigation route is
-	var isAppFirstRun by remember { mutableStateOf(true) }
-	var startDestination by remember { mutableStateOf(MAIN_SCREEN_ROUTE) }
-
 	// Check whether this is the app's first run and decide the navigation route
 	// accordingly
-	isAppFirstRun = dataStore.observeAppFirstRun()
+	//val isAppFirstRun = dataStore.observeAppFirstRun()
+	var isAppFirstRun: Boolean
 
-	// This is not the app's first run. Set the navigation route to the main
-	// screen
-	if (isAppFirstRun)
-	{
-		startDestination = ONBOARDING_SCREEN_ROUTE
+	runBlocking {
+		isAppFirstRun = dataStore.getAppFirstRunFlow().first()
 	}
-	//}
 
-	return startDestination
+	// Return the appropriate starting destination
+	return if (isAppFirstRun) ONBOARDING_SCREEN_ROUTE else MAIN_SCREEN_ROUTE
 }

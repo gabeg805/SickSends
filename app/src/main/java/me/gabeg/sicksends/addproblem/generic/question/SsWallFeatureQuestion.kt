@@ -57,7 +57,7 @@ fun SsWallFeatureBody(
 
 	// Body
 	SsButtonToggleGroupBody(
-		title = "Wall Features",
+		title = viewModel.wallFeature.title,
 		question = viewModel.wallFeature.question,
 		initialState = wallFeatures,
 		allStateNames = getAllWallFeatureNames(),

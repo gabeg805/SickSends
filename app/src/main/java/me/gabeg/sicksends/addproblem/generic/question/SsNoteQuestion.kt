@@ -1,9 +1,7 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -62,10 +60,11 @@ fun SsNoteBody(
 
 	// Body
 	SsTextFieldBody(
-		title = "Notes",
+		title = viewModel.note.title,
 		question = viewModel.note.question,
 		initial = note ?: "",
-		modifier = Modifier.fillMaxSize(),
+		modifier = Modifier
+			.fillMaxWidth(),
 		maxLines = 6,
 		visible = visible,
 		onTextChange = { newNote ->
@@ -75,10 +74,8 @@ fun SsNoteBody(
 	// Continue/skip button
 	AnimatedVisibility(visible = visible)
 	{
+
 		SsContinueSkipButton(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(top = 32.dp, bottom = 64.dp),
 			state = note?.isNotEmpty() ?: false,
 			onContinue = {
 				onDone()
@@ -89,5 +86,6 @@ fun SsNoteBody(
 				onDone()
 			}
 		)
+
 	}
 }

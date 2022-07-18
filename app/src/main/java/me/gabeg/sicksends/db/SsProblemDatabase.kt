@@ -162,7 +162,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 					p.wallFeature = EnumSet.of(SsWallFeatureType.ARETE, SsWallFeatureType.OVERHANG)
 					p.climbingTechnique = EnumSet.of(SsClimbingTechniqueType.KNEE_BAR, SsClimbingTechniqueType.SMEAR)
 					p.numAttempt = i.toLong()
-					p.isFlash = false
+					p.numAttempt = 3
 					p.isOutdoor = false
 
 					if (i == 0) {
@@ -220,7 +220,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 5
 						p.isOutdoor = false
 						p.howDidItFeel = 0
 					} else if (i == 11) {
@@ -228,7 +228,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 7
 						p.isOutdoor = true
 						p.howDidItFeel = 0
 					} else if (i == 12) {
@@ -236,7 +236,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = false
 						p.howDidItFeel = 0
 					} else if (i == 13) {
@@ -244,7 +244,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt= 1
 						p.isOutdoor = true
 						p.howDidItFeel = 0
 					} else if (i == 14) {
@@ -252,7 +252,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V10"
 						p.locationName = ""
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 9
 						p.isOutdoor = false
 						p.howDidItFeel = 1
 					} else if (i == 15) {
@@ -260,7 +260,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 11
 						p.isOutdoor = true
 						p.howDidItFeel = 2
 					} else if (i == 16) {
@@ -268,7 +268,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = false
 						p.howDidItFeel = 4
 					} else if (i == 17) {
@@ -276,7 +276,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = true
 						p.howDidItFeel = 5
 					} else if (i == 18) {
@@ -284,7 +284,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 13
 						p.isOutdoor = false
 						p.howDidItFeel = 0
 					} else if (i == 19) {
@@ -292,7 +292,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 15
 						p.isOutdoor = true
 						p.howDidItFeel = 0
 					} else if (i == 20) {
@@ -300,7 +300,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = false
 						p.howDidItFeel = 0
 					} else if (i == 21) {
@@ -308,7 +308,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = ""
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = true
 						p.howDidItFeel = 0
 					} else if (i == 22) {
@@ -316,7 +316,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = "Yosemite Valley"
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 17
 						p.isOutdoor = false
 						p.howDidItFeel = 0
 					} else if (i == 23) {
@@ -324,7 +324,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = "Yosemite Valley"
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 19
 						p.isOutdoor = true
 						p.howDidItFeel = 0
 					} else if (i == 24) {
@@ -332,7 +332,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = "Yosemite Valley"
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = false
 						p.howDidItFeel = 0
 					} else if (i == 25) {
@@ -340,7 +340,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = "Yosemite Valley"
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = true
 						p.howDidItFeel = 0
 					} else if (i == 26) {
@@ -348,7 +348,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = "Yosemite Valley"
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 21
 						p.isOutdoor = false
 						p.howDidItFeel = 1
 					} else if (i == 27) {
@@ -356,7 +356,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = "Yosemite Valley"
 						p.isProject = true
-						p.isFlash = false
+						p.numAttempt = 23
 						p.isOutdoor = true
 						p.howDidItFeel = 2
 					} else if (i == 28) {
@@ -364,7 +364,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = "Yosemite Valley"
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = false
 						p.howDidItFeel = 4
 					} else if (i == 29) {
@@ -372,7 +372,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 						p.grade = "V8"
 						p.locationName = "Yosemite Valley"
 						p.isProject = false
-						p.isFlash = true
+						p.numAttempt = 1
 						p.isOutdoor = true
 						p.howDidItFeel = 4
 					}

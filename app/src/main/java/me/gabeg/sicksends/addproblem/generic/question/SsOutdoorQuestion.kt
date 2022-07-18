@@ -51,7 +51,7 @@ fun SsIsOutdoorBody(
 
 	// Body
 	SsYesNoBody(
-		title = "Outdoors",
+		title = viewModel.outdoor.title,
 		question = viewModel.outdoor.question,
 		initialState = isOutdoor,
 		visible = visible,

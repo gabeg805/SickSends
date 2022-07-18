@@ -1,11 +1,9 @@
 package me.gabeg.sicksends.addproblem.generic.question
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import me.gabeg.sicksends.addproblem.SsContinueSkipButton
 import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.SsYesNoBody
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
@@ -63,7 +61,7 @@ fun SsIsProjectBody(
 
 	// Body
 	SsYesNoBody(
-		title = "Project",
+		title = viewModel.project.title,
 		question = viewModel.project.question,
 		initialState = isProject,
 		visible = visible,
@@ -82,17 +80,5 @@ fun SsIsProjectBody(
 
 			onDone()
 		})
-
-	//// Skip button
-	//AnimatedVisibility(visible = visible)
-	//{
-	//	SsContinueSkipButton(
-	//		state = false,
-	//		onSkip = {
-	//			viewModel.problem.isProject = null
-
-	//			onDone()
-	//		})
-	//}
 
 }

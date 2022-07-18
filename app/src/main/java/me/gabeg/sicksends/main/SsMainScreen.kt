@@ -2,14 +2,11 @@ package me.gabeg.sicksends.main
 
 import android.util.Log
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -18,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +25,6 @@ import me.gabeg.sicksends.boulder.BOULDER_SCREEN_ROUTE
 import me.gabeg.sicksends.boulder.SsBoulderScreen
 import me.gabeg.sicksends.db.SsProblemDatabase
 import me.gabeg.sicksends.problem.ui.*
-import me.gabeg.sicksends.shared.SsSharedBoulderDataStore
 import me.gabeg.sicksends.shared.SsSharedDataStore
 import me.gabeg.sicksends.sport.SPORT_SCREEN_ROUTE
 import me.gabeg.sicksends.sport.SsSportScreen
@@ -73,16 +68,14 @@ fun SsMainScreen(
 	//		}
 	//}
 
-	val nestedScrollConnection = remember { viewModel.scrollConnection }
-
 	navController.enableOnBackPressed(true)
 
-	var drawerState = remember { SsDrawerState() }
-	var queryState = remember { SsSearchFilterQueryState() }
-
+	/**
+	 * Scaffold
+	 */
 	Scaffold(
 		modifier = Modifier
-			.nestedScroll(nestedScrollConnection),
+			.nestedScroll(viewModel.scrollConnection),
 		scaffoldState = scaffoldState,
 		topBar = {
 			viewModel.currentNavEntry = navController.currentBackStackEntryAsState()
@@ -93,7 +86,7 @@ fun SsMainScreen(
 				onMenuItemClicked = { menuItem ->
 					if (menuItem == "Search")
 					{
-						drawerState.toggle()
+						viewModel.drawerState.toggle()
 					}
 				},
 				onBackPressed = {
@@ -112,13 +105,16 @@ fun SsMainScreen(
 		floatingActionButton = {
 			SsFloatingActionButton(viewModel)
 			{
+				viewModel.previousRoute = viewModel.currentRoute
+
 				navController.navigate(ADD_PROBLEM_SCREEN_ROUTE)
+				//navController.navigate(ADD_PROBLEM_SCREEN_ROUTE + "/$previousRoute")
 			}
 		},
 		floatingActionButtonPosition = FabPosition.End,
 		content = { innerPadding ->
 
-			SsSearchTopDrawer(drawerState, queryState, innerPadding)
+			SsSearchTopDrawer(viewModel, innerPadding)
 
 			// Navigation host which allows navigation to occur
 			NavHost(navController, startDestination = HOME_SCREEN_ROUTE)
@@ -127,53 +123,60 @@ fun SsMainScreen(
 				// Home
 				composable(route = HOME_SCREEN_ROUTE)
 				{
-					viewModel.shouldFabBeVisible.value = false
+					viewModel.hideFab()
 					viewModel.shouldBottomNavigationBarBeVisible.value = true
 					SsHomeScreen(innerPadding)
 				}
 
 				// Add climb
+				//composable(route = ADD_PROBLEM_SCREEN_ROUTE + "/{climbType}")
 				composable(route = ADD_PROBLEM_SCREEN_ROUTE)
 				{
-					viewModel.shouldFabBeVisible.value = false
+					viewModel.hideFab()
 					viewModel.shouldBottomNavigationBarBeVisible.value = false
-					SsAddClimbScreen(innerPadding)
+
+					// navBackStack.arguments?.getString("climbType")
+					SsAddClimbScreen(innerPadding,
+						onDone = {
+							navController.popBackStack()
+						})
 
 				}
 
 				// Boulder
 				composable(route = BOULDER_SCREEN_ROUTE)
 				{
-					viewModel.shouldFabBeVisible.value = true
+					viewModel.showFab()
 					viewModel.shouldBottomNavigationBarBeVisible.value = true
-					SsBoulderScreen(queryState, lazyListState, innerPadding)
+					SsBoulderScreen(viewModel.queryState, lazyListState, innerPadding)
 				}
 
 				// Sport
 				composable(route = SPORT_SCREEN_ROUTE)
 				{
-					viewModel.shouldFabBeVisible.value = true
+					viewModel.showFab()
 					viewModel.shouldBottomNavigationBarBeVisible.value = true
-					SsSportScreen(queryState, lazyListState, innerPadding)
+					SsSportScreen(viewModel.queryState, lazyListState, innerPadding)
 				}
 
 				// Top rope
 				composable(route = TOP_ROPE_SCREEN_ROUTE)
 				{
-					viewModel.shouldFabBeVisible.value = true
+					viewModel.showFab()
 					viewModel.shouldBottomNavigationBarBeVisible.value = true
-					SsTopRopeScreen(queryState, lazyListState, innerPadding)
+					SsTopRopeScreen(viewModel.queryState, lazyListState, innerPadding)
 				}
 
 				// Trad
 				composable(route = TRAD_SCREEN_ROUTE)
 				{
-					viewModel.shouldFabBeVisible.value = true
+					viewModel.showFab()
 					viewModel.shouldBottomNavigationBarBeVisible.value = true
-					SsTradScreen(queryState, lazyListState, innerPadding)
+					SsTradScreen(viewModel.queryState, lazyListState, innerPadding)
 				}
 
 			}
+
 		})
 }
 
@@ -246,7 +249,7 @@ fun SsFloatingActionButton(
 
 	// Animate the visibility of the FAB
 	AnimatedVisibility(
-		visible = viewModel.shouldFabBeVisible.value,
+		visible = viewModel.fabVisibilityOnScroll,
 		enter = scaleIn(),
 		exit = scaleOut())
 	{
@@ -266,8 +269,7 @@ fun SsFloatingActionButton(
 }
 
 @Composable
-fun SsSearchTopDrawer(drawerState : SsDrawerState,
-	queryState: SsSearchFilterQueryState, padding : PaddingValues)
+fun SsSearchTopDrawer(viewModel: SsMainScreenViewModel, padding : PaddingValues)
 {
 
 	val outdoorOptions = listOf("Either", "Outdoor", "Indoor")
@@ -282,7 +284,7 @@ fun SsSearchTopDrawer(drawerState : SsDrawerState,
 		scaffoldPadding = padding,
 		modifier = Modifier
 			.padding(16.dp),
-		state = drawerState)
+		state = viewModel.drawerState)
 	{
 
 		val iconPadding = 16.dp
@@ -340,11 +342,11 @@ fun SsSearchTopDrawer(drawerState : SsDrawerState,
 				.fillMaxWidth()
 				.padding(vertical = 16.dp),
 			onClick = {
-				queryState.outdoor = outdoorSearchFilter.toQuery()
-				queryState.project = projectSearchFilter.toQuery()
-				queryState.flash = flashSearchFilter.toQuery()
+				viewModel.queryState.outdoor = outdoorSearchFilter.toQuery()
+				viewModel.queryState.project = projectSearchFilter.toQuery()
+				viewModel.queryState.flash = flashSearchFilter.toQuery()
 
-				drawerState.close()
+				viewModel.drawerState.close()
 			})
 		{
 			Text("Apply")

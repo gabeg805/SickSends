@@ -54,7 +54,7 @@ fun SsHoldBody(
 
 	// Body
 	SsButtonToggleGroupBody(
-		title = "Holds",
+		title = viewModel.hold.title,
 		question = viewModel.hold.question,
 		initialState = holds,
 		allStateNames = getAllHoldNames(),

@@ -1,12 +1,9 @@
 package me.gabeg.sicksends.addproblem
 
 import android.view.KeyEvent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,9 +17,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
@@ -32,6 +31,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +55,10 @@ import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Compan
 import me.gabeg.sicksends.addproblem.generic.question.*
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.type.SsHoldType
+import me.gabeg.sicksends.problem.ui.SsNextIcon
+import me.gabeg.sicksends.problem.ui.SsPreviousIcon
+import me.gabeg.sicksends.problem.ui.SsYesIcon
+import me.gabeg.sicksends.problem.ui.SsYoIcon
 import me.gabeg.sicksends.shared.getAllHoldNames
 import me.gabeg.sicksends.shared.getYesOrNo
 import me.gabeg.sicksends.ui.*
@@ -62,7 +66,7 @@ import me.gabeg.sicksends.util.toNames
 import me.gabeg.sicksends.util.toggle
 import java.util.*
 
-const val ADD_PROBLEM_SCREEN_ROUTE = "Add problem"
+const val ADD_PROBLEM_SCREEN_ROUTE = "Add Problem"
 
 /**
  * Add climb screen.
@@ -73,13 +77,16 @@ const val ADD_PROBLEM_SCREEN_ROUTE = "Add problem"
 @Composable
 fun SsAddClimbScreen(
 	innerPadding : PaddingValues,
-	viewModel: SsAddBoulderProblemViewModel = hiltViewModel())
+	viewModel : SsAddBoulderProblemViewModel = hiltViewModel(),
+	onDone : () -> Unit = {})
 {
 
+	val scope = rememberCoroutineScope()
 	val scrollState = rememberLazyListState()
 	val pagerState = rememberPagerState()
 	val dataStore = viewModel.dataStore
 
+	val askHowDidItFeel = dataStore.observeQuestionHowDidItFeel()
 	val askName = dataStore.observeQuestionName()
 	val askFlash = dataStore.observeQuestionIsFlash()
 	val askNumAttempt = dataStore.observeQuestionNumAttempt()
@@ -91,165 +98,316 @@ fun SsAddClimbScreen(
 	val askWallFeature = dataStore.observeQuestionWallFeature()
 	val askClimbingTechnique = dataStore.observeQuestionClimbingTechnique()
 
-	println("Ask name     ? $askName")
-	println("Ask flash    ? $askFlash")
-	println("Ask attempt  ? $askNumAttempt")
-	println("Ask project  ? $askProject")
-	println("Ask outdoor  ? $askOutdoor")
-	println("Ask location ? $askLocation")
-	println("Ask note     ? $askNote")
-	println("Ask hold     ? $askHold")
+	//println("Ask name     ? $askName")
+	//println("Ask flash    ? $askFlash")
+	//println("Ask attempt  ? $askNumAttempt")
+	//println("Ask project  ? $askProject")
+	//println("Ask outdoor  ? $askOutdoor")
+	//println("Ask location ? $askLocation")
+	//println("Ask note     ? $askNote")
+	//println("Ask hold     ? $askHold")
 
-	LaunchedEffect(true)
-	{
-		println("Showing 0 index!")
-		viewModel.show(0)
-	}
+	viewModel.startShow()
 
-	LazyColumn(
+	Column(
 		modifier = Modifier
-			.fillMaxSize()
-			.padding(vertical = 24.dp, horizontal = 16.dp),
-		state = scrollState)
+			.fillMaxSize())
 	{
 
-		/**
-		 * Grade
-		 */
-		item {
-			SsGradeQuestion(
-				viewModel = viewModel,
-				scrollState = scrollState)
-		}
-
-		/**
-		 *  Is Flash / Number of attempts
-		 */
-		if (askFlash || askNumAttempt)
+		LazyColumn(
+			modifier = Modifier
+				.padding(horizontal = 16.dp)
+				.weight(1f),
+			state = scrollState)
 		{
-			item {
 
-				// Is flash
-				if (askFlash)
-				{
-					SsFlashQuestion(
+			/**
+			 * Grading system
+			 */
+			item {
+				Spacer(modifier = Modifier.padding(vertical = 8.dp))
+
+				SsGradingSystemQuestion(
+					viewModel = viewModel,
+					scrollState = scrollState)
+			}
+
+			/**
+			 * Grade
+			 */
+			item {
+				SsGradeQuestion(
+					viewModel = viewModel,
+					scrollState = scrollState)
+			}
+
+			/**
+			 * How did it feel?
+			 */
+			if (askHowDidItFeel)
+			{
+				item {
+					SsHowDidItFeelQuestion(
 						viewModel = viewModel,
 						scrollState = scrollState)
 				}
-				// Number of attempts
-				else if (askNumAttempt)
-				{
-					SsNumAttemptQuestion(
+			}
+
+			/**
+			 *  Is Flash / Number of attempts
+			 */
+			if (askFlash || askNumAttempt)
+			{
+				item {
+
+					// Is flash
+					if (askFlash)
+					{
+						SsFlashQuestion(
+							viewModel = viewModel,
+							scrollState = scrollState)
+					}
+					// Number of attempts
+					else if (askNumAttempt)
+					{
+						SsNumAttemptQuestion(
+							viewModel = viewModel,
+							scrollState = scrollState)
+					}
+
+				}
+			}
+
+			/**
+			 * Is project?
+			 */
+			if (askProject)
+			{
+				item {
+					SsProjectQuestion(
 						viewModel = viewModel,
 						scrollState = scrollState)
 				}
-
 			}
-		}
 
-		/**
-		 * Is project?
-		 */
-		if (askProject)
-		{
+			/**
+			 * Is outdoor?
+			 */
+			if (askOutdoor)
+			{
+				item {
+					SsOutdoorQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
+			}
+
+			/**
+			 * Location
+			 */
+			if (askLocation)
+			{
+				item {
+					SsLocationQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
+			}
+
+			/**
+			 * Name
+			 */
+			if (askName)
+			{
+				item {
+					SsNameQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
+			}
+
+			/**
+			 * Notes
+			 */
+			if (askNote)
+			{
+				item {
+					SsNoteQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
+			}
+
+			/**
+			 * Holds
+			 */
+			if (askHold)
+			{
+				item {
+					SsHoldQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
+			}
+
+			/**
+			 * Wall features
+			 */
+			if (askWallFeature)
+			{
+				item {
+					SsWallFeatureQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
+			}
+
+			/**
+			 * Climbing techniques
+			 */
+			if (askClimbingTechnique)
+			{
+				item {
+					SsClimbingTechniqueQuestion(
+						viewModel = viewModel,
+						scrollState = scrollState)
+				}
+			}
+
+			// TODO: Media/images/videos
+
 			item {
-				SsProjectQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
+				Spacer(modifier = Modifier.padding(vertical = 32.dp))
 			}
 		}
 
-		/**
-		 * Is outdoor?
-		 */
-		if (askOutdoor)
+		//Divider(color = Color.Red)
+
+		val grade by viewModel.problem.observableGrade.observeAsState("")
+		val isLastQuestionVisible by viewModel.allVisibility.last()
+
+		AnimatedVisibility(
+			visible = grade.isNotEmpty(),
+			enter = slideInVertically(
+				animationSpec = tween(durationMillis = 250),
+				initialOffsetY = { it }),
+			exit = slideOutVertically(
+				animationSpec = tween(durationMillis = 250),
+				targetOffsetY = { it }))
 		{
-			item {
-				SsOutdoorQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
+
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 8.dp, vertical = 8.dp),
+				verticalAlignment = Alignment.CenterVertically)
+			{
+
+				//// Previous button
+			//	//SsLongClickOutlinedButton(
+			//	//IconButton(
+			//	TextButton(
+			//		modifier = Modifier
+			//			.padding(end = 0.dp),
+			//		//colors = ButtonDefaults.buttonColors(
+			//	//		//backgroundColor = MaterialTheme.colors.primary,
+			//	//		//backgroundColor = Color(0xffb200b2),
+			//	//		backgroundColor = Color.Transparent,
+			//	//		contentColor = Color.Black),
+			//		//shape = RoundedCornerShape(32.dp),
+			//		contentPadding = PaddingValues(start = 0.dp, end = 8.dp),
+			//		onClick = {
+			//			scope.launch {
+
+			//				// Find the currently visible question
+			//				val index = viewModel.findCurrentVisibleIndex()
+
+			//				viewModel.showPrevious()
+			//				delay(250)
+			//				scrollState.animateScrollToItem(index)
+			//			}
+			//		})
+			//	{
+			//		SsPreviousIcon()
+			//		Text("PREV")
+			//		//SsNextIcon(modifier = Modifier.padding(start = 0.dp))
+			//		//Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+			//		//	Text("NEXT",
+			//		//		modifier = Modifier
+			//		//			.padding(end = 4.dp),
+			//		//		textAlign = TextAlign.Center)
+			//	}
+
+				// Done button
+				Button(
+					modifier = Modifier
+						.padding(horizontal = 16.dp)
+						.weight(1f),
+					colors = ButtonDefaults.buttonColors(
+						backgroundColor = Color.Magenta,
+						contentColor = Color.White),
+					shape = RoundedCornerShape(32.dp),
+					onClick = {
+						viewModel.problem.debug()
+						onDone()
+					})
+				{
+					Text(
+						"DONE",
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(0.dp),
+						textAlign = TextAlign.Center)
+				}
+
+				//AnimatedVisibility(visible = !isLastQuestionVisible)
+			//	{
+
+			//		// Spacer
+			//		//Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+
+			//		// Next button
+			//		//SsLongClickOutlinedButton(
+			//		//IconButton(
+			//		TextButton(
+			//			modifier = Modifier
+			//				.padding(start = 0.dp),
+			//		//	colors = ButtonDefaults.buttonColors(
+			//		//		//backgroundColor = MaterialTheme.colors.primary,
+			//		//		//backgroundColor = Color(0xffb200b2),
+			//		//		backgroundColor = Color.Transparent,
+			//		//		contentColor = Color.Black),
+			//		//	shape = RoundedCornerShape(32.dp),
+			//			contentPadding = PaddingValues(start = 8.dp, end = 0.dp),
+			//			onClick = {
+			//				scope.launch {
+
+			//					// Find the currently visible question
+			//					val index = viewModel.findCurrentVisibleIndex()
+
+			//					viewModel.showNext()
+			//					delay(250)
+			//					scrollState.animateScrollToItem(index)
+			//				}
+			//			})
+			//		{
+			//			Text("NEXT")
+			//			SsNextIcon()
+			//			//SsNextIcon(modifier = Modifier.padding(start = 0.dp))
+			//			//Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+			//		//	Text("NEXT",
+			//		//		modifier = Modifier
+			//		//			.padding(end = 4.dp),
+			//		//		textAlign = TextAlign.Center)
+			//		}
+
+			//	}
+
 			}
+
 		}
 
-		/**
-		 * Location
-		 */
-		if (askLocation)
-		{
-			item {
-				SsLocationQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
-			}
-		}
-
-		/**
-		 * Name
-		 */
-		if (askName)
-		{
-			item {
-				SsNameQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
-			}
-		}
-
-		/**
-		 * Notes
-		 */
-		if (askNote)
-		{
-			item {
-				SsNoteQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
-			}
-		}
-
-		/**
-		 * Holds
-		 */
-		if (askHold)
-		{
-			item {
-				SsHoldQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
-			}
-		}
-
-		/**
-		 * Wall features
-		 */
-		if (askWallFeature)
-		{
-			item {
-				SsWallFeatureQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
-			}
-		}
-
-		/**
-		 * Climbing techniques
-		 */
-		if (askClimbingTechnique)
-		{
-			item {
-				SsClimbingTechniqueQuestion(
-					viewModel = viewModel,
-					scrollState = scrollState)
-			}
-		}
-
-		// TODO: Media/images/videos
-
-		item {
-			Spacer(modifier = Modifier.padding(vertical = 32.dp))
-		}
 	}
-
 }
 
 /**
@@ -314,10 +472,10 @@ fun SsQuestion(
 	index : Int,
 	scrollState : LazyListState = rememberLazyListState(),
 	onClick : () -> Unit = {
-		viewModel.showOnly(index)
+		viewModel.show(index)
 	},
 	onDone : suspend CoroutineScope.() -> Unit = {
-		viewModel.showOnly(index+1)
+		viewModel.showNext()
 		delay(250)
 		scrollState.animateScrollToItem(index)
 	})
@@ -395,7 +553,7 @@ fun SsQuestion(
 					body(isVisible)
 					{
 						scope.launch {
-							println("CAAAAAALL onDone! $index")
+							//println("CAAAAAALL onDone! $index")
 							onDone()
 						}
 					}
@@ -517,7 +675,7 @@ fun SsIcon(
  * imeAction, might want new line if single line is not true, but then how to
  * go to next thing?
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SsTextFieldBody(
 	title : String,
@@ -586,10 +744,11 @@ fun SsTextFieldBody(
 					}))
 
 			// Focus the text field, if it is visible
-			if (visible)
-			{
-				focusRequester.requestFocus()
-			}
+			//if (visible)
+			//{
+			//	focusRequester.requestFocus()
+			//	LocalSoftwareKeyboardController.current?.hide()
+			//}
 
 		}
 
@@ -795,7 +954,9 @@ inline fun <reified T : Enum<T>> SsButtonToggleGroupBody(
 					items = allStateNames,
 					modifier = Modifier
 						.fillMaxWidth()
-						.padding(horizontal = 16.dp, vertical = 4.dp),
+						.padding(horizontal = 16.dp),
+						//.padding(top = 4.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
+						//.padding(horizontal = 16.dp, vertical = 4.dp),
 					numPerRow = 2,
 					select = names,
 					onClick = { index, name, isChecked ->
@@ -813,7 +974,6 @@ inline fun <reified T : Enum<T>> SsButtonToggleGroupBody(
 						// Call the onClick() function with the new state
 						onClick(newState)
 					})
-
 
 				// Continue/Skip button
 				SsContinueSkipButton(
@@ -839,20 +999,25 @@ inline fun <reified T : Enum<T>> SsButtonToggleGroupBody(
 fun SsContinueSkipButton(
 	modifier : Modifier = Modifier
 		.fillMaxWidth()
-		.padding(vertical = 32.dp),
+		.padding(horizontal = 40.dp, vertical = 32.dp),
 	state : Boolean = true,
-	colors : ButtonColors = ButtonDefaults.buttonColors(
-		backgroundColor = Color.Magenta,
-		contentColor = Color.White),
+	//colors : ButtonColors = ButtonDefaults.buttonColors(
+	colors : ButtonColors = ButtonDefaults.textButtonColors(
+		backgroundColor = Color.White,
+		contentColor = Color.Black),
+		//backgroundColor = Color.Magenta,
+		//contentColor = Color.White),
 	shape : Shape = RoundedCornerShape(32.dp),
 	onContinue : () -> Unit = {},
 	onSkip : () -> Unit = {},
 	onClick : (() -> Unit)? = null)
 {
-	SsLongClickButton(
+	//SsLongClickButton(
+	TextButton(
 		modifier = modifier,
 		colors = colors,
-		shape = shape,
+		elevation = ButtonDefaults.elevation(),
+		//shape = shape,
 		onClick = {
 
 			// Click
@@ -879,7 +1044,10 @@ fun SsContinueSkipButton(
 		Crossfade(targetState = state)
 		{
 			val text = if (it) "CONTINUE" else "SKIP"
+			//val text = if (it) "NEXT" else "SKIP"
 
+			//Text(text,
+			//	textAlign = TextAlign.Center)
 			Text(text,
 				modifier = Modifier
 					.fillMaxWidth(),

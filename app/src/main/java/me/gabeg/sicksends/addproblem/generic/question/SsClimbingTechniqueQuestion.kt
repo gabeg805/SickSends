@@ -58,7 +58,7 @@ fun SsClimbingTechniqueBody(
 
 	// Body
 	SsButtonToggleGroupBody(
-		title = "Climbing Techniques",
+		title = viewModel.climbingTechnique.title,
 		question = viewModel.climbingTechnique.question,
 		initialState = climbingTechniques,
 		allStateNames = getAllClimbingTechniqueNames(),

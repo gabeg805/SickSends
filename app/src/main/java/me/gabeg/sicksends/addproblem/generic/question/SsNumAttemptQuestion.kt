@@ -74,11 +74,15 @@ fun SsNumAttemptBody(
 
 	println("Num attempt : $numAttempt || Visible : $visible")
 
+	// Title and question
+	val title = viewModel.numAttempt.title
+	val question = viewModel.numAttempt.question
+
 	// Subtitle
-	var subtitle = getSubtitle(text, viewModel.numAttempt.question, visible)
+	var subtitle = getSubtitle(text, question, visible)
 
 	// Body
-	SsBody("Attempts", subtitle)
+	SsBody(title, subtitle)
 	{
 
 		// Whether to show the composables or not
@@ -93,9 +97,8 @@ fun SsNumAttemptBody(
 				Row(
 					modifier = Modifier
 						.fillMaxWidth()
-						.height(IntrinsicSize.Min)
-						.padding(bottom = 16.dp),
-					horizontalArrangement = Arrangement.Center,
+						.height(IntrinsicSize.Min),
+				horizontalArrangement = Arrangement.Center,
 					verticalAlignment = Alignment.CenterVertically)
 				{
 
@@ -193,6 +196,7 @@ fun SsNumAttemptBody(
 					onClick = {
 						onDone()
 					})
+
 			}
 
 		}

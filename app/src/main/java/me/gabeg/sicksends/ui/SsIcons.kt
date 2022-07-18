@@ -9,6 +9,70 @@ import androidx.compose.ui.res.painterResource
 import me.gabeg.sicksends.R
 
 /**
+ * Next icon.
+ */
+@Composable
+fun SsNextIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_keyboard_arrow_right_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Next")
+}
+
+/**
+ * Previous icon.
+ */
+@Composable
+fun SsPreviousIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_keyboard_arrow_left_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Previous")
+}
+
+/**
+ * icon.
+ */
+@Composable
+fun SsYoIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_double_arrow_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Next or skip")
+}
+
+/**
+ * Thought bubble icon.
+ */
+@Composable
+fun SsThoughtBubbleIcon(modifier : Modifier = Modifier)
+{
+	//val painter = painterResource(R.drawable.ic_thought_bubble)
+	//val painter = painterResource(R.drawable.ic_filled_thought_bubble)
+	//val painter = painterResource(R.drawable.ic_better_filled_thought_bubble)
+	val painter = painterResource(R.drawable.ic_baseline_psychology_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Thought bubble")
+}
+
+
+
+
+
+
+
+
+
+
+/**
  * Add icon.
  */
 @Composable
@@ -79,6 +143,19 @@ fun SsGradeIcon(modifier : Modifier = Modifier)
 	Icon(painter,
 		modifier = modifier,
 		contentDescription = "Grade")
+}
+
+/**
+ * Grading system icon.
+ */
+@Composable
+fun SsGradingSystemIcon(modifier : Modifier = Modifier)
+{
+	val painter = painterResource(R.drawable.ic_baseline_public_24)
+
+	Icon(painter,
+		modifier = modifier,
+		contentDescription = "Grading system")
 }
 
 /**

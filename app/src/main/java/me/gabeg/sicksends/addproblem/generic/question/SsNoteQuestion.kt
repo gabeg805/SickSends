@@ -7,11 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import me.gabeg.sicksends.addproblem.SsContinueSkipButton
-import me.gabeg.sicksends.addproblem.SsQuestion
-import me.gabeg.sicksends.addproblem.SsTextFieldBody
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
+import me.gabeg.sicksends.addproblem.generic.SsContinueSkipButton
+import me.gabeg.sicksends.addproblem.generic.SsQuestion
+import me.gabeg.sicksends.addproblem.generic.SsTextFieldBody
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.ui.SsNoteIcon
 

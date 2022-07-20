@@ -298,6 +298,16 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	}
 
 	/**
+	 * Get the list of all grades for a type of grading system.
+	 *
+	 * @param gradingSystem A grading system.
+	 *
+	 * @return A list of all grades for a type of grading system.
+	 */
+	@Composable
+	abstract fun getAllGrades(gradingSystem : String) : List<String>
+
+	/**
 	 * Get all the indices of each question.
 	 *
 	 * @return A list of all the indices of each question.
@@ -312,31 +322,31 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 	/**
 	 * Get the subtitle for the grade section.
 	 */
-	fun getGradeSubtitle() : String
-	{
-		val gradingSystem = problem.gradingSystem
-		val grade = problem.grade
-		val howDidItFeel = problem.howDidItFeelName
-		val perceivedGrade = problem.perceivedGrade ?: ""
+	//fun getGradeSubtitle() : String
+	//{
+	//	val gradingSystem = problem.gradingSystem
+	//	val grade = problem.grade
+	//	val howDidItFeel = problem.howDidItFeelName
+	//	val perceivedGrade = problem.perceivedGrade ?: ""
 
-		if (gradingSystem.isEmpty())
-		{
-			return ""
-		}
-		else if (grade.isEmpty())
-		{
-			return gradingSystem
-		}
-		else if (howDidItFeel.isEmpty() && perceivedGrade.isEmpty())
-		{
-			return "$gradingSystem  |  $grade"
-		}
-		else
-		{
-			return "$gradingSystem  |  $grade  |  " +
-				if (howDidItFeel.isNotEmpty()) howDidItFeel else perceivedGrade
-		}
-	}
+	//	if (gradingSystem.isEmpty())
+	//	{
+	//		return ""
+	//	}
+	//	else if (grade.isEmpty())
+	//	{
+	//		return gradingSystem
+	//	}
+	//	else if (howDidItFeel.isEmpty() && perceivedGrade.isEmpty())
+	//	{
+	//		return "$gradingSystem  |  $grade"
+	//	}
+	//	else
+	//	{
+	//		return "$gradingSystem  |  $grade  |  " +
+	//			if (howDidItFeel.isNotEmpty()) howDidItFeel else perceivedGrade
+	//	}
+	//}
 
 	/**
 	 * Get the initial grading system that should be shown.
@@ -492,15 +502,18 @@ abstract class SsAddGenericProblemViewModel<out T : SsGenericProblem>(
 		}
 		else if (index == hold.index)
 		{
-			return this.problem.hold.isNotEmpty()
+			return this.problem.hasHold
+			//return this.problem.hold.isNotEmpty()
 		}
 		else if (index == wallFeature.index)
 		{
-			return this.problem.wallFeature.isNotEmpty()
+			return this.problem.hasWallFeature
+			//return this.problem.wallFeature.isNotEmpty()
 		}
 		else if (index == climbingTechnique.index)
 		{
-			return this.problem.climbingTechnique.isNotEmpty()
+			return this.problem.hasClimbingTechnique
+			//return this.problem.climbingTechnique.isNotEmpty()
 		}
 		else
 		{

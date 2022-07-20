@@ -107,9 +107,9 @@ fun SsOnboardingScreen(navController: NavHostController)
 			onDone = {
 				// Indicate in the data store that this is no longer the app's first
 				// run. The user has gone through the onboarding screen
-				scope.launch {
-					dataStore.editIsAppFirstRun(false)
-				}
+				//scope.launch {
+			//		dataStore.editIsAppFirstRun(false)
+			//	}
 
 				// Go to the main screen
 				navController.popBackStack()

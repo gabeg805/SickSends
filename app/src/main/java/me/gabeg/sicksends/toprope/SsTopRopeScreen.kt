@@ -1,8 +1,11 @@
 package me.gabeg.sicksends.toprope
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import me.gabeg.sicksends.db.toprope.SsTopRopeProblem
 import me.gabeg.sicksends.db.toprope.SsTopRopeViewModel
@@ -21,7 +24,26 @@ fun SsTopRopeScreen(
 	innerPadding : PaddingValues,
 	viewModel: SsTopRopeViewModel = hiltViewModel())
 {
-	val allProblems :  List<SsTopRopeProblem> = listOf()
+	val problems :  List<SsTopRopeProblem>
 
-	SsProblemScreen(allProblems, innerPadding = innerPadding)
+	if (queryState.hasNoFilter())
+	{
+		val allProblems: List<SsTopRopeProblem> by viewModel.allProblems.observeAsState(listOf())
+		problems = allProblems
+	}
+	else
+	{
+		val findProblems: List<SsTopRopeProblem> by viewModel
+			.findProblems(
+				queryState.outdoor,
+				queryState.project,
+				queryState.flash)
+			.observeAsState(listOf())
+		problems = findProblems
+	}
+
+	Column()
+	{
+		SsProblemScreen(problems, innerPadding = innerPadding, lazyListState)
+	}
 }

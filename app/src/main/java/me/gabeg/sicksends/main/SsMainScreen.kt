@@ -19,8 +19,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import me.gabeg.sicksends.addproblem.ADD_PROBLEM_SCREEN_ROUTE
-import me.gabeg.sicksends.addproblem.SsAddClimbScreen
+import me.gabeg.sicksends.addproblem.boulder.SsAddBoulderProblemScreen
+import me.gabeg.sicksends.addproblem.generic.ADD_PROBLEM_SCREEN_ROUTE
+import me.gabeg.sicksends.addproblem.sport.SsAddSportProblemScreen
+import me.gabeg.sicksends.addproblem.toprope.SsAddTopRopeProblemScreen
+import me.gabeg.sicksends.addproblem.trad.SsAddTradProblemScreen
 import me.gabeg.sicksends.boulder.BOULDER_SCREEN_ROUTE
 import me.gabeg.sicksends.boulder.SsBoulderScreen
 import me.gabeg.sicksends.db.SsProblemDatabase
@@ -130,17 +133,26 @@ fun SsMainScreen(
 
 				// Add climb
 				//composable(route = ADD_PROBLEM_SCREEN_ROUTE + "/{climbType}")
+				//navBackStack.arguments?.getString("climbType")
 				composable(route = ADD_PROBLEM_SCREEN_ROUTE)
 				{
 					viewModel.hideFab()
 					viewModel.shouldBottomNavigationBarBeVisible.value = false
 
-					// navBackStack.arguments?.getString("climbType")
-					SsAddClimbScreen(innerPadding,
-						onDone = {
-							navController.popBackStack()
-						})
+					// What to do when the screen is done
+					val onDone : () -> Unit = {
+						navController.popBackStack()
+					}
 
+					// Show the screen
+					when (viewModel.previousRoute)
+					{
+						BOULDER_SCREEN_ROUTE  -> SsAddBoulderProblemScreen(onDone = onDone)
+						SPORT_SCREEN_ROUTE    -> SsAddSportProblemScreen(onDone = onDone)
+						TOP_ROPE_SCREEN_ROUTE -> SsAddTopRopeProblemScreen(onDone = onDone)
+						TRAD_SCREEN_ROUTE     -> SsAddTradProblemScreen(onDone = onDone)
+						else                  -> {}
+					}
 				}
 
 				// Boulder

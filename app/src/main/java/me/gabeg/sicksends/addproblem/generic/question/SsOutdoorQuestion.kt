@@ -2,9 +2,9 @@ package me.gabeg.sicksends.addproblem.generic.question
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
-import me.gabeg.sicksends.addproblem.SsQuestion
-import me.gabeg.sicksends.addproblem.SsYesNoBody
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
+import me.gabeg.sicksends.addproblem.generic.SsQuestion
+import me.gabeg.sicksends.addproblem.generic.SsYesNoBody
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.ui.SsOutdoorIcon
 

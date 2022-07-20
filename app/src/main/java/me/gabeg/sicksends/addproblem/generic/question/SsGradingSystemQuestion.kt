@@ -7,19 +7,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
-import me.gabeg.sicksends.addproblem.SsBody
-import me.gabeg.sicksends.addproblem.SsButtonToggleGroupBody
-import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Companion.getSubtitle
+import me.gabeg.sicksends.addproblem.generic.SsBody
+import me.gabeg.sicksends.addproblem.generic.SsQuestion
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.ui.SsGradingSystemIcon
-import me.gabeg.sicksends.shared.getAllWallFeatureNames
 import me.gabeg.sicksends.shared.getExampleGrade
 import me.gabeg.sicksends.ui.SsButtonToggleGroup
 
@@ -123,7 +120,7 @@ fun SsGradingsystemBody(
 				// Show the example grade
 				if (exampleGradingSystem.isNotEmpty())
 				{
-					var example = getExampleGrade(exampleGradingSystem)
+					val example = getExampleGrade(exampleGradingSystem)
 
 					Toast.makeText(LocalContext.current, example, Toast.LENGTH_SHORT).show()
 

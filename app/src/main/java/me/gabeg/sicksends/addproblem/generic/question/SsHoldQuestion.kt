@@ -4,9 +4,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import me.gabeg.sicksends.addproblem.SsButtonToggleGroupBody
-import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
+import me.gabeg.sicksends.addproblem.generic.SsButtonToggleGroupBody
+import me.gabeg.sicksends.addproblem.generic.SsQuestion
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.type.SsHoldType
 import me.gabeg.sicksends.problem.ui.SsBoulderIcon

@@ -287,15 +287,69 @@ fun getAllRopeGradesUsa() : List<String>
 fun getAllRopeGradingSystems() : List<String>
 {
 	return listOf(
-		getGradeRopeAustralian(),
-		getGradeRopeBrasilian(),
-		getGradeRopeFinnish(),
-		getGradeRopeFrench(),
-		getGradeRopeNorway(),
-		getGradeRopePoland(),
-		getGradeRopeSaxon(),
-		getGradeRopeUiaa(),
-		getGradeRopeUsa())
+		getRopeGradingSystemAustralian(),
+		getRopeGradingSystemBrasilian(),
+		getRopeGradingSystemFinnish(),
+		getRopeGradingSystemFrench(),
+		getRopeGradingSystemNorway(),
+		getRopeGradingSystemPoland(),
+		getRopeGradingSystemSaxon(),
+		getRopeGradingSystemUiaa(),
+		getRopeGradingSystemUsa())
+}
+
+/**
+ * Get a list of all the rope grades for a given grading system.
+ *
+ * @return A list of all the rope grades for a given grading system.
+ */
+@Composable
+fun getAllRopeGradesForGradingSystem(gradingSystem : String) : List<String>
+{
+	return when (gradingSystem)
+	{
+
+		// Australian
+		getRopeGradingSystemAustralian() -> getAllRopeGradesAustralian()
+
+		// Brasilian
+		getRopeGradingSystemBrasilian() -> getAllRopeGradesBrasilian()
+
+		// Finnish
+		getRopeGradingSystemFinnish() -> getAllRopeGradesFinnish()
+
+		// French
+		getRopeGradingSystemFrench() -> getAllRopeGradesFrench()
+
+		// Norway
+		getRopeGradingSystemNorway() -> getAllRopeGradesNorway()
+
+		// Poland
+		getRopeGradingSystemPoland() -> getAllRopeGradesPoland()
+
+		// Saxon
+		getRopeGradingSystemSaxon() -> getAllRopeGradesSaxon()
+
+		// UIAA
+		getRopeGradingSystemUiaa() -> getAllRopeGradesUiaa()
+
+		// USA
+		getRopeGradingSystemUsa() -> getAllRopeGradesUsa()
+
+		// Unknown
+		else -> listOf()
+	}
+}
+
+/**
+ * Get a list of all the sport grades for a given grading system.
+ *
+ * @return A list of all the sport grades for a given grading system.
+ */
+@Composable
+fun getAllSportGradesForGradingSystem(gradingSystem : String) : List<String>
+{
+	return getAllRopeGradesForGradingSystem(gradingSystem)
 }
 
 /**
@@ -310,27 +364,14 @@ fun getAllSportGradingSystems() : List<String>
 }
 
 /**
- * @return List of possible grades for British trad climbing.
- */
-@Composable
-fun getAllTradGradesBritish() : List<String>
-{
-	return stringArrayResource(R.array.grades_trad_bri).toList()
-}
-
-/**
- * Get the name of all trad grading systems.
+ * Get a list of all the top rope grades for a given grading system.
  *
- * @return The name of all trad grading systems.
+ * @return A list of all the top rope grades for a given grading system.
  */
 @Composable
-fun getAllTradGradingSystems() : List<String>
+fun getAllTopRopeGradesForGradingSystem(gradingSystem : String) : List<String>
 {
-	var allGradingSystems = getAllRopeGradingSystems().toMutableList()
-
-	allGradingSystems.add(2, getGradeTradBritish())
-
-	return allGradingSystems
+	return getAllRopeGradesForGradingSystem(gradingSystem)
 }
 
 /**
@@ -342,6 +383,48 @@ fun getAllTradGradingSystems() : List<String>
 fun getAllTopRopeGradingSystems() : List<String>
 {
 	return getAllRopeGradingSystems()
+}
+
+/**
+ * @return List of possible grades for British trad climbing.
+ */
+@Composable
+fun getAllTradGradesBritish() : List<String>
+{
+	return stringArrayResource(R.array.grades_trad_bri).toList()
+}
+
+/**
+ * Get a list of all the trad grades for a given grading system.
+ *
+ * @return A list of all the trad grades for a given grading system.
+ */
+@Composable
+fun getAllTradGradesForGradingSystem(gradingSystem : String) : List<String>
+{
+	return when (gradingSystem)
+	{
+		// British
+		getTradGradingSystemBritish() -> getAllTradGradesBritish()
+
+		// Other rope grading system
+		else -> getAllRopeGradesForGradingSystem(gradingSystem)
+	}
+}
+
+/**
+ * Get the name of all trad grading systems.
+ *
+ * @return The name of all trad grading systems.
+ */
+@Composable
+fun getAllTradGradingSystems() : List<String>
+{
+	val allGradingSystems = getAllRopeGradingSystems().toMutableList()
+
+	allGradingSystems.add(2, getTradGradingSystemBritish())
+
+	return allGradingSystems
 }
 
 /**
@@ -559,118 +642,127 @@ fun getExampleGrade(grade : String) : String
 {
 	return when (grade)
 	{
-		getBoulderGradingSystemFont()   -> getExampleGradeBoulderFont()
-		getBoulderGradingSystemUk()     -> getExampleGradeBoulderUk()
-		getBoulderGradingSystemVscale() -> getExampleGradeBoulderVscale()
-		getGradeRopeAustralian()        -> getExampleGradeRopeAustralian()
-		getGradeRopeBrasilian()         -> getExampleGradeRopeBrasilian()
-		getGradeRopeFinnish()           -> getExampleGradeRopeFinnish()
-		getGradeRopeFrench()            -> getExampleGradeRopeFrench()
-		getGradeRopeNorway()            -> getExampleGradeRopeNorway()
-		getGradeRopePoland()            -> getExampleGradeRopePoland()
-		getGradeRopeSaxon()             -> getExampleGradeRopeSaxon()
-		getGradeRopeUiaa()              -> getExampleGradeRopeUiaa()
-		getGradeRopeUsa()               -> getExampleGradeRopeUsa()
-		getGradeTradBritish()           -> getExampleGradeTradBritish()
-		else                            -> ""
+		getBoulderGradingSystemFont()    -> getExampleGradeBoulderFont()
+		getBoulderGradingSystemUk()      -> getExampleGradeBoulderUk()
+		getBoulderGradingSystemVscale()  -> getExampleGradeBoulderVscale()
+		getRopeGradingSystemAustralian() -> getExampleGradeRopeAustralian()
+		getRopeGradingSystemBrasilian()  -> getExampleGradeRopeBrasilian()
+		getRopeGradingSystemFinnish()    -> getExampleGradeRopeFinnish()
+		getRopeGradingSystemFrench()     -> getExampleGradeRopeFrench()
+		getRopeGradingSystemNorway()     -> getExampleGradeRopeNorway()
+		getRopeGradingSystemPoland()     -> getExampleGradeRopePoland()
+		getRopeGradingSystemSaxon()      -> getExampleGradeRopeSaxon()
+		getRopeGradingSystemUiaa()       -> getExampleGradeRopeUiaa()
+		getRopeGradingSystemUsa()        -> getExampleGradeRopeUsa()
+		getTradGradingSystemBritish()    -> getExampleGradeTradBritish()
+		else                             -> ""
 	}
 }
 
 /**
- * Get the name of grade for Australian rope climbing.
- *
- * @return Name of grade for Australian rope climbing.
+ * No.
  */
 @Composable
-fun getGradeRopeAustralian() : String
+fun getNo() : String
+{
+	return stringResource(R.string.no)
+}
+
+/**
+ * Get the name of the grading system for Australian rope climbing.
+ *
+ * @return Name of the grading system for Australian rope climbing.
+ */
+@Composable
+fun getRopeGradingSystemAustralian() : String
 {
 	return stringResource(R.string.grade_rope_aus)
 }
 
 /**
- * Get the name of grade for Brasilian rope climbing.
+ * Get the name of the grading system for Brasilian rope climbing.
  *
- * @return Name of grade for Brasilian rope climbing.
+ * @return Name of the grading system for Brasilian rope climbing.
  */
 @Composable
-fun getGradeRopeBrasilian() : String
+fun getRopeGradingSystemBrasilian() : String
 {
 	return stringResource(R.string.grade_rope_bra)
 }
 
 /**
- * Get the name of grade for Finnish rope climbing.
+ * Get the name of the grading system for Finnish rope climbing.
  *
- * @return Name of grade for Finnish rope climbing.
+ * @return Name of the grading system for Finnish rope climbing.
  */
 @Composable
-fun getGradeRopeFinnish() : String
+fun getRopeGradingSystemFinnish() : String
 {
 	return stringResource(R.string.grade_rope_fin)
 }
 
 /**
- * Get the name of grade for French rope climbing.
+ * Get the name of the grading system for French rope climbing.
  *
- * @return Name of grade for French rope climbing.
+ * @return Name of the grading system for French rope climbing.
  */
 @Composable
-fun getGradeRopeFrench() : String
+fun getRopeGradingSystemFrench() : String
 {
 	return stringResource(R.string.grade_rope_fre)
 }
 
 /**
- * Get the name of grade for Norway rope climbing.
+ * Get the name of the grading system for Norway rope climbing.
  *
- * @return Name of grade for Norway rope climbing.
+ * @return Name of the grading system for Norway rope climbing.
  */
 @Composable
-fun getGradeRopeNorway() : String
+fun getRopeGradingSystemNorway() : String
 {
 	return stringResource(R.string.grade_rope_nor)
 }
 
 /**
- * Get the name of grade for Poland rope climbing.
+ * Get the name of the grading system for Poland rope climbing.
  *
- * @return Name of grade for Poland rope climbing.
+ * @return Name of the grading system for Poland rope climbing.
  */
 @Composable
-fun getGradeRopePoland() : String
+fun getRopeGradingSystemPoland() : String
 {
 	return stringResource(R.string.grade_rope_pol)
 }
 
 /**
- * Get the name of grade for Saxon rope climbing.
+ * Get the name of the grading system for Saxon rope climbing.
  *
- * @return Name of grade for Saxon rope climbing.
+ * @return Name of the grading system for Saxon rope climbing.
  */
 @Composable
-fun getGradeRopeSaxon() : String
+fun getRopeGradingSystemSaxon() : String
 {
 	return stringResource(R.string.grade_rope_sax)
 }
 
 /**
- * Get the name of grade for UIAA rope climbing.
+ * Get the name of the grading system for UIAA rope climbing.
  *
- * @return Name of grade for UIAA rope climbing.
+ * @return Name of the grading system for UIAA rope climbing.
  */
 @Composable
-fun getGradeRopeUiaa() : String
+fun getRopeGradingSystemUiaa() : String
 {
 	return stringResource(R.string.grade_rope_uiaa)
 }
 
 /**
- * Get the name of grade for USA rope climbing.
+ * Get the name of the grading system for USA rope climbing.
  *
- * @return Name of grade for USA rope climbing.
+ * @return Name of the grading system for USA rope climbing.
  */
 @Composable
-fun getGradeRopeUsa() : String
+fun getRopeGradingSystemUsa() : String
 {
 	return stringResource(R.string.grade_rope_usa)
 }
@@ -681,18 +773,9 @@ fun getGradeRopeUsa() : String
  * @return Name of grade for British trad climbing.
  */
 @Composable
-fun getGradeTradBritish() : String
+fun getTradGradingSystemBritish() : String
 {
 	return stringResource(R.string.grade_trad_bri)
-}
-
-/**
- * No.
- */
-@Composable
-fun getNo() : String
-{
-	return stringResource(R.string.no)
 }
 
 /**

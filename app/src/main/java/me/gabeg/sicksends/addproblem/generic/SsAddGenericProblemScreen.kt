@@ -1,4 +1,4 @@
-package me.gabeg.sicksends.addproblem
+package me.gabeg.sicksends.addproblem.generic
 
 import android.view.KeyEvent
 import androidx.compose.animation.*
@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -40,45 +38,37 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.gabeg.sicksends.SsLongClickButton
-import me.gabeg.sicksends.SsLongClickOutlinedButton
-import me.gabeg.sicksends.addproblem.boulder.SsAddBoulderProblemViewModel
-import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Companion.getSubtitle
 import me.gabeg.sicksends.addproblem.generic.question.*
 import me.gabeg.sicksends.db.generic.SsGenericProblem
-import me.gabeg.sicksends.problem.type.SsHoldType
-import me.gabeg.sicksends.problem.ui.SsNextIcon
-import me.gabeg.sicksends.problem.ui.SsPreviousIcon
-import me.gabeg.sicksends.problem.ui.SsYesIcon
-import me.gabeg.sicksends.problem.ui.SsYoIcon
-import me.gabeg.sicksends.shared.getAllHoldNames
-import me.gabeg.sicksends.shared.getYesOrNo
-import me.gabeg.sicksends.ui.*
+import me.gabeg.sicksends.ui.SsButtonToggleGroup
+import me.gabeg.sicksends.ui.SsNoIconTextButton
+import me.gabeg.sicksends.ui.SsYesIconTextButton
 import me.gabeg.sicksends.util.toNames
 import me.gabeg.sicksends.util.toggle
 import java.util.*
 
+/**
+ * Screen route.
+ */
 const val ADD_PROBLEM_SCREEN_ROUTE = "Add Problem"
 
 /**
- * Add climb screen.
+ * A screen to add a generic problem.
  *
- * TODO: perceived grade, location name, location lat/lon, image
+ * TODO: location name, location lat/lon, image
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun SsAddClimbScreen(
-	innerPadding : PaddingValues,
-	viewModel : SsAddBoulderProblemViewModel = hiltViewModel(),
-	onDone : () -> Unit = {})
+fun SsAddGenericProblemScreen(
+	viewModel : SsAddGenericProblemViewModel<SsGenericProblem>,
+	onDone : (SsGenericProblem) -> Unit = {})
 {
 
 	val scope = rememberCoroutineScope()
@@ -86,6 +76,7 @@ fun SsAddClimbScreen(
 	val pagerState = rememberPagerState()
 	val dataStore = viewModel.dataStore
 
+	// Determine which questions should be asked
 	val askHowDidItFeel = dataStore.observeQuestionHowDidItFeel()
 	val askName = dataStore.observeQuestionName()
 	val askFlash = dataStore.observeQuestionIsFlash()
@@ -107,8 +98,10 @@ fun SsAddClimbScreen(
 	//println("Ask note     ? $askNote")
 	//println("Ask hold     ? $askHold")
 
+	// Start showing the questions
 	viewModel.startShow()
 
+	// All questions
 	Column(
 		modifier = Modifier
 			.fillMaxSize())
@@ -341,15 +334,21 @@ fun SsAddClimbScreen(
 				// Done button
 				Button(
 					modifier = Modifier
-						.padding(horizontal = 16.dp)
+						.padding(horizontal = 32.dp)
 						.weight(1f),
 					colors = ButtonDefaults.buttonColors(
 						backgroundColor = Color.Magenta,
 						contentColor = Color.White),
 					shape = RoundedCornerShape(32.dp),
 					onClick = {
+						if (viewModel.problem.timestamp == 0L)
+						{
+							viewModel.problem.timestamp = System.currentTimeMillis() / 1000
+						}
+
 						viewModel.problem.debug()
-						onDone()
+
+						onDone(viewModel.problem)
 					})
 				{
 					Text(

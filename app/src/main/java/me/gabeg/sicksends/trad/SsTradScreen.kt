@@ -1,8 +1,11 @@
 package me.gabeg.sicksends.trad
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import me.gabeg.sicksends.db.trad.SsTradProblem
 import me.gabeg.sicksends.db.trad.SsTradViewModel
@@ -21,7 +24,26 @@ fun SsTradScreen(
 	innerPadding : PaddingValues,
 	viewModel: SsTradViewModel = hiltViewModel())
 {
-	val allProblems :  List<SsTradProblem> = listOf()
+	val problems :  List<SsTradProblem>
 
-	SsProblemScreen(allProblems, innerPadding = innerPadding)
+	if (queryState.hasNoFilter())
+	{
+		val allProblems: List<SsTradProblem> by viewModel.allProblems.observeAsState(listOf())
+		problems = allProblems
+	}
+	else
+	{
+		val findProblems: List<SsTradProblem> by viewModel
+			.findProblems(
+				queryState.outdoor,
+				queryState.project,
+				queryState.flash)
+			.observeAsState(listOf())
+		problems = findProblems
+	}
+
+	Column()
+	{
+		SsProblemScreen(problems, innerPadding = innerPadding, lazyListState)
+	}
 }

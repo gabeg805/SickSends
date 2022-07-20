@@ -126,12 +126,21 @@ abstract class SsGenericProblem
 	/**
 	 * Types of wall features on the problem.
 	 */
-	abstract var wallFeature : EnumSet<SsWallFeatureType>
+	abstract var wallFeature : EnumSet<SsWallFeatureType>?
+
+	/**
+	 * Check if there is one or more wall feature set.
+	 *
+	 * @return True if there is one or more wall feature set, and False otherwise.
+	 */
+	@Ignore
+	var hasWallFeature : Boolean = false
+		get() = wallFeature?.isNotEmpty() ?: false
 
 	/**
 	 * Types of holds on the problem.
 	 */
-	abstract var hold : EnumSet<SsHoldType>
+	abstract var hold : EnumSet<SsHoldType>?
 
 	/**
 	 * Check if there is one or more hold set.
@@ -140,12 +149,21 @@ abstract class SsGenericProblem
 	 */
 	@Ignore
 	var hasHold : Boolean = false
-		get() = hold.isNotEmpty()
+		get() = hold?.isNotEmpty() ?: false
 
 	/**
 	 * Types of climbing techniques used on the problem.
 	 */
-	abstract var climbingTechnique : EnumSet<SsClimbingTechniqueType>
+	abstract var climbingTechnique : EnumSet<SsClimbingTechniqueType>?
+
+	/**
+	 * Check if there is one or more climbing technique set.
+	 *
+	 * @return True if there is one or more climbing technique set, and False otherwise.
+	 */
+	@Ignore
+	var hasClimbingTechnique : Boolean = false
+		get() = climbingTechnique?.isNotEmpty() ?: false
 
 	/**
 	 * File path to the image.

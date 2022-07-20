@@ -20,9 +20,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
-import me.gabeg.sicksends.addproblem.SsBody
-import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
+import me.gabeg.sicksends.addproblem.generic.SsBody
+import me.gabeg.sicksends.addproblem.generic.SsQuestion
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.ui.SsLocationIcon
 
@@ -75,7 +75,7 @@ fun SsLocationBody(
 
 	// Request focus to show the keyboard
 	val focusRequester = remember { FocusRequester() }
-	var imeAction = ImeAction.Next
+	val imeAction = ImeAction.Next
 
 	// Screen width
 	val screenWidth : Dp = LocalConfiguration.current.screenWidthDp.dp - 32.dp

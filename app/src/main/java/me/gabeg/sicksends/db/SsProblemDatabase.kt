@@ -148,7 +148,7 @@ abstract class SsProblemDatabase : RoomDatabase()
 			suspend fun populateDatabase(boulderDao: SsBoulderDao)
 			{
 				var boulders : MutableList<SsBoulderProblem> = mutableListOf()
-				var timestamp : Long = System.currentTimeMillis() / 1000;
+				var timestamp : Long = System.currentTimeMillis() / 1000
 
 				for (i in 0..29)
 				{

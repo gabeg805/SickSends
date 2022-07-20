@@ -43,12 +43,12 @@ fun SsSickSendsApp()
 			startDestination = startDestination)
 		{
 
-			// Start the onboarding screen
+			// Onboarding screen
 			composable(route = ONBOARDING_SCREEN_ROUTE) {
 				SsOnboardingScreen(navController = navController)
 			}
 
-			// Start the main screen
+			// Main screen
 			composable(route = MAIN_SCREEN_ROUTE) {
 				val otherNavController = rememberNavController()
 

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f35a3e1aad1cf1544f63be8a6b99b280",
+    "identityHash": "96d22b1feb89e66377c10b46a5a7bce6",
     "entities": [
       {
         "tableName": "boulder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature` INTEGER NOT NULL, `hold` INTEGER NOT NULL, `climbing_technique` INTEGER NOT NULL, `media_path` TEXT, `note` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature` INTEGER, `hold` INTEGER, `climbing_technique` INTEGER, `media_path` TEXT, `note` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -96,19 +96,19 @@
             "fieldPath": "wallFeature",
             "columnName": "wall_feature",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "hold",
             "columnName": "hold",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "climbingTechnique",
             "columnName": "climbing_technique",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "mediaPath",
@@ -134,7 +134,7 @@
       },
       {
         "tableName": "sport",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature` INTEGER NOT NULL, `hold` INTEGER NOT NULL, `climbing_technique` INTEGER NOT NULL, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature` INTEGER, `hold` INTEGER, `climbing_technique` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -224,19 +224,19 @@
             "fieldPath": "wallFeature",
             "columnName": "wall_feature",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "hold",
             "columnName": "hold",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "climbingTechnique",
             "columnName": "climbing_technique",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "mediaPath",
@@ -280,7 +280,7 @@
       },
       {
         "tableName": "top_rope",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature` INTEGER NOT NULL, `hold` INTEGER NOT NULL, `climbing_technique` INTEGER NOT NULL, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature` INTEGER, `hold` INTEGER, `climbing_technique` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -370,19 +370,19 @@
             "fieldPath": "wallFeature",
             "columnName": "wall_feature",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "hold",
             "columnName": "hold",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "climbingTechnique",
             "columnName": "climbing_technique",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "mediaPath",
@@ -426,7 +426,7 @@
       },
       {
         "tableName": "trad",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature` INTEGER NOT NULL, `hold` INTEGER NOT NULL, `climbing_technique` INTEGER NOT NULL, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `grading_system` TEXT NOT NULL, `grade` TEXT NOT NULL, `perceived_grade` TEXT, `how_did_it_feel` INTEGER, `name` TEXT, `num_attempt` INTEGER, `location_name` TEXT, `location_lat` TEXT, `location_lon` TEXT, `is_project` INTEGER, `is_flash` INTEGER, `is_outdoor` INTEGER, `wall_feature` INTEGER, `hold` INTEGER, `climbing_technique` INTEGER, `media_path` TEXT, `note` TEXT, `num_take` INTEGER, `is_onsight` INTEGER, `is_redpoint` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -516,19 +516,19 @@
             "fieldPath": "wallFeature",
             "columnName": "wall_feature",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "hold",
             "columnName": "hold",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "climbingTechnique",
             "columnName": "climbing_technique",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "mediaPath",
@@ -574,7 +574,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f35a3e1aad1cf1544f63be8a6b99b280')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '96d22b1feb89e66377c10b46a5a7bce6')"
     ]
   }
 }

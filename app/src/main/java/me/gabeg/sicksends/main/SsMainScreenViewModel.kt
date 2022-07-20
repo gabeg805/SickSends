@@ -15,7 +15,7 @@ import androidx.lifecycle.asLiveData
 import androidx.navigation.NavBackStackEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import me.gabeg.sicksends.R
-import me.gabeg.sicksends.addproblem.ADD_PROBLEM_SCREEN_ROUTE
+import me.gabeg.sicksends.addproblem.generic.ADD_PROBLEM_SCREEN_ROUTE
 import me.gabeg.sicksends.boulder.BOULDER_SCREEN_ROUTE
 import me.gabeg.sicksends.shared.*
 import me.gabeg.sicksends.sport.SPORT_SCREEN_ROUTE

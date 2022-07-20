@@ -115,19 +115,19 @@ data class SsTradProblem(
 	 * Types of wall features on the problem.
 	 */
 	@ColumnInfo(name = "wall_feature")
-	override var wallFeature : EnumSet<SsWallFeatureType> = SsWallFeatureType.emptySet(),
+	override var wallFeature : EnumSet<SsWallFeatureType>? = SsWallFeatureType.emptySet(),
 
 	/**
 	 * Types of holds on the problem.
 	 */
 	@ColumnInfo(name = "hold")
-	override var hold : EnumSet<SsHoldType> = SsHoldType.emptySet(),
+	override var hold : EnumSet<SsHoldType>? = SsHoldType.emptySet(),
 
 	/**
 	 * Types of climbing techniques used on the problem.
 	 */
 	@ColumnInfo(name = "climbing_technique")
-	override var climbingTechnique : EnumSet<SsClimbingTechniqueType> = SsClimbingTechniqueType.emptySet(),
+	override var climbingTechnique : EnumSet<SsClimbingTechniqueType>? = SsClimbingTechniqueType.emptySet(),
 
 	/**
 	 * File path to the image.

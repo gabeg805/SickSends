@@ -119,7 +119,8 @@ fun ConstraintLayoutScope.buildFlashIcon(problem : SsGenericProblem,
 {
 
 	// Problem is not a flash. Do not do anything
-	if (problem.isFlash != true)
+	//if (problem.isFlash != true)
+	if ((problem.numAttempt != 1L) || (problem.isProject == true))
 	{
 		return
 	}

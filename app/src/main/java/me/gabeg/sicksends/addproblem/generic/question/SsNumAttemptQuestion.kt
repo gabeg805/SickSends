@@ -20,11 +20,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import me.gabeg.sicksends.SsLongClickOutlinedButton
-import me.gabeg.sicksends.addproblem.SsBody
-import me.gabeg.sicksends.addproblem.SsContinueSkipButton
-import me.gabeg.sicksends.addproblem.SsQuestion
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel
 import me.gabeg.sicksends.addproblem.generic.SsAddGenericProblemViewModel.Companion.getSubtitle
+import me.gabeg.sicksends.addproblem.generic.SsBody
+import me.gabeg.sicksends.addproblem.generic.SsContinueSkipButton
+import me.gabeg.sicksends.addproblem.generic.SsQuestion
 import me.gabeg.sicksends.db.generic.SsGenericProblem
 import me.gabeg.sicksends.problem.ui.SsAddIcon
 import me.gabeg.sicksends.problem.ui.SsNumberOfAttemptsIcon

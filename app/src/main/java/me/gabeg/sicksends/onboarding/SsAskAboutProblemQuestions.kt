@@ -49,15 +49,18 @@ import me.gabeg.sicksends.ui.SsIconTextButton
 fun SsAskAboutProblemQuestionsPage()
 {
 
+	// Context
+	val context = LocalContext.current
+
 	// Coroutine scope
 	val scope = rememberCoroutineScope()
 
 	// Data store preferences
-	val generalDataStore = SsSharedGeneralClimbingDataStore(LocalContext.current)
-	val boulderDataStore = SsSharedBoulderDataStore(LocalContext.current)
-	val sportDataStore = SsSharedSportDataStore(LocalContext.current)
-	val topRopeDataStore = SsSharedTopRopeDataStore(LocalContext.current)
-	val tradDataStore = SsSharedTradDataStore(LocalContext.current)
+	val generalDataStore = SsSharedGeneralClimbingDataStore(context)
+	val boulderDataStore = SsSharedBoulderDataStore(context)
+	val sportDataStore = SsSharedSportDataStore(context)
+	val topRopeDataStore = SsSharedTopRopeDataStore(context)
+	val tradDataStore = SsSharedTradDataStore(context)
 
 	// All data stores
 	val allDataStores = listOf(generalDataStore, boulderDataStore,
@@ -96,60 +99,113 @@ fun SsAskAboutProblemQuestionsPage()
 
 			// Grade
 			item {
-				SsAskQuestions(
+				SsAskQuestion(
 					icon = { SsGradeIcon() },
-					title = "Grade")
-				{
+					title = "Grade",
+					description = "The difficulty rating of the climb. This is required and will always be asked.",
+					selected = grade,
+					onClick = {
+						Toast.makeText(context, "This is a required question", Toast.LENGTH_SHORT).show()
+					})
+
+				//SsAskQuestions(
+			//		icon = { SsGradeIcon() },
+			//		title = "Grade")
+			//	{
 
 					// Grade
-					SsQuestionButton(
-						modifier = Modifier
-							.width(screenWidth / 4),
-						icon = { SsGradeIcon() },
-						text = "Grade\n(Required)",
-						description = "The difficulty rating of the climb. This is required and will always be asked.",
-						selected = grade,
-						onClick = {
-						},
-						onLongClick = it)
+					//SsQuestionButton(
+				//		modifier = Modifier
+				//			.width(screenWidth / 4),
+				//		icon = { SsGradeIcon() },
+				//		text = "Grade\n(Required)",
+				//		description = "The difficulty rating of the climb. This is required and will always be asked.",
+				//		selected = grade,
+				//		onClick = {
+				//		},
+				//		onLongClick = it)
 
 					// How did it feel
-					SsQuestionButton(
-						modifier = Modifier
-							.width(screenWidth / 4),
-						icon = { SsHowDidItFeelIcon() },
-						text = "How Did\nIt Feel",
-						description = "How did the climb feel on a scale from:\n\n\t\u2022 Very Easy\n\t\u2022 Easy\n\t\u2022 Normal\n\t\u2022 Hard\n\t\u2022 Very Hard",
-						selected = howDidItFeel,
-						onClick = {
-							scope.launch {
-								for (ds in allDataStores)
-								{
-									ds.editQuestionHowDidItFeel(it)
-								}
-							}
-						},
-						onLongClick = it)
+					//SsQuestionButton(
+				//		modifier = Modifier
+				//			.width(screenWidth / 4),
+				//		icon = { SsHowDidItFeelIcon() },
+				//		text = "How Did\nIt Feel",
+				//		description = "How did the climb feel on a scale from:\n\n\t\u2022 Very Easy\n\t\u2022 Easy\n\t\u2022 Normal\n\t\u2022 Hard\n\t\u2022 Very Hard",
+				//		selected = howDidItFeel,
+				//		onClick = {
+				//			scope.launch {
+				//				for (ds in allDataStores)
+				//				{
+				//					ds.editQuestionHowDidItFeel(it)
+				//				}
+				//			}
+				//		},
+				//		onLongClick = it)
 
 					// Perceived grade
-					SsQuestionButton(
-						modifier = Modifier
-							.width(screenWidth / 4),
-						icon = { SsPerceivedGradeIcon() },
-						text = "Perceived\nGrade",
-						description = "The grade you think the climb should really be.",
-						selected = perceivedGrade,
-						onClick = {
-							scope.launch {
-								for (ds in allDataStores)
+					//SsQuestionButton(
+				//		modifier = Modifier
+				//			.width(screenWidth / 4),
+				//		icon = { SsPerceivedGradeIcon() },
+				//		text = "Perceived\nGrade",
+				//		description = "The grade you think the climb should really be.",
+				//		selected = perceivedGrade,
+				//		onClick = {
+				//			scope.launch {
+				//				for (ds in allDataStores)
+				//				{
+				//					ds.editQuestionPerceivedGrade(it)
+				//				}
+				//			}
+				//		},
+				//		onLongClick = it)
+
+				//}
+			}
+
+			// Perceived grade
+			item {
+				SsAskQuestion(
+					icon = { SsPerceivedGradeIcon() },
+					title = "Perceived Grade",
+					description = "The grade you think the climb should really be.",
+					selected = perceivedGrade,
+					onClick = {
+						scope.launch {
+							for (ds in allDataStores)
+							{
+								ds.editQuestionPerceivedGrade(it)
+
+								if (it)
 								{
-									ds.editQuestionPerceivedGrade(it)
+									ds.editQuestionHowDidItFeel(!it)
 								}
 							}
-						},
-						onLongClick = it)
+						}
+					})
+			}
 
-				}
+			// How did it feel
+			item {
+				SsAskQuestion(
+					icon = { SsHowDidItFeelIcon() },
+					title = "How Did It Feel",
+					description = "How did the climb feel on a scale from:\n\n\t\u2022 Very Easy\n\t\u2022 Easy\n\t\u2022 Normal\n\t\u2022 Hard\n\t\u2022 Very Hard",
+					selected = howDidItFeel,
+					onClick = {
+						scope.launch {
+							for (ds in allDataStores)
+							{
+								ds.editQuestionHowDidItFeel(it)
+
+								if (it)
+								{
+									ds.editQuestionPerceivedGrade(!it)
+								}
+							}
+						}
+					})
 			}
 
 			// Flash
@@ -214,6 +270,33 @@ fun SsAskAboutProblemQuestionsPage()
 							for (ds in allDataStores)
 							{
 								ds.editQuestionNumAttempt(it)
+
+								if (it)
+								{
+									ds.editQuestionIsFlash(!it)
+								}
+							}
+						}
+					})
+			}
+
+			// Flash
+			item {
+				SsAskQuestion(
+					icon = { SsFlashIcon() },
+					title = "Flash",
+					description = "Whether or not the problem was flashed.",
+					selected = isFlash,
+					onClick = {
+						scope.launch {
+							for (ds in allDataStores)
+							{
+								ds.editQuestionIsFlash(it)
+
+								if (it)
+								{
+									ds.editQuestionNumAttempt(!it)
+								}
 							}
 						}
 					})
